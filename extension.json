@@ -1,0 +1,79 @@
+{
+	"name": "FlowThread",
+	"author": "Gary Guo",
+	"url": "about:blank",
+	"descriptionmsg": "flowthread_desc",
+	"version": "0.0.1",
+	"license-name": "BSD-2-Clause",
+	"type": "specialpage",
+	"MessagesDirs": {
+		"FlowThread": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"FlowThread": "FlowThread_body.php",
+		"ApiFlowThread": "ApiFlowThread.php",
+		"FlowThreadPost": "Post.php",
+		"FlowThreadPage": "Page.php",
+		"SpecialFlowThreadExport": "special/Export.php",
+		"SpecialFlowThreadImport": "special/Import.php"
+	},
+	"Hooks": {
+		"BeforePageDisplay": [
+			"FlowThread::onBeforePageDisplay"
+		],
+		"LoadExtensionSchemaUpdates": [
+			"FlowThread::onLoadExtensionSchemaUpdates"
+		]
+	},
+	"ResourceModules": {
+		"ext.flowThread.admin": {
+			"scripts":[
+				"js/flowthread_admin.js"
+			]
+		},
+		"ext.flowThread": {
+			"scripts":[
+				"js/flowthread.js"
+			],
+			"styles":[
+				"css/flowthread.css"
+			]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "FlowThread"
+	},
+	"APIModules": {
+		"flowthread": "ApiFlowThread"
+	},
+	"AvailableRights": [
+		"comment",
+		"commentadmin-restricted",
+		"commentadmin"
+	],
+	"GroupPermissions": {
+		"*": {
+			"comment": true
+		},
+		"sysop": {
+			"commentadmin": true,
+			"commentadmin-restricted": true
+		}
+	},
+	"LogTypes": [
+		"comments"
+	],
+	"LogActionsHandlers": {
+		"comments/delete": "LogFormatter",
+		"comments/recover": "LogFormatter",
+		"comments/erase": "LogFormatter"
+	},
+	"SpecialPages": {
+		"FlowThreadExport": "SpecialFlowThreadExport",
+		"FlowThreadImport": "SpecialFlowThreadImport"
+	},
+	"manifest_version": 1
+}

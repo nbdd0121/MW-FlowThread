@@ -1,0 +1,19 @@
+{
+	"flowthread_desc": "This extension provides a thread-like 评论 system",
+	"log-name-comments": "评论日志",
+	"log-description-comments": "此页面显示评论管理的日志。",
+	"logentry-comments-delete": "$1从页面$3中删除了$4的评论",
+	"logentry-comments-recover": "$1从页面$3中恢复了$4的评论",
+	"logentry-comments-erase": "$1从页面$3中永久删除了$4的评论及$5条子评论",
+	"right-comment": "评论",
+	"right-commentadmin-restricted": "受限的评论管理",
+	"right-commentadmin": "评论管理",
+	"action-comment": "评论",
+	"action-commentadmin-restricted": "受限地管理评论",
+	"action-commentadmin": "管理评论",
+	"flowthreadexport": "导出FlowThread评论",
+	"flowthreadexport-submit": "导出",
+	"flowthreadimport": "导入FlowThread评论",
+	"flowthreadimport-legend": "导入FlowThread评论"
+	
+}

@@ -1,0 +1,18 @@
+{
+	"flowthread_desc": "This extension provides a thread-like commenting system",
+	"log-name-comments": "Comments log",
+	"log-description-comments": "This page shows administrative activities related to comments.",
+	"logentry-comments-delete": "$1 deleted a comment by $4 from $3",
+	"logentry-comments-recover": "$1 recovered a comment by $4 from $3",
+	"logentry-comments-erase": "$$1 permantly deleted a comment by $4 from $3, along with its $5 follow-ups.",
+	"right-comment": "Post comments",
+	"right-commentadmin-restricted": "Restrictedly manage comments",
+	"right-commentadmin": "Manage comments",
+	"action-comment": "post comments",
+	"action-commentadmin-restricted": "manage comments with restriction",
+	"action-commentadmin": "manage comments",
+	"flowthreadexport": "Export FlowThread Comments",
+	"flowthreadexport-submit": "Export",
+	"flowthreadimport": "Import FlowThread Comments",
+	"flowthreadimport-legend": "Import FlowThread Comments"
+}
