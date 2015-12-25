@@ -1,0 +1,91 @@
+.comment-avatar {
+    float: left;
+}
+
+.comment-thread {
+    border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.comment-post {
+    padding: 10px;
+}
+
+.comment-container {
+    margin-top: 1em;
+}
+
+.comment-body {
+    padding-left: 60px;
+}
+
+.comment-user, .comment-user a {
+    color: #777;
+    font-size: 13px;
+}
+
+.comment-text {
+    font-size: 13px;
+    line-height: 1.5em;
+    margin: 0.5em 0px;
+    word-wrap: break-word;
+}
+
+.comment-footer {
+    font-size: 12px;
+    margin-right: 8px;
+    color: #999;
+}
+
+.comment-like, .comment-report, .comment-delete, .comment-recover {
+    margin-left: 5px;
+}
+
+.comment-delete, .comment-recover {
+    cursor: pointer;
+    transition: color 0.15s linear 0s;
+}
+
+.comment-like::before, .comment-report::before, .comment-delete::before, .comment-recover::before {
+    content: "";
+    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
+    opacity: 0.6;
+    padding-left: 15px;
+    transition: opacity 0.15s linear 0s;
+    font-size: 9px;
+    vertical-align: middle;
+}
+
+.comment-like::before {
+    background-position: 0px -14px;
+}
+
+.comment-report::before {
+    background-position: 0px -50px;
+}
+
+.comment-delete::before {
+    background-position: 0px -40px;
+}
+
+.comment-recover::before {
+    background-position: 0px 0px;
+}
+
+.comment-like:hover::before, .comment-report:hover::before, .comment-delete:hover::before, .comment-recover:hover::before {
+    opacity: 1.0;
+}
+
+.comment-report:hover, .comment-like:hover, .comment-delete:hover, .comment-recover:hover {
+    opacity: 1.0;
+    color: #555;
+}
+
+.comment-avatar img {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-selected {
+    padding-left: 2em;
+    background: lightblue;
+}

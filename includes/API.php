@@ -1,12 +1,11 @@
 <?php
-define('FLOW_THREAD_ATT_NORM', 0);
-define('FLOW_THREAD_ATT_LIKE', 1);
-define('FLOW_THREAD_ATT_REPO', 2);
+namespace FlowThread;
 
-class ApiFlowThread extends ApiBase
+class API extends \ApiBase
 {
+
     private function fetchPosts($pageid) {
-        $page = FlowThreadPage::newFromId($pageid);
+        $page = Page::newFromId($pageid);
 
         $comments = array();
         foreach ($page->posts as $post) {
@@ -16,12 +15,12 @@ class ApiFlowThread extends ApiBase
                 $myAtt = $post->getUserAttitude($this->getUser());
 
                 $data = array(
-                    'id' => $post->id,
+                    'id' => $post->id->getHex(),
                     'userid' => $post->userid,
                     'username' => $post->username,
                     'text' => $post->text,
-                    'timestamp' => wfTimestamp(TS_UNIX, $post->timestamp),
-                    'parentid' => $post->parentid,
+                    'timestamp' => $post->id->getTimestamp(),
+                    'parentid' => $post->parentid ? $post->parentid->getHex() : '',
                     'like' => $favorCount,
                     'myatt' => $myAtt,
                 );
@@ -32,12 +31,28 @@ class ApiFlowThread extends ApiBase
         
         return $comments;
     }
+
+    private function parsePostList($postList) {
+        if(!$postList) {
+            return array();
+        }
+        $ret = array();
+        foreach(explode('|', $postList) as $id) {
+            $ret[] = Post::newFromId(UUID::fromHex($id));
+        }
+        return $ret;
+    }
     
     public function execute() {
         $action = $this->getMain()->getVal('type');
         $page = $this->getMain()->getVal('pageid');
-        $post = $this->getMain()->getVal('postid');
+
         try {
+            // If post is set, get the post object by id
+            // By fetching the post object, we also validate the id
+            $postList = $this->getMain()->getVal('postid');
+            $postList = $this->parsePostList($postList);
+
             switch ($action) {
                 case 'list':
                     $page = $this->getMain()->getVal('pageid');
@@ -45,65 +60,72 @@ class ApiFlowThread extends ApiBase
                     break;
 
                 case 'like':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->setUserAttitude($this->getUser(), FLOW_THREAD_ATT_LIKE);
+                    foreach($postList as $post)
+                        $post->setUserAttitude($this->getUser(), Post::ATTITUDE_LIKE);
                     break;
 
                 case 'dislike':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->setUserAttitude($this->getUser(), FLOW_THREAD_ATT_NORM);
+                    foreach($postList as $post)
+                        $post->setUserAttitude($this->getUser(), Post::ATTITUDE_NORMAL);
                     break;
 
                 case 'report':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->setUserAttitude($this->getUser(), FLOW_THREAD_ATT_REPO);
+                    foreach($postList as $post)
+                        $post->setUserAttitude($this->getUser(), Post::ATTITUDE_REPORT);
                     break;
 
                 case 'post':
-                    FlowThreadPost::checkIfCanPost($this->getUser());
+                    // Permission check
+                    Post::checkIfCanPost($this->getUser());
+
                     $text = $this->getMain()->getVal('content');
+
+                    // Parse as wikitext if specified
                     if($this->getMain()->getCheck('wikitext')) {
-                        $parser = new Parser();
-                        $opt = new ParserOptions($this->getUser());
+                        $parser = new \Parser();
+                        $opt = new \ParserOptions($this->getUser());
                         $opt->setEditSection(false);
-                        $output = $parser->parse($text, Title::newFromId($page), $opt);
+                        $output = $parser->parse($text, \Title::newFromId($page), $opt);
                         $text = $output->getText();
                         unset($parser);
                         unset($opt);
                         unset($output);
                     }
+
                     $data = array(
-                        'id' => 0,
+                        'id' => null,
                         'pageid' => $page,
                         'userid' => $this->getUser()->getId(),
                         'username' => $this->getUser()->getName(),
                         'text' => $text,
-                        'timestamp' => wfTimestamp(TS_MW),
-                        'parentid' => $post,
-                        'status' => 0
+                        'parentid' => count($postList) ? $postList[0]->id : null,
+                        'status' => 0,
+                        'like' => 0,
+                        'report' => 0
                     );
-                    $postObject = new FlowThreadPost($data);
+
+                    $postObject = new Post($data);
                     $postObject->post();
                     break;
 
                 case 'delete':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->delete($this->getUser());
+                    foreach($postList as $post)
+                        $post->delete($this->getUser());
                     break;
 
                 case 'recover':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->recover($this->getUser());
+                    foreach($postList as $post)
+                        $post->recover($this->getUser());
                     break;
 
                 case 'erase':
-                    $postObject = FlowThreadPost::newFromId($post);
-                    $postObject->erase($this->getUser());
+                    foreach($postList as $post)
+                        $post->erase($this->getUser());
                     break;
             }
             return true;
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             $this->getResult()->addValue(null, 'error', $e->getMessage());
         }
     }
@@ -115,31 +137,36 @@ class ApiFlowThread extends ApiBase
     public function getAllowedParams() {
         return array(
             'type' => array(
-                ApiBase::PARAM_TYPE => 'string'
+                \ApiBase::PARAM_TYPE => 'string'
             ) ,
             'pageid' => array(
-                ApiBase::PARAM_TYPE => 'integer'
+                \ApiBase::PARAM_TYPE => 'integer'
             ) ,
             'postid' => array(
-                ApiBase::PARAM_TYPE => 'integer'
+                \ApiBase::PARAM_TYPE => 'integer'
             ) ,
             'content' => array(
-                ApiBase::PARAM_TYPE => 'string'
+                \ApiBase::PARAM_TYPE => 'string'
             ) ,
+            'usewikitext' => array(
+                \ApiBase::PARAM_TYPE => 'boolean'
+            )
         );
     }
     
     public function getParamDescription() {
         return array(
-            'type' => 'Type of action to take (post, list, like, dislike, delete, report)',
+            'type' => 'Type of action to take (post, list, like, dislike, delete, report, recover, erase)',
             'pageid' => 'The page id of the commented page',
-            'postid' => 'The id of a certain comment'
+            'postid' => 'The id of a certain comment',
+            'content' => 'Content of comment',
+            'usewikitext' => 'Specify whether content is intepreted as wikitext or not'
         );
     }
     
     public function getExamplesMessages() {
         return array(
-            'action=flowthread&pageid=0&type=list' => 'List all comments in 0'
+            'action=flowthread&pageid=1&type=list' => 'List all comments in article 1'
         );
     }
 }

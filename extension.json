@@ -3,7 +3,7 @@
 	"author": "Gary Guo",
 	"url": "about:blank",
 	"descriptionmsg": "flowthread_desc",
-	"version": "0.0.1",
+	"version": "0.9.0",
 	"license-name": "BSD-2-Clause",
 	"type": "specialpage",
 	"MessagesDirs": {
@@ -13,11 +13,13 @@
 	},
 	"AutoloadClasses": {
 		"FlowThread": "FlowThread_body.php",
-		"ApiFlowThread": "ApiFlowThread.php",
-		"FlowThreadPost": "Post.php",
-		"FlowThreadPage": "Page.php",
-		"SpecialFlowThreadExport": "special/Export.php",
-		"SpecialFlowThreadImport": "special/Import.php"
+		"FlowThread\\API": "includes/API.php",
+		"FlowThread\\Post": "includes/Post.php",
+		"FlowThread\\Page": "includes/Page.php",
+		"FlowThread\\SpecialExport": "special/Export.php",
+		"FlowThread\\SpecialImport": "special/Import.php",
+		"FlowThread\\SpecialManage": "special/Manage.php",
+		"FlowThread\\UUID": "includes/UUID.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
@@ -28,17 +30,46 @@
 		]
 	},
 	"ResourceModules": {
-		"ext.flowThread.admin": {
-			"scripts":[
-				"js/flowthread_admin.js"
-			]
-		},
-		"ext.flowThread": {
+		"ext.flowthread": {
+			"dependencies": [
+				"moment"
+			],
 			"scripts":[
 				"js/flowthread.js"
 			],
 			"styles":[
 				"css/flowthread.css"
+			],
+			"messages": [
+				"flowthread-ui-reply",
+				"flowthread-ui-like",
+				"flowthread-ui-report",
+				"flowthread-ui-delete",
+				"flowthread-ui-usewikitext",
+				"flowthread-ui-placeholder",
+				"flowthread-ui-submit",
+				"flowthread-ui-nocontent"
+			]
+		},
+		"ext.flowthread.manage": {
+			"dependencies": [
+				"moment"
+			],
+			"scripts": [
+				"js/manage.js"
+			],
+			"styles": [
+				"css/manage.css"
+			],
+			"messages": [
+				"flowthread-ui-like",
+				"flowthread-ui-report",
+				"flowthread-ui-delete",
+				"flowthread-ui-recover",
+				"flowthread-ui-erase",
+				"flowthread-ui-selectall",
+				"flowthread-ui-unselectall",
+				"flowthread-ui-user-post-on-page"
 			]
 		}
 	},
@@ -47,7 +78,7 @@
 		"remoteExtPath": "FlowThread"
 	},
 	"APIModules": {
-		"flowthread": "ApiFlowThread"
+		"flowthread": "FlowThread\\API"
 	},
 	"AvailableRights": [
 		"comment",
@@ -66,14 +97,19 @@
 	"LogTypes": [
 		"comments"
 	],
+	"FilterLogTypes": {
+		"comments": true
+	},
 	"LogActionsHandlers": {
 		"comments/delete": "LogFormatter",
 		"comments/recover": "LogFormatter",
-		"comments/erase": "LogFormatter"
+		"comments/erase": "LogFormatter",
+		"comments/import": "LogFormatter"
 	},
 	"SpecialPages": {
-		"FlowThreadExport": "SpecialFlowThreadExport",
-		"FlowThreadImport": "SpecialFlowThreadImport"
+		"FlowThreadExport": "FlowThread\\SpecialExport",
+		"FlowThreadImport": "FlowThread\\SpecialImport",
+		"FlowThreadManage": "FlowThread\\SpecialManage"
 	},
 	"manifest_version": 1
 }

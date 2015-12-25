@@ -1,32 +1,61 @@
-var template = '<div class="comment-thread"><div class="comment-post">\
-		<div class="comment-avatar">\
-			<img src="/w/extensions/FlowThread/css/avatar.jpg"></img>\
-		</div>\
-		<div class="comment-body">\
-			<div class="comment-user"></div>\
-			<div class="comment-text"></div>\
-			<div class="comment-footer">\
-				<span class="comment-time"></span>\
-				<span class="comment-reply">回复</span>\
-				<span class="comment-like" enabled>赞 <span></span></span>\
-				<span class="comment-report" enabled>举报</span>\
-                <span class="comment-delete">删除</span>\
-			</div>\
-		</div></div></div>';
-var replyBoxTemplate = '<div class="comment-replybox">\
-	<div class="comment-avatar">\
-		<img src="/w/extensions/FlowThread/css/avatar.jpg"></img>\
-	</div>\
-	<div class="comment-body">\
-		<textarea placeholder="说点什么吧…"></textarea>\
-		<div class="comment-toolbar">\
-            <input type="checkbox" name="wikitext" value="" />\
-            使用维基文本\
-			<button class="comment-submit">发布</button>\
-		</div>\
-	</div></div>';
+var template = '<div class="comment-thread"><div class="comment-post">'
+        + '<div class="comment-avatar">'
+            + '<img src="/w/extensions/FlowThread/css/avatar.jpg"></img>'
+        + '</div>'
+        + '<div class="comment-body">'
+            + '<div class="comment-user"></div>'
+            + '<div class="comment-text"></div>'
+        + '<div class="comment-footer">'
+            + '<span class="comment-time"></span>'
+            + '<span class="comment-reply">' + mw.msg('flowthread-ui-reply') + '</span>';
 
-var replyBox = $(replyBox);
+// User not signed in do not have right to vote
+if(mw.user.getId() !== 0) {
+    template += '<span class="comment-like">' + mw.msg('flowthread-ui-like') + ' <span></span></span>'
+        + '<span class="comment-report">' + mw.msg('flowthread-ui-report') + ' <span></span></span>'
+}
+            
+template += '<span class="comment-delete">' + mw.msg('flowthread-ui-delete') + '</span>';
+template += '</div>'
+        + '</div></div></div>';
+
+var replyBoxTemplate = '<div class="comment-replybox">'
+	+ '<div class="comment-avatar">'
+	   + '<img src="/w/extensions/FlowThread/css/avatar.jpg"></img>'
+	+ '</div>'
+	+ '<div class="comment-body">'
+		+ '<textarea placeholder="' + mw.msg('flowthread-ui-placeholder') + '"></textarea>'
+		+ '<div class="comment-toolbar">'
+            + '<input type="checkbox" name="wikitext" value="" />'
+            + mw.msg('flowthread-ui-usewikitext')
+			+ '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
+		+ '</div>'
+	+ '</div></div>';
+
+function getTimeString(time) {
+    var m = moment(time).locale(mw.config.get('wgUserLanguage'));
+    var diff = Date.now() - time;
+    if(0 < diff && diff < 24*3600*1000) {
+        return m.fromNow();
+    }else{
+        return m.format('LL, HH:mm:ss');
+    }
+}
+
+function wrapText(text) {
+    var span = $('<span/>');
+    span.text(text);
+    return span.wrapAll('<div/>').parent().html();
+}
+
+function wrapPageLink(page, name) {
+    var link = $('<a/>');
+    link.attr('href', mw.config.get('wgArticlePath').replace('$1', page));
+    link.text(name);
+    return link.wrapAll('<div/>').parent().html();
+}
+
+var replyBox = null;
 
 function Thread(post) {
     var self = this;
@@ -37,16 +66,16 @@ function Thread(post) {
     // $.data(object, 'flowthread', this);
 
     object.attr('comment-id', post.id);
+
+    var userlink;
     if (post.userid !== 0) {
-        var userlink = $('<a></a>');
-        userlink.attr('href', mw.config.get('wgArticlePath').replace('$1', 'User:' + post.username));
-        userlink.text(post.username);
-        object.find('.comment-user').append(userlink);
+        userlink = wrapPageLink('User: ' + post.username, post.username);
     } else {
-        object.find('.comment-user').text(post.username);
+        userlink = wrapText(post.username);
     }
+    object.find('.comment-user').html(userlink);
     object.find('.comment-text').html(post.text);
-    object.find('.comment-time').text(new Date(post.timestamp * 1000).toLocaleString('zh-CN'));
+    object.find('.comment-time').text(getTimeString(post.timestamp*1000));
 
     object.find('.comment-reply').click(function() {
         self.reply();
@@ -69,7 +98,8 @@ function Thread(post) {
         self.delete(post.id);
     });
 
-    if(mw.config.exists('commentadmin')) {
+    // commentadmin-restricted and poster himself can delete comment
+    if(mw.config.exists('commentadmin') || (post.userid && post.userid === mw.user.getId())) {
         object.find('.comment-delete').attr('enabled', '');
     }
 
@@ -131,19 +161,24 @@ Thread.prototype.delete = function() {
 }
 
 Thread.prototype.reply = function() {
-    setFollowUp(this.post.id, createReplyBox(this.post.id));
+    if(replyBox){
+        replyBox.remove();
+    }
+    replyBox = createReplyBox(this.post.id);
+    setFollowUp(this.post.id, replyBox);
 }
 
-
-Thread.sendComment = function(postid, text) {
+Thread.sendComment = function(postid, text, wikitext) {
     var api = new mw.Api();
-    api.get({
+    var req = {
         action: 'flowthread',
         type: 'post',
         pageid: mw.config.get('wgArticleId'),
         postid: postid,
-        content: text
-    }).done(reloadComments);
+        content: text,
+        wikitext: wikitext
+    };
+    api.get(req).done(reloadComments);
 }
 
 function reloadComments(comments) {
@@ -155,7 +190,7 @@ function reloadComments(comments) {
     }).done(function(data) {
         $('.comment-container').html('');
         data.flowthread.forEach(function(item) {
-            if (item.parentid === 0) {
+            if (item.parentid === '') {
                 $('.comment-container').prepend(new Thread(item).object);
             } else {
                 setFollowUp(item.parentid, new Thread(item).object);
@@ -173,27 +208,23 @@ function createReplyBox(parentid) {
     var replyBox = $(replyBoxTemplate);
     var textarea = replyBox.find('textarea');
     var submit = replyBox.find('.comment-submit');
+    var useWikitext = replyBox.find('[name=wikitext]');
     textarea.keyup(function(e) {
         if (e.ctrlKey && e.which === 13) submit.click();
         $(this).height(1);
         $(this).height(this.scrollHeight);
     });
     submit.click(function() {
-        if (!textarea.val()) {
-            alert('你还没写内容呢');
+        var text = textarea.val().trim();
+        if (!text) {
+            alert(mw.msg('flowthread-ui-nocontent'));
             return;
         }
-        var text = textarea.val();
         textarea.val('');
-        Thread.sendComment(parentid, text);
+        Thread.sendComment(parentid, text, useWikitext[0].checked);
     });
     return replyBox;
 }
 
-$(function() {
-    $('#bodyContent').after('<div class="comment-container"></div>', createReplyBox(0));
-    reloadComments();
-    // setInterval(function() {
-    //     reloadComments();
-    // }, 5000);
-});
+$('#bodyContent').after('<div class="comment-container"></div>', createReplyBox(''));
+reloadComments();

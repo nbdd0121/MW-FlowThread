@@ -153,40 +153,22 @@
 
 .comment-delete::before {
     background-position: 0px -40px;
-    /*background-position: 0px -75px;*/
 }
 
-.comment-reply:hover, .comment-like:hover {
+.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover {
     opacity: 1.0;
     color: #555;
 }
 
-.comment-reply:hover::before, .comment-like:hover::before {
+.comment-reply:hover::before, .comment-like:hover::before, .comment-report:hover::before, .comment-delete:hover::before {
     opacity: 1.0;
 }
 
-.comment-report:hover, .comment-like:hover {
-    opacity: 1.0;
-    color: #555;
-}
-
-.comment-report:hover::before, .comment-like:hover::before {
-    opacity: 1.0;
-}
-
-.comment-post .comment-report, .comment-post .comment-delete, .comment-post .comment-like {
+.comment-post .comment-report, .comment-post .comment-delete {
 	display: none;
 }
 
-.comment-post .comment-like[enabled] {
-    display: initial;
-}
-
-.comment-post .comment-report[reported] {
-    display: initial;
-}
-
-.comment-post:hover .comment-report[enabled], .comment-post:hover .comment-delete[enabled] {
+.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete[enabled] {
 	display: initial;
 }
 

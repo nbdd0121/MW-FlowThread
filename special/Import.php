@@ -1,6 +1,7 @@
 <?php
+namespace FlowThread;
 
-class SpecialFlowThreadImport extends FormSpecialPage {
+class SpecialImport extends \FormSpecialPage {
 
 	public function __construct() {
 		parent::__construct('FlowThreadImport', 'commentadmin');
@@ -8,19 +9,19 @@ class SpecialFlowThreadImport extends FormSpecialPage {
 
 	public function execute( $par ) {
 		$user = $this->getUser();
-		if ( !$user->isAllowedAny( 'commentadmin' ) ) {
-			throw new PermissionsError( 'commentadmin' );
+		if (!$this->userCanExecute($user)) {
+			throw new \PermissionsError( 'commentadmin' );
 		}
 		parent::execute($par);
 	}
 
-	public function onSubmit( array $data, HTMLForm $form = null ) {
+	public function onSubmit( array $data, \HTMLForm $form = null ) {
 		// Get uploaded file
 		$upload =& $_FILES['wpjsonimport'];
  
  		// Check to make sure there is a file uploaded
 		if ( $upload === null || !$upload['name'] ) {
-			return Status::newFatal('importnofile');
+			return \Status::newFatal('importnofile');
         }
 
         // Messages borrowed from Special:Import
@@ -28,23 +29,23 @@ class SpecialFlowThreadImport extends FormSpecialPage {
         	switch ( $upload['error'] ) {
  				case 1:
  				case 2:
- 					return Status::newFatal( 'importuploaderrorsize' );
+ 					return \Status::newFatal( 'importuploaderrorsize' );
  				case 3:
- 					return Status::newFatal( 'importuploaderrorpartial' );
+ 					return \Status::newFatal( 'importuploaderrorpartial' );
  				case 4:
- 					return Status::newFatal( 'importuploaderrortemp' );
+ 					return \Status::newFatal( 'importuploaderrortemp' );
  				default:
- 					return Status::newFatal('importnofile');
+ 					return \Status::newFatal('importnofile');
  			}
         }
 
         // Read file
  		$fname = $upload['tmp_name'];
  		if ( !is_uploaded_file( $fname ) ) {
- 			return Status::newFatal('importnofile');
+ 			return \Status::newFatal('importnofile');
  		}
 
- 		$data = FormatJSON::parse(file_get_contents($fname));
+ 		$data = \FormatJSON::parse(file_get_contents($fname));
 
  		// If there is an error during JSON parsing, abort
  		if(!$data->isOK()) {
@@ -57,37 +58,47 @@ class SpecialFlowThreadImport extends FormSpecialPage {
 	private function doImport( array $json ) {
 		$output = $this->getOutput();
 		foreach($json as $articles) {
-			$title = Title::newFromText($articles->title);
+			$title = \Title::newFromText($articles->title);
 			$count = count($articles->posts);
 
 			// Skip non-existent title
 			if($title === null || !$title->exists()) {
-				$output->addWikitext("* Title [[{$articles->title}]] skipped as it does not exist, {$count} comments not imported\n");
+				$output->addWikiMsg('flowthreadimport-failed', $articles->title, $count);
 				continue;
 			}
 
 			$titleId = $title->getArticleID();
 
-			$output->addWikitext("* {$count} comments imported for page [[{$articles->title}]]\n");
+			$output->addWikiMsg('flowthreadimport-success', $articles->title, $count);
 
 			foreach($articles->posts as $postJson) {
 				$data = array(
-                    'id' => 0,
+                    'id' => null,
                     'pageid' => $titleId,
                     'userid' => $postJson->userid,
                     'username' => $postJson->username,
                     'text' => $postJson->text,
-                    'timestamp' => wfTimestamp($postJson->timestamp, TS_MW),
-                    'parentid' => 0,
-                    'status' => $postJson->status
+                    'parentid' => null,
+                    'status' => $postJson->status,
+                    'like' => 0,
+                    'report' => 0
                 );
-                $postObject = new FlowThreadPost($data);
+                $postObject = new Post($data);
                 $postObject->post();
 			}
+
+			$logEntry = new \ManualLogEntry( 'comments', 'import' );
+			$logEntry->setPerformer( $this->getUser() );
+			$logEntry->setTarget ($title);
+			$logEntry->setParameters( array(
+				'4::count' => $count
+			) );
+			$logId = $logEntry->insert();
+			$logEntry->publish( $logId, 'udp' );
 		}
 	}
 
-	protected function alterForm( HTMLForm $form ) {
+	protected function alterForm( \HTMLForm $form ) {
 		$form->setSubmitTextMsg( 'uploadbtn' );
 	}
 
@@ -97,7 +108,7 @@ class SpecialFlowThreadImport extends FormSpecialPage {
 				'class' => 'HTMLTextField',
 				'type' => 'file',
 				'label-message' => 'import-upload-filename',
-			),
+			)
 		);
 		return $formDescriptor;
 	}
