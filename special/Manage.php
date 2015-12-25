@@ -93,12 +93,17 @@ class SpecialManage extends \SpecialPage {
 		// Pager can only be generated after query
 		$this->getOutput()->addHTML($this->getPager());
 
-		$inlineScript = 'mw.config.set("commentfilter",' . \FormatJSON::encode($this->filter) . ');';
-		$inlineScript .= 'mw.config.set("commentjson",' . \FormatJSON::encode($json) . ');';
+		global $wgFlowThreadDefaultAvatar;
+		$this->getOutput()->addJsConfigVars(array(
+			'commentfilter' => $this->filter,
+			'commentjson' => $json,
+			'wgFlowThreadDefaultAvatar' => $wgFlowThreadDefaultAvatar
+		));
 		if($this->getUser()->isAllowed('commentadmin')) {
-			$inlineScript .= 'mw.config.set("commentadmin", "")';
+			$this->getOutput()->addJsConfigVars(array(
+				'commentadmin' => ''
+			));
 		}
-		$this->getOutput()->addInlineScript("window.RLQ=window.RLQ||[];window.RLQ.push(function(){{$inlineScript}});");
 	}
 
 	private function queryDatabase() {

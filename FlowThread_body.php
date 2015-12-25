@@ -23,9 +23,11 @@ class FlowThread
         ))) return;
 
         if($out->getUser()->isAllowed('commentadmin-restricted')) {
-            $out->addInlineScript('window.RLQ=window.RLQ||[];window.RLQ.push(function(){mw.config.set("commentadmin","");});');
+            $out->addJsConfigVars(array( 'commentadmin' => ''));
         }
 
+        global $wgFlowThreadDefaultAvatar;
+        $out->addJsConfigVars(array( 'wgFlowThreadDefaultAvatar' => $wgFlowThreadDefaultAvatar));
         $out->addModules('ext.flowthread');
     }
 
