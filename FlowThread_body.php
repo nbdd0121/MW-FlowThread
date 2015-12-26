@@ -34,7 +34,7 @@ class FlowThread
         $out->addModules('ext.flowthread');
     }
 
-    public static function onLoadErxtensionSchemaUpdates( $updater ) {
+    public static function onLoadExtensionSchemaUpdates( $updater ) {
         $dir = __DIR__ . '/sql';
 
         $dbType = $updater->getDB()->getType();
@@ -45,8 +45,8 @@ class FlowThread
             $filename = 'mysql.sql';
         }
 
-        $updater->addExtensionUpdate( array( 'addTable', 'FlowThread', "{$dir}/{$filename}", true ) );
-        $updater->addExtensionUpdate( array( 'addTable', 'FlowThread_Attitude', "{$dir}/{$filename}", true ) );
+        $updater->addExtensionTable('FlowThread', "{$dir}/{$filename}");
+        $updater->addExtensionTable('FlowThreadAttitude', "{$dir}/{$filename}");
 
         return true;
     }
