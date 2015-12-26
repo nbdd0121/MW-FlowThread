@@ -38,6 +38,14 @@
 	"flowthread-ui-usewikitext": "Use Wikitext",
 	"flowthread-ui-placeholder": "Say Something...",
 	"flowthread-ui-submit": "Submit",
-	"flowthread-ui-nocontent": "Content cannot be empty"
+	"flowthread-ui-nocontent": "Content cannot be empty",
+
+	"echo-category-title-flowthread": "FlowThread comment",
+	"echo-pref-tooltip-flowthread": "Notify me when my comment is replyed.",
+	"notification-flowthread_reply": "[[User:$1|$1]] replied your post on [[:$2]].",
+	"notification-flowthread_reply-flyout": "[[User:$1|$1]] replied your post on $2.",
+	"notification-flowthread_reply-payload-error": "Post no longer exists",
+	"notification-flowthread_reply-email-subject": "$1 replied your post on {{SITENAME}}",
+	"notification-flowthread_reply-email-batch-body": "$1 replied your post on $2"
 	
 }

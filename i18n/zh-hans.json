@@ -38,5 +38,13 @@
 	"flowthread-ui-usewikitext": "使用维基文本",
 	"flowthread-ui-placeholder": "说点什么吧...",
 	"flowthread-ui-submit": "提交",
-	"flowthread-ui-nocontent": "内容不能为空"
+	"flowthread-ui-nocontent": "内容不能为空",
+
+	"echo-category-title-flowthread": "FlowThread评论",
+	"echo-pref-tooltip-flowthread": "当我的评论被回复时提醒我。",
+	"notification-flowthread_reply": "[[User:$1|$1]]回复了你在[[:$2]]上发表的评论。",
+	"notification-flowthread_reply-flyout": "[[User:$1|$1]]回复了你在$2上发表的评论。",
+	"notification-flowthread_reply-payload-error": "评论不存在",
+	"notification-flowthread_reply-email-subject": "$1回复了你在{{SITENAME}}上发表的评论",
+	"notification-flowthread_reply-email-batch-body": "$1回复了你在$2上发表的评论。"
 }

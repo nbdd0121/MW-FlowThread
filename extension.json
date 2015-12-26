@@ -1,7 +1,7 @@
 {
 	"name": "FlowThread",
 	"author": "Gary Guo",
-	"url": "about:blank",
+	"url": "https://github.com/nbdd0121/MW-FlowThread",
 	"descriptionmsg": "flowthread_desc",
 	"version": "0.9.0",
 	"license-name": "BSD-2-Clause",
@@ -27,6 +27,9 @@
 		],
 		"LoadExtensionSchemaUpdates": [
 			"FlowThread::onLoadExtensionSchemaUpdates"
+		],
+		"ArticleDeleteComplete": [
+			"FlowThread::onArticleDeleteComplete"
 		]
 	},
 	"ResourceModules": {
