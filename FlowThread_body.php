@@ -50,4 +50,9 @@ class FlowThread
 
         return true;
     }
+
+    public static function onArticleDeleteComplete( &$article, User &$user, $reason, $id, Content $content = null, LogEntry $logEntry ) {
+        \FlowThread\Page::newFromId($id)->erase();
+        return true;
+    }
 }

@@ -190,7 +190,8 @@ class Post {
 	}
 
 	// Recursively delete a thread and its children
-	private function eraseSilently(\DatabaseBase $db) {
+	// FIXME: Should be somehow protected
+	public function eraseSilently(\DatabaseBase $db) {
 		$counter = 1;
 
 		$db->delete('FlowThread', array(
@@ -250,6 +251,7 @@ class Post {
             'flowthread_report' => $this->reportCount
         ));
         $dbw->commit();
+        \Hooks::run('FlowThreadPosted', array($this));
 	}
 
 
@@ -271,7 +273,7 @@ class Post {
 		$this->id = null;
 	}
 
-	private function isValid() {
+	public function isValid() {
 		// This can happen if code is continuing to operate on post after it is erased
 		if($this->id === null) {
 			return false;
@@ -279,7 +281,7 @@ class Post {
 		return true;
 	}
 
-	private function validate() {
+	public function validate() {
 		if(!$this->isValid()) {
 			throw new \Exception("Invalid post");
 		}

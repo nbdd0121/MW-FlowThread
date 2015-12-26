@@ -39,4 +39,13 @@ class Page {
         return new self($comments);
 	}
 
+	public function erase() {
+		$dbw = wfGetDB(DB_MASTER);
+        foreach($this->posts as $post) {
+            if($post->isValid())
+                $post->eraseSilently($dbw);
+        }
+        $this->posts = array();
+	}
+
 }
