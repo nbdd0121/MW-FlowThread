@@ -1,6 +1,6 @@
 var template = '<div class="comment-thread"><div class="comment-post">'
 		+ '<div class="comment-avatar">'
-			+ '<img src="' + mw.config.get('wgFlowThreadDefaultAvatar') + '"></img>'
+			+ '<img src=""></img>'
 		+ '</div>'
 		+ '<div class="comment-body">'
 			+ '<div class="comment-user"></div>'
@@ -21,6 +21,15 @@ if(mw.config.get('commentfilter') === 'deleted'){
 
 template += '</div>'
 		+ '</div></div></div>';
+var extAvatar = mw.config.get('wgExtAvatar');
+
+function getAvatar(id, username) {
+    if(id===0 || !extAvatar) {
+        return mw.config.get('wgDefaultAvatar');
+    }else{
+        return getLink('Special:Avatar/' + username);
+    }
+}
 
 function getTimeString(time) {
 	var m = moment(time).locale(mw.config.get('wgUserLanguage'));
@@ -38,9 +47,13 @@ function wrapText(text) {
 	return span.wrapAll('<div/>').parent().html();
 }
 
+function getLink(page) {
+	return mw.config.get('wgArticlePath').replace('$1', page);
+}
+
 function wrapPageLink(page, name) {
 	var link = $('<a/>');
-	link.attr('href', mw.config.get('wgArticlePath').replace('$1', page));
+	link.attr('href', getLink(page));
 	link.text(name);
 	return link.wrapAll('<div/>').parent().html();
 }
@@ -63,6 +76,8 @@ function Thread(post) {
 	var pageLink = wrapPageLink(post.title, post.title);
 	object.find('.comment-user').html(mw.msg('flowthread-ui-user-post-on-page', userlink, pageLink));
 
+	object.find('.comment-avatar img').attr('src', getAvatar(post.userid, post.username));
+	
 	object.find('.comment-text').html(post.text);
 	object.find('.comment-time').text(getTimeString(post.timestamp*1000));
 

@@ -60,8 +60,8 @@ class SpecialManage extends \SpecialPage {
 		$this->setHeaders();
 		$this->outputHeader();
 		$output = $this->getOutput();
-		$this->getOutput()->addModules( 'mediawiki.userSuggest' ); # This is used for user input field
-		$this->getOutput()->addModules('ext.flowthread.manage');
+		$output->addModules( 'mediawiki.userSuggest' ); # This is used for user input field
+		$output->addModules('ext.flowthread.manage');
 
 		$this->showForm();
 
@@ -91,19 +91,23 @@ class SpecialManage extends \SpecialPage {
 		}
 
 		// Pager can only be generated after query
-		$this->getOutput()->addHTML($this->getPager());
+		$output->addHTML($this->getPager());
 
-		global $wgFlowThreadDefaultAvatar;
-		$this->getOutput()->addJsConfigVars(array(
+		$output->addJsConfigVars(array(
 			'commentfilter' => $this->filter,
-			'commentjson' => $json,
-			'wgFlowThreadDefaultAvatar' => $wgFlowThreadDefaultAvatar
+			'commentjson' => $json
 		));
 		if($this->getUser()->isAllowed('commentadmin')) {
-			$this->getOutput()->addJsConfigVars(array(
+			$output->addJsConfigVars(array(
 				'commentadmin' => ''
 			));
 		}
+
+		global $wgExtAvatar, $wgDefaultAvatar;
+        if($wgExtAvatar) {
+            $output->addJsConfigVars(array( 'wgExtAvatar' => true));    
+        }
+        $output->addJsConfigVars(array( 'wgDefaultAvatar' => $wgDefaultAvatar));
 	}
 
 	private function queryDatabase() {

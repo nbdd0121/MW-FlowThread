@@ -26,8 +26,11 @@ class FlowThread
             $out->addJsConfigVars(array( 'commentadmin' => ''));
         }
 
-        global $wgFlowThreadDefaultAvatar;
-        $out->addJsConfigVars(array( 'wgFlowThreadDefaultAvatar' => $wgFlowThreadDefaultAvatar));
+        global $wgExtAvatar, $wgDefaultAvatar;
+        if($wgExtAvatar) {
+            $out->addJsConfigVars(array( 'wgExtAvatar' => true));    
+        }
+        $out->addJsConfigVars(array( 'wgDefaultAvatar' => $wgDefaultAvatar));
         $out->addModules('ext.flowthread');
     }
 

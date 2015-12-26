@@ -32,8 +32,8 @@ class Page {
 
         // Set parent directly, so no more database queries needed when access getParent()
         foreach ($comments as $post) {
-        	if($post->parentid !== 0)
-        		$post->parent = $lookup[$post->parentid];
+        	if($post->parentid !== null)
+        		$post->parent = $lookup[$post->parentid->getBin()];
         }
 
         return new self($comments);
