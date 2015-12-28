@@ -42,9 +42,17 @@
 
 	"echo-category-title-flowthread": "FlowThread评论",
 	"echo-pref-tooltip-flowthread": "当我的评论被回复时提醒我。",
+	"notification-flowthread-payload-error": "评论不存在",
+
 	"notification-flowthread_reply": "[[User:$1|$1]]回复了你在[[:$2]]上发表的评论。",
 	"notification-flowthread_reply-flyout": "[[User:$1|$1]]回复了你在$2上发表的评论。",
-	"notification-flowthread_reply-payload-error": "评论不存在",
 	"notification-flowthread_reply-email-subject": "$1回复了你在{{SITENAME}}上发表的评论",
-	"notification-flowthread_reply-email-batch-body": "$1回复了你在$2上发表的评论。"
+	"notification-flowthread_reply-email-batch-body": "$1回复了你在$2上发表的评论。",
+	"notification-link-text-view-flowthread_reply": "查看回复",
+
+	"notification-flowthread_userpage": "[[User:$1|$1]]在[[:$2|你的用户页]]上发表了评论。",
+	"notification-flowthread_userpage-flyout": "[[User:$1|$1]]在你的用户页上发表了评论。",
+	"notification-flowthread_userpage-email-subject": "$1在你在{{SITENAME}}上的用户页上发表了评论",
+	"notification-flowthread_userpage-email-batch-body": "$1在你的用户页上发表了评论。",
+	"notification-link-text-view-flowthread_userpage": "查看评论"
 }
