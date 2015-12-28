@@ -5,33 +5,42 @@ if (!defined('MEDIAWIKI')) {
 
 class FlowThread
 {
-    public static function onBeforePageDisplay(OutputPage & $out, Skin & $skin) {
-        $title = $out->getTitle();
+    public static function onBeforePageDisplay(OutputPage & $output, Skin & $skin) {
+        $title = $output->getTitle();
+
         // Disallow commenting on pages without article id
-        if ($title->getArticleID() == 0) return;
-        if ($title->isSpecialPage()) return;
+        if ($title->getArticleID() == 0) return true;
+        if ($title->isSpecialPage()) return true;
 
         // These could be explicitly allowed in later version
-        if (!$title->canTalk()) return;
-        if ($title->isTalkPage()) return;
-        //if ($title->isMainPage()) return;
+        if (!$title->canTalk()) return true;
+        if ($title->isTalkPage()) return true;
+        // if ($title->isMainPage()) return;
 
+        // Do not display when printing
+        if ($output->isPrintable()) return true;
+
+        // Disable if not viewing
+        if($skin->getRequest()->getVal( 'action', 'view' ) != 'view') return true;
+
+        // Blacklist several namespace
         if (in_array($title->getNamespace() , array(
             NS_MEDIAWIKI,
             NS_TEMPLATE,
             NS_CATEGORY,
-        ))) return;
+        ))) return true;
 
-        if($out->getUser()->isAllowed('commentadmin-restricted')) {
-            $out->addJsConfigVars(array( 'commentadmin' => ''));
+        if($output->getUser()->isAllowed('commentadmin-restricted')) {
+            $output->addJsConfigVars(array( 'commentadmin' => ''));
         }
 
         global $wgExtAvatar, $wgDefaultAvatar;
         if($wgExtAvatar) {
-            $out->addJsConfigVars(array( 'wgExtAvatar' => true));    
+            $output->addJsConfigVars(array( 'wgExtAvatar' => true));    
         }
-        $out->addJsConfigVars(array( 'wgDefaultAvatar' => $wgDefaultAvatar));
-        $out->addModules('ext.flowthread');
+        $output->addJsConfigVars(array( 'wgDefaultAvatar' => $wgDefaultAvatar));
+        $output->addModules('ext.flowthread');
+        return true;
     }
 
     public static function onLoadExtensionSchemaUpdates( $updater ) {
