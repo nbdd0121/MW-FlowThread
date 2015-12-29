@@ -19,7 +19,8 @@
 		"FlowThread\\SpecialExport": "special/Export.php",
 		"FlowThread\\SpecialImport": "special/Import.php",
 		"FlowThread\\SpecialManage": "special/Manage.php",
-		"FlowThread\\UUID": "includes/UUID.php"
+		"FlowThread\\UUID": "includes/UUID.php",
+		"FlowThread\\SpamFilter": "includes/SpamFilter.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [

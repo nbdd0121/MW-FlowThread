@@ -10,7 +10,8 @@ var template = '<div class="comment-thread"><div class="comment-post">'
 			+ '<span class="comment-like">' + mw.msg('flowthread-ui-like') + ' <span></span></span>'
 			+ '<span class="comment-report">' + mw.msg('flowthread-ui-report') + ' <span></span></span>';
 
-if(mw.config.get('commentfilter') === 'deleted'){
+var deleted = mw.config.get('commentfilter') === 'deleted' || mw.config.get('commentfilter') == 'spam';
+if(deleted){
 	template += '<span class="comment-recover">' + mw.msg('flowthread-ui-recover') + '</span>';
 	if(mw.config.exists('commentadmin')) {
 		template += '<span class="comment-delete">' + mw.msg('flowthread-ui-erase') + '</span>';
@@ -208,7 +209,7 @@ function getSelectedThreads() {
 	})
 }
 
-if(mw.config.get('commentfilter') === 'deleted') {
+if(deleted) {
 	var batchRecover = $(wrapButtonMsg('flowthread-ui-recover'));
 	$("#mw-content-text").append(batchRecover);
 	batchRecover.click(function() {

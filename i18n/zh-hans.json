@@ -25,6 +25,7 @@
 	"flowthreadmanage-keyword": "关键字",
 	"flowthread-filter-all": "所有评论",
 	"flowthread-filter-reported": "被举报评论",
+	"flowthread-filter-spam": "垃圾评论",
 	"flowthread-filter-deleted": "被删除评论",
 	"flowthread-ui-reply": "回复",
 	"flowthread-ui-like": "赞",
@@ -54,5 +55,7 @@
 	"notification-flowthread_userpage-flyout": "[[User:$1|$1]]在你的用户页上发表了评论。",
 	"notification-flowthread_userpage-email-subject": "$1在你在{{SITENAME}}上的用户页上发表了评论",
 	"notification-flowthread_userpage-email-batch-body": "$1在你的用户页上发表了评论。",
-	"notification-link-text-view-flowthread_userpage": "查看评论"
+	"notification-link-text-view-flowthread_userpage": "查看评论",
+
+	"flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->"
 }

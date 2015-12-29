@@ -25,6 +25,7 @@
 	"flowthreadmanage-keyword": "Keyword",
 	"flowthread-filter-all": "All Comments",
 	"flowthread-filter-reported": "Reported Comments",
+	"flowthread-filter-spam": "Spam Comments",
 	"flowthread-filter-deleted": "Deleted Comments",
 	"flowthread-ui-reply": "Reply",
 	"flowthread-ui-like": "Like",
@@ -54,9 +55,7 @@
 	"notification-flowthread_userpage-flyout": "[[User:$1|$1]] posted in your user page.",
 	"notification-flowthread_userpage-email-subject": "$1 posted in your user page on {{SITENAME}}",
 	"notification-flowthread_userpage-email-batch-body": "$1 posted in your user page",
-	"notification-link-text-view-flowthread_userpage": "View Post"
+	"notification-link-text-view-flowthread_userpage": "View Post",
 
-
-
-	
+	"flowthread-blacklist": "# Texts in this list will be blocked when posted as comment.\n# Syntax is as follows:\n#* Everything from a \"#\" character to the end of the line is a comment\n#* Every non-blank line is a regex fragment matching texts\n #<!-- leave this line exactly as it is --><pre>\n\n #</pre><!-- leave this line exactly as it is -->"
 }

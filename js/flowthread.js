@@ -192,7 +192,9 @@ Thread.sendComment = function(postid, text, wikitext) {
         content: text,
         wikitext: wikitext
     };
-    api.get(req).done(reloadComments);
+    api.get(req).done(reloadComments).fail(function(error){
+        alert(error);
+    });
 }
 
 function reloadComments(comments) {
