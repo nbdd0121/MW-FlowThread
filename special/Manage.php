@@ -77,11 +77,12 @@ class SpecialManage extends \SpecialPage {
 				$count++;
 			}
 			$post = Post::newFromDatabaseRow($row);
+			$title = \Title::newFromId($row->flowthread_pageid);
 			$json[] = array(
 				'id' => $post->id->getHex(),
 				'userid' => $post->userid,
 				'username' => $post->username,
-				'title' => \Title::newFromId($row->flowthread_pageid)->getPrefixedText(),
+				'title' => $title ? $title->getPrefixedText() : null,
 				'text' => $post->text,
 				'timestamp' => $post->id->getTimestamp(),
 				'parentid' => $post->parentid ? $post->parentid->getHex() : '',

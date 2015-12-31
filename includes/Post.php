@@ -107,6 +107,22 @@ class Post {
 		}
 	}
 
+	public static function canPost(\User $user) {
+		/* Disallow blocked user to post */
+		if ($user->isBlocked()) {
+			return false;
+		}
+		/* User without comment right cannot post */
+		if (!$user->isAllowed('comment')) {
+			return false;
+		}
+		/* Prevent cross-site request forgeries */
+		if (wfReadOnly()) {
+			return false;
+		}
+		return true;
+	}
+
 	public static function checkIfCanPost(\User $user) {
 		/* Disallow blocked user to post */
 		if ($user->isBlocked()) {

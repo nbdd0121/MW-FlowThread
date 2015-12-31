@@ -50,6 +50,10 @@ class FlowThread {
 			$output->addJsConfigVars(array('commentadmin' => ''));
 		}
 
+		if (\FlowThread\Post::canPost($output->getUser())) {
+			$output->addJsConfigVars(array('canpost' => ''));
+		}
+
 		global $wgExtAvatar, $wgDefaultAvatar;
 		if ($wgExtAvatar) {
 			$output->addJsConfigVars(array('wgExtAvatar' => true));

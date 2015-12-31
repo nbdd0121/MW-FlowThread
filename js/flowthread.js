@@ -1,3 +1,4 @@
+var canpost = mw.config.exists('canpost');
 var template = '<div class="comment-thread"><div class="comment-post">'
   + '<div class="comment-avatar">'
   + '<img src=""></img>'
@@ -6,8 +7,10 @@ var template = '<div class="comment-thread"><div class="comment-post">'
   + '<div class="comment-user"></div>'
   + '<div class="comment-text"></div>'
   + '<div class="comment-footer">'
-  + '<span class="comment-time"></span>'
-  + '<span class="comment-reply">' + mw.msg('flowthread-ui-reply') + '</span>';
+  + '<span class="comment-time"></span>';
+if (canpost) {
+  template += '<span class="comment-reply">' + mw.msg('flowthread-ui-reply') + '</span>';
+}
 
 // User not signed in do not have right to vote
 if (mw.user.getId() !== 0) {
@@ -297,5 +300,5 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after('<div class="comment-container"></div>', pager.object, createReplyBox(''));
+$('#bodyContent').after('<div class="comment-container"></div>', pager.object, canpost ? createReplyBox('') : null);
 reloadComments();
