@@ -25,7 +25,10 @@ class FlowThread {
 			return true;
 		}
 
-		// if ($title->isMainPage()) return;
+		// No commenting on main page
+		if ($title->isMainPage()) {
+			return true;
+		}
 
 		// Do not display when printing
 		if ($output->isPrintable()) {
