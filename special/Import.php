@@ -7,99 +7,109 @@ class SpecialImport extends \FormSpecialPage {
 		parent::__construct('FlowThreadImport', 'commentadmin');
 	}
 
-	public function execute( $par ) {
+	public function execute($par) {
 		$user = $this->getUser();
 		if (!$this->userCanExecute($user)) {
-			throw new \PermissionsError( 'commentadmin' );
+			throw new \PermissionsError('commentadmin');
 		}
 		parent::execute($par);
 	}
 
-	public function onSubmit( array $data, \HTMLForm $form = null ) {
+	public function onSubmit(array $data, \HTMLForm $form = null) {
 		// Get uploaded file
-		$upload =& $_FILES['wpjsonimport'];
- 
- 		// Check to make sure there is a file uploaded
-		if ( $upload === null || !$upload['name'] ) {
+		$upload = &$_FILES['wpjsonimport'];
+
+		// Check to make sure there is a file uploaded
+		if ($upload === null || !$upload['name']) {
 			return \Status::newFatal('importnofile');
-        }
+		}
 
-        // Messages borrowed from Special:Import
-        if ( !empty( $upload['error'] ) ) {
-        	switch ( $upload['error'] ) {
- 				case 1:
- 				case 2:
- 					return \Status::newFatal( 'importuploaderrorsize' );
- 				case 3:
- 					return \Status::newFatal( 'importuploaderrorpartial' );
- 				case 4:
- 					return \Status::newFatal( 'importuploaderrortemp' );
- 				default:
- 					return \Status::newFatal('importnofile');
- 			}
-        }
+		// Messages borrowed from Special:Import
+		if (!empty($upload['error'])) {
+			switch ($upload['error']) {
+			case 1:
+			case 2:
+				return \Status::newFatal('importuploaderrorsize');
+			case 3:
+				return \Status::newFatal('importuploaderrorpartial');
+			case 4:
+				return \Status::newFatal('importuploaderrortemp');
+			default:
+				return \Status::newFatal('importnofile');
+			}
+		}
 
-        // Read file
- 		$fname = $upload['tmp_name'];
- 		if ( !is_uploaded_file( $fname ) ) {
- 			return \Status::newFatal('importnofile');
- 		}
+		// Read file
+		$fname = $upload['tmp_name'];
+		if (!is_uploaded_file($fname)) {
+			return \Status::newFatal('importnofile');
+		}
 
- 		$data = \FormatJSON::parse(file_get_contents($fname));
+		$data = \FormatJSON::parse(file_get_contents($fname));
 
- 		// If there is an error during JSON parsing, abort
- 		if(!$data->isOK()) {
- 			return $data;
- 		}
+		// If there is an error during JSON parsing, abort
+		if (!$data->isOK()) {
+			return $data;
+		}
 
- 		$this->doImport($data->getValue());
+		$this->doImport($data->getValue());
 	}
 
-	private function doImport( array $json ) {
+	private function doImport(array $json) {
 		$output = $this->getOutput();
-		foreach($json as $articles) {
+		foreach ($json as $articles) {
 			$title = \Title::newFromText($articles->title);
 			$count = count($articles->posts);
+			$skipped = 0;
 
 			// Skip non-existent title
-			if($title === null || !$title->exists()) {
+			if ($title === null || !$title->exists()) {
 				$output->addWikiMsg('flowthreadimport-failed', $articles->title, $count);
 				continue;
 			}
 
 			$titleId = $title->getArticleID();
 
-			$output->addWikiMsg('flowthreadimport-success', $articles->title, $count);
-
-			foreach($articles->posts as $postJson) {
+			foreach ($articles->posts as $postJson) {
 				$data = array(
-                    'id' => null,
-                    'pageid' => $titleId,
-                    'userid' => $postJson->userid,
-                    'username' => $postJson->username,
-                    'text' => $postJson->text,
-                    'parentid' => null,
-                    'status' => $postJson->status,
-                    'like' => 0,
-                    'report' => 0
-                );
-                $postObject = new Post($data);
-                $postObject->post();
+					'id' => UUID::fromHex($postJson->id),
+					'pageid' => $titleId,
+					'userid' => $postJson->userid,
+					'username' => $postJson->username,
+					'text' => $postJson->text,
+					'parentid' => $postJson->parentid ? UUID::fromHex($postJson->parentid) : null,
+					'status' => $postJson->status,
+					'like' => 0,
+					'report' => 0,
+				);
+				$postObject = new Post($data);
+				try {
+					$postObject->post();
+				} catch (\Exception $ex) {
+					$count--;
+					$skipped++;
+				}
 			}
 
-			$logEntry = new \ManualLogEntry( 'comments', 'import' );
-			$logEntry->setPerformer( $this->getUser() );
-			$logEntry->setTarget ($title);
-			$logEntry->setParameters( array(
-				'4::count' => $count
-			) );
-			$logId = $logEntry->insert();
-			$logEntry->publish( $logId, 'udp' );
+			if ($count) {
+				$logEntry = new \ManualLogEntry('comments', 'import');
+				$logEntry->setPerformer($this->getUser());
+				$logEntry->setTarget($title);
+				$logEntry->setParameters(array(
+					'4::count' => $count,
+				));
+				$logId = $logEntry->insert();
+				$logEntry->publish($logId, 'udp');
+				$output->addWikiMsg('flowthreadimport-success', $articles->title, $count);
+			}
+			if ($skipped) {
+				$output->addWikiMsg('flowthreadimport-skipped', $articles->title, $skipped);
+			}
 		}
 	}
 
-	protected function alterForm( \HTMLForm $form ) {
-		$form->setSubmitTextMsg( 'uploadbtn' );
+	protected function alterForm(\HTMLForm $form) {
+		$form->setSubmitTextMsg('uploadbtn');
 	}
 
 	protected function getFormFields() {
@@ -108,7 +118,7 @@ class SpecialImport extends \FormSpecialPage {
 				'class' => 'HTMLTextField',
 				'type' => 'file',
 				'label-message' => 'import-upload-filename',
-			)
+			),
 		);
 		return $formDescriptor;
 	}

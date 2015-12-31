@@ -42,6 +42,63 @@ class EchoHook {
 			'email-body-batch-params' => array('agent', 'title'),
 			'icon' => 'chat',
 		);
+		$notifications['flowthread_delete'] = array(
+			'user-locators' => array(
+				'EchoUserLocator::locateEventAgent',
+			),
+			'category' => 'flowthread',
+			'group' => 'negative',
+			'section' => 'alert',
+			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
+			'title-message' => 'notification-flowthread_delete',
+			'title-params' => array('title'),
+			'flyout-message' => 'notification-flowthread_delete-flyout',
+			'flyout-params' => array('title'),
+			'payload' => array('text'),
+			'email-subject-message' => 'notification-flowthread_delete-email-subject',
+			'email-subject-params' => array(),
+			'email-body-batch-message' => 'notification-flowthread_delete-email-batch-body',
+			'email-body-batch-params' => array('title'),
+			'icon' => 'trash',
+		);
+		$notifications['flowthread_recover'] = array(
+			'user-locators' => array(
+				'EchoUserLocator::locateEventAgent',
+			),
+			'category' => 'flowthread',
+			'group' => 'positive',
+			'section' => 'alert',
+			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
+			'title-message' => 'notification-flowthread_recover',
+			'title-params' => array('title'),
+			'flyout-message' => 'notification-flowthread_recover-flyout',
+			'flyout-params' => array('title'),
+			'payload' => array('text'),
+			'email-subject-message' => 'notification-flowthread_recover-email-subject',
+			'email-subject-params' => array(),
+			'email-body-batch-message' => 'notification-flowthread_recover-email-batch-body',
+			'email-body-batch-params' => array('title'),
+			'icon' => 'reviewed',
+		);
+		$notifications['flowthread_spam'] = array(
+			'user-locators' => array(
+				'EchoUserLocator::locateEventAgent',
+			),
+			'category' => 'flowthread',
+			'group' => 'negative',
+			'section' => 'alert',
+			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
+			'title-message' => 'notification-flowthread_spam',
+			'title-params' => array('title'),
+			'flyout-message' => 'notification-flowthread_spam-flyout',
+			'flyout-params' => array('title'),
+			'payload' => array('text'),
+			'email-subject-message' => 'notification-flowthread_spam-email-subject',
+			'email-subject-params' => array(),
+			'email-body-batch-message' => 'notification-flowthread_spam-email-batch-body',
+			'email-body-batch-params' => array('title'),
+			'icon' => 'placeholder',
+		);
 		return true;
 	}
 
@@ -107,6 +164,66 @@ class EchoHook {
 			}
 		}
 
+		return true;
+	}
+
+	public static function onFlowThreadDeleted($post) {
+		if ($post->userid === 0) {
+			return true;
+		}
+
+		$poster = \User::newFromId($post->userid);
+		$title = \Title::newFromId($post->pageid);
+
+		\EchoEvent::create(array(
+			'type' => 'flowthread_delete',
+			'title' => $title,
+			'extra' => array(
+				'notifyAgent' => true,
+				'postid' => $post->id->getBin(),
+			),
+			'agent' => $poster,
+		));
+		return true;
+	}
+
+	public static function onFlowThreadRecovered($post) {
+		if ($post->userid === 0) {
+			return true;
+		}
+
+		$poster = \User::newFromId($post->userid);
+		$title = \Title::newFromId($post->pageid);
+
+		\EchoEvent::create(array(
+			'type' => 'flowthread_recover',
+			'title' => $title,
+			'extra' => array(
+				'notifyAgent' => true,
+				'postid' => $post->id->getBin(),
+			),
+			'agent' => $poster,
+		));
+		return true;
+	}
+
+	public static function onFlowThreadSpammed($post) {
+		if ($post->userid === 0) {
+			return true;
+		}
+
+		$poster = \User::newFromId($post->userid);
+		$title = \Title::newFromId($post->pageid);
+
+		\EchoEvent::create(array(
+			'type' => 'flowthread_spam',
+			'title' => $title,
+			'extra' => array(
+				'notifyAgent' => true,
+				'postid' => $post->id->getBin(),
+			),
+			'agent' => $poster,
+		));
 		return true;
 	}
 

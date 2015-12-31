@@ -18,6 +18,7 @@
 	"flowthreadimport": "导入FlowThread评论",
 	"flowthreadimport-legend": "导入FlowThread评论",
 	"flowthreadimport-success": "* 向页面[[$1]]导入了$2条评论",
+	"flowthreadimport-skipped": "* 因ID已经存在，[[$1]]中的$2条评论未被导入",
 	"flowthreadimport-failed": "* 因页面[[$1]]不存在被跳过，$2条评论未被导入",
 	"flowthreadmanage": "管理FlowThread评论",
 	"flowthreadmanage-user": "评论者",
@@ -56,6 +57,21 @@
 	"notification-flowthread_userpage-email-subject": "$1在你在{{SITENAME}}上的用户页上发表了评论",
 	"notification-flowthread_userpage-email-batch-body": "$1在你的用户页上发表了评论。",
 	"notification-link-text-view-flowthread_userpage": "查看评论",
+
+	"notification-flowthread_delete": "你在[[:$1]]上的评论被删除了。",
+	"notification-flowthread_delete-flyout": "你在[[:$1]]上的评论被删除了。",
+	"notification-flowthread_delete-email-subject": "你在{{SITENAME}}上的评论被删除了",
+	"notification-flowthread_delete-email-batch-body": "你在[[:$1]]上的评论被删除了",
+
+	"notification-flowthread_recover": "你在[[:$1]]上的评论被恢复了。",
+	"notification-flowthread_recover-flyout": "你在[[:$1]]上的评论被恢复了。",
+	"notification-flowthread_recover-email-subject": "你在{{SITENAME}}上的评论被恢复了",
+	"notification-flowthread_recover-email-batch-body": "你在[[:$1]]上的评论被恢复了",
+
+	"notification-flowthread_spam": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
+	"notification-flowthread_spam-flyout": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
+	"notification-flowthread_spam-email-subject": "你在{{SITENAME}}上的评论被标记为垃圾评论",
+	"notification-flowthread_spam-email-batch-body": "你在[[:$1]]上的评论被自动标记为垃圾评论",
 
 	"flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->"
 }

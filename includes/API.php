@@ -7,29 +7,29 @@ class API extends \ApiBase {
 		$offset = intval($this->getMain()->getVal('offset', 0));
 
 		$page = new Page($pageid);
+		$page->type = Post::STATUS_NORMAL;
 		$page->offset = $offset;
 		$page->fetch();
 
 		$comments = array();
 		foreach ($page->posts as $post) {
-			// Filter out invisible posts (deleted posts, or one of those posts' parent is deleted)
-			if ($post->isVisible()) {
-				$favorCount = $post->getFavorCount();
-				$myAtt = $post->getUserAttitude($this->getUser());
+			// No longer need to filter out invisible posts
 
-				$data = array(
-					'id' => $post->id->getHex(),
-					'userid' => $post->userid,
-					'username' => $post->username,
-					'text' => $post->text,
-					'timestamp' => $post->id->getTimestamp(),
-					'parentid' => $post->parentid ? $post->parentid->getHex() : '',
-					'like' => $favorCount,
-					'myatt' => $myAtt,
-				);
+			$favorCount = $post->getFavorCount();
+			$myAtt = $post->getUserAttitude($this->getUser());
 
-				$comments[] = $data;
-			}
+			$data = array(
+				'id' => $post->id->getHex(),
+				'userid' => $post->userid,
+				'username' => $post->username,
+				'text' => $post->text,
+				'timestamp' => $post->id->getTimestamp(),
+				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
+				'like' => $favorCount,
+				'myatt' => $myAtt,
+			);
+
+			$comments[] = $data;
 		}
 
 		$obj = array(
@@ -170,16 +170,20 @@ class API extends \ApiBase {
 				$postObject = new Post($data);
 				$postObject->post();
 
+				if ($spam) {
+					\Hooks::run('FlowThreadSpammed', array($postObject));
+				}
+
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;
 			default:
 				throw new \Exception("Unknown action");
 			}
-			return true;
 		} catch (\Exception $e) {
 			$this->getResult()->addValue("error", 'code', $e->getMessage());
 			$this->getResult()->addValue("error", 'info', $e->getMessage());
 		}
+		return true;
 	}
 
 	public function getDescription() {

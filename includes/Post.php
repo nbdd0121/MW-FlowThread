@@ -154,6 +154,8 @@ class Post {
 		));
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
+
+		\Hooks::run('FlowThreadRecovered', array($this));
 	}
 
 	public function delete(\User $user) {
@@ -184,6 +186,8 @@ class Post {
 		));
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
+
+		\Hooks::run('FlowThreadDeleted', array($this));
 	}
 
 	// Recursively delete a thread and its children
@@ -236,7 +240,9 @@ class Post {
 
 	public function post() {
 		$dbw = wfGetDB(DB_MASTER);
-		$this->id = UUID::generate();
+		if (!$this->id) {
+			$this->id = UUID::generate();
+		}
 		$dbw->insert('FlowThread', array(
 			'flowthread_id' => $this->id->getBin(),
 			'flowthread_pageid' => $this->pageid,

@@ -6,6 +6,7 @@ class Page {
 	public $offset = 0;
 	public $limit = 10;
 	public $posts = null;
+	public $type = null;
 
 	public function __construct($id) {
 		// Invalid ID
@@ -22,21 +23,26 @@ class Page {
 		$comments = array();
 		$parentLookup = array();
 
-		$cond = array(
+		$options = array(
 			'OFFSET' => $this->offset,
 			'ORDER BY' => 'flowthread_id DESC',
 			'SQL_CALC_FOUND_ROWS',
 		);
 		if ($this->limit !== -1) {
-			$cond['LIMIT'] = $this->limit;
+			$options['LIMIT'] = $this->limit;
+		}
+
+		$cond = array(
+			'flowthread_pageid' => $this->pageid,
+			'flowthread_parentid IS NULL',
+		);
+		if ($this->type !== null) {
+			$cond['flowthread_status'] = $this->type;
 		}
 
 		// Get all root posts
 		$res = $dbr->select('FlowThread', Post::getRequiredColumns(),
-			array(
-				'flowthread_pageid' => $this->pageid,
-				'flowthread_parentid IS NULL',
-			), __METHOD__, $cond);
+			$cond, __METHOD__, $options);
 
 		$this->totalCount = $dbr->query('select FOUND_ROWS() as row')->fetchObject()->row;
 
@@ -56,11 +62,14 @@ class Page {
 		// Recursively get all children post list
 		// This is not really resource consuming as you might think, as we use IN to boost it up
 		while ($sqlPart) {
-			$res = $dbr->select('FlowThread', Post::getRequiredColumns(),
-				array(
-					'flowthread_pageid' => $this->pageid,
-					'flowthread_parentid IN(' . $sqlPart . ')',
-				));
+			$cond = array(
+				'flowthread_pageid' => $this->pageid,
+				'flowthread_parentid IN(' . $sqlPart . ')',
+			);
+			if ($this->type !== null) {
+				$cond['flowthread_status'] = $this->type;
+			}
+			$res = $dbr->select('FlowThread', Post::getRequiredColumns(), $cond);
 
 			$sqlPart = '';
 

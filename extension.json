@@ -20,7 +20,9 @@
 		"FlowThread\\SpecialImport": "special/Import.php",
 		"FlowThread\\SpecialManage": "special/Manage.php",
 		"FlowThread\\UUID": "includes/UUID.php",
-		"FlowThread\\SpamFilter": "includes/SpamFilter.php"
+		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
+		"FlowThread\\EchoHook": "/includes/Echo.php",
+		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
@@ -31,6 +33,24 @@
 		],
 		"ArticleDeleteComplete": [
 			"FlowThread::onArticleDeleteComplete"
+		],
+		"BeforeCreateEchoEvent": [
+			"FlowThread\\EchoHook::onBeforeCreateEchoEvent"
+		],
+		"EchoGetDefaultNotifiedUsers": [
+			"FlowThread\\EchoHook::onEchoGetDefaultNotifiedUsers"
+		],
+		"FlowThreadPosted": [
+			"FlowThread\\EchoHook::onFlowThreadPosted"
+		],
+		"FlowThreadDeleted": [
+			"FlowThread\\EchoHook::onFlowThreadDeleted"
+		],
+		"FlowThreadRecovered": [
+			"FlowThread\\EchoHook::onFlowThreadRecovered"
+		],
+		"FlowThreadSpammed": [
+			"FlowThread\\EchoHook::onFlowThreadSpammed"
 		]
 	},
 	"ResourceModules": {
@@ -117,6 +137,10 @@
 	},
 	"config": {
 		"DefaultAvatar": "http://static.mengniang.org/common/f/f2/645f3c7fgw1eszwigytqmj20m80m8whl.jpg"
+	},
+	"DefaultUserOptions": {
+		"echo-subscriptions-web-flowthread": true,
+		"echo-subscriptions-email-flowthread": false
 	},
 	"manifest_version": 1
 }
