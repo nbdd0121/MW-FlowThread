@@ -61,17 +61,17 @@
 	"notification-flowthread_delete": "你在[[:$1]]上的评论被删除了。",
 	"notification-flowthread_delete-flyout": "你在[[:$1]]上的评论被删除了。",
 	"notification-flowthread_delete-email-subject": "你在{{SITENAME}}上的评论被删除了",
-	"notification-flowthread_delete-email-batch-body": "你在[[:$1]]上的评论被删除了",
+	"notification-flowthread_delete-email-batch-body": "你在$1上的评论被删除了",
 
 	"notification-flowthread_recover": "你在[[:$1]]上的评论被恢复了。",
 	"notification-flowthread_recover-flyout": "你在[[:$1]]上的评论被恢复了。",
 	"notification-flowthread_recover-email-subject": "你在{{SITENAME}}上的评论被恢复了",
-	"notification-flowthread_recover-email-batch-body": "你在[[:$1]]上的评论被恢复了",
+	"notification-flowthread_recover-email-batch-body": "你在$1上的评论被恢复了",
 
 	"notification-flowthread_spam": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
 	"notification-flowthread_spam-flyout": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
 	"notification-flowthread_spam-email-subject": "你在{{SITENAME}}上的评论被标记为垃圾评论",
-	"notification-flowthread_spam-email-batch-body": "你在[[:$1]]上的评论被自动标记为垃圾评论",
+	"notification-flowthread_spam-email-batch-body": "你在$1上的评论被自动标记为垃圾评论",
 
 	"flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->"
 }

@@ -61,17 +61,17 @@
 	"notification-flowthread_delete": "Your comment on [[:$1]] was deleted.",
 	"notification-flowthread_delete-flyout": "Your comment on [[:$1]] was deleted.",
 	"notification-flowthread_delete-email-subject": "Your comment on {{SITENAME}} was deleted",
-	"notification-flowthread_delete-email-batch-body": "Your comment posted on [[:$1]] was deleted",
+	"notification-flowthread_delete-email-batch-body": "Your comment posted on $1 was deleted",
 
 	"notification-flowthread_recover": "Your comment on [[:$1]] was recovered.",
 	"notification-flowthread_recover-flyout": "Your comment on [[:$1]] was recovered.",
 	"notification-flowthread_recover-email-subject": "Your comment on {{SITENAME}} was recovered",
-	"notification-flowthread_recover-email-batch-body": "Your comment posted on [[:$1]] was recovered",
+	"notification-flowthread_recover-email-batch-body": "Your comment posted on $1 was recovered",
 
 	"notification-flowthread_spam": "Your comment on [[:$1]] was marked as spam automatically.",
 	"notification-flowthread_spam-flyout": "Your comment on [[:$1]] was marked as spam automatically.",
 	"notification-flowthread_spam-email-subject": "Your comment on {{SITENAME}} was marked as spam",
-	"notification-flowthread_spam-email-batch-body": "Your comment posted on [[:$1]] was marked as spam automatically",
+	"notification-flowthread_spam-email-batch-body": "Your comment posted on $1 was marked as spam automatically",
 
 	"flowthread-blacklist": "# Texts in this list will be blocked when posted as comment.\n# Syntax is as follows:\n#* Everything from a \"#\" character to the end of the line is a comment\n#* Every non-blank line is a regex fragment matching texts\n #<!-- leave this line exactly as it is --><pre>\n\n #</pre><!-- leave this line exactly as it is -->"
 }
