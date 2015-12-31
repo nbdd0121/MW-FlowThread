@@ -271,6 +271,11 @@ Paginator.prototype.addEllipse = function() {
 
 Paginator.prototype.repaint = function() {
   this.object.html('');
+  if (this.count === 1) {
+    this.object.hide();
+  } else {
+    this.object.show();
+  }
   var pageStart = Math.max(this.current - 2, 0);
   var pageEnd = Math.min(this.current + 4, this.count - 1);
   if (pageStart !== 0) {
