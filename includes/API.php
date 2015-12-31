@@ -4,7 +4,11 @@ namespace FlowThread;
 class API extends \ApiBase {
 
 	private function fetchPosts($pageid) {
-		$page = Page::newFromId($pageid);
+		$offset = intval($this->getMain()->getVal('offset', 0));
+
+		$page = new Page($pageid);
+		$page->offset = $offset;
+		$page->fetch();
 
 		$comments = array();
 		foreach ($page->posts as $post) {
@@ -28,7 +32,12 @@ class API extends \ApiBase {
 			}
 		}
 
-		return $comments;
+		$obj = array(
+			"posts" => $comments,
+			"count" => $page->totalCount,
+		);
+
+		return $obj;
 	}
 
 	private function parsePostList($postList) {

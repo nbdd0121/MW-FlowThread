@@ -10,7 +10,7 @@ CREATE TABLE FlowThread (
 	flowthread_report INT(11) NOT NULL
 );
 
-CREATE INDEX FlowThreadSearchByPage ON FlowThread(flowthread_pageid);
+CREATE INDEX FlowThreadSearchByPage ON FlowThread(flowthread_pageid, flowthread_parentid);
 
 CREATE TABLE FlowThreadAttitude (
 	flowthread_att_id BINARY(11) NOT NULL,

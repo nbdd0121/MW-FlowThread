@@ -305,6 +305,7 @@ class Post {
 
 		$res = $dbr->select('FlowThread',
 			self::getRequiredColumns(), array(
+				'flowthread_pageid' => $this->pageid, # This line is critical in performance, as we indexed pageid
 				'flowthread_parentid' => $this->id->getBin(),
 			));
 

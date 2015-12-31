@@ -193,3 +193,30 @@
 .comment-thread > div:not(:first-child) .comment-body {
 	padding-left: 40px;
 }
+
+.comment-paginator {
+    border-top: 1px solid rgba(0,0,0,0.13);
+    text-align: right;
+    padding: 0.5em;
+}
+
+.comment-paginator span {
+    color: #777;
+    border-radius: 3px;
+    font-size: 12px;
+    margin: 0 3px;
+    padding: 2px 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.comment-paginator span:hover {
+    color: #333;
+    background-color: rgba(0,0,0,0.03);
+}
+
+.comment-paginator span[current] {
+    color: #d32;
+    border: 1px solid #ccc;
+    background-color: rgba(0,0,0,0.03);
+}
