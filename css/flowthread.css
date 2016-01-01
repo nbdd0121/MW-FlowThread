@@ -53,6 +53,7 @@
     border-bottom-left-radius: 3px;
     background: transparent url("bg_sprites.png") repeat-x scroll 0px -60px;
     box-sizing: border-box;
+    margin-bottom: 1em;
 }
 
 .comment-submit {

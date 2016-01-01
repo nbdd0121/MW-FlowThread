@@ -5,7 +5,7 @@ class SpamFilter {
 	public static function validate($text) {
 		$blacklist = self::getBlackList();
 
-		if (preg_match($blacklist, $text)) {
+		if ($blacklist && preg_match($blacklist, $text)) {
 			return false;
 		}
 
@@ -38,6 +38,9 @@ class SpamFilter {
 		$lines = array_filter($lines, function ($regex) {
 			return self::validateRegex('/' . $regex . '/');
 		});
+		if (!count($lines)) {
+			return null;
+		}
 		return '/' . implode('|', $lines) . '/i';
 	}
 

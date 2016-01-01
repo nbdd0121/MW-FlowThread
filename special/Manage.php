@@ -133,6 +133,9 @@ class SpecialManage extends \SpecialPage {
 			$cond[] = 'flowthread_text' . $query;
 		}
 
+		$dir = $this->revDir ? 'ASC' : 'DESC';
+		$orderBy = 'flowthread_id ' . $dir;
+
 		if ($this->filter === 'deleted') {
 			$cond['flowthread_status'] = 1;
 		} else if ($this->filter === 'spam') {
@@ -141,14 +144,14 @@ class SpecialManage extends \SpecialPage {
 			$cond['flowthread_status'] = 0;
 			if ($this->filter === 'reported') {
 				$cond[] = 'flowthread_report > 0';
+				$orderBy = 'flowthread_report ' . $dir . ', ' . $orderBy;
 			}
 		}
 
-		$dir = $this->revDir ? 'ASC' : 'DESC';
 		$res = $dbr->select(array(
 			'FlowThread',
 		), Post::getRequiredColumns(), $cond, __METHOD__, array(
-			'ORDER BY' => 'flowthread_report ' . $dir . ', flowthread_id ' . $dir,
+			'ORDER BY' => $orderBy,
 			'OFFSET' => $this->offset,
 			'LIMIT' => $this->limit + 1,
 		));
