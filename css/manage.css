@@ -1,5 +1,6 @@
 .comment-avatar {
     float: left;
+    cursor: pointer;
 }
 
 .comment-thread {
