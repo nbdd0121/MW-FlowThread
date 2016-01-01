@@ -28,7 +28,7 @@ function getAvatar(id, username) {
     if(id===0 || !extAvatar) {
         return mw.config.get('wgDefaultAvatar');
     }else{
-        return getLink('Special:Avatar/' + username);
+        return mw.util.getUrl('Special:Avatar/' + username);
     }
 }
 
@@ -48,13 +48,9 @@ function wrapText(text) {
 	return span.wrapAll('<div/>').parent().html();
 }
 
-function getLink(page) {
-	return mw.config.get('wgArticlePath').replace('$1', page);
-}
-
 function wrapPageLink(page, name) {
 	var link = $('<a/>');
-	link.attr('href', getLink(page));
+	link.attr('href', mw.util.getUrl(page));
 	link.text(name);
 	return link.wrapAll('<div/>').parent().html();
 }
