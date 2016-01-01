@@ -255,6 +255,12 @@ class Post {
 	}
 
 	public function post() {
+		global $wgMaxNestLevel;
+		// Restrict max nest level
+		if ($this->getNestLevel() > $wgMaxNestLevel) {
+			$this->parentid = $this->getParent()->parentid;
+			$this->parent = $this->getParent()->parent;
+		}
 		$dbw = wfGetDB(DB_MASTER);
 		if (!$this->id) {
 			$this->id = UUID::generate();
@@ -314,6 +320,16 @@ class Post {
 			$this->parent = self::newFromId($this->parentid);
 		}
 		return $this->parent;
+	}
+
+	public function getNestLevel() {
+		$level = 0;
+		$item = $this->getParent();
+		while ($item) {
+			$item = $item->getParent();
+			$level++;
+		}
+		return $level;
 	}
 
 	public function getTimestamp() {
