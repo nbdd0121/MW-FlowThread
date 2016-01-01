@@ -3,7 +3,7 @@
 	"author": "Gary Guo",
 	"url": "https://github.com/nbdd0121/MW-FlowThread",
 	"descriptionmsg": "flowthread_desc",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"license-name": "BSD-2-Clause",
 	"type": "specialpage",
 	"MessagesDirs": {
@@ -137,7 +137,8 @@
 	},
 	"config": {
 		"DefaultAvatar": "http://static.mengniang.org/common/f/f2/645f3c7fgw1eszwigytqmj20m80m8whl.jpg",
-		"MaxNestLevel": 3
+		"MaxNestLevel": 3,
+		"TriggerFlowThreadHooks": true
 	},
 	"DefaultUserOptions": {
 		"echo-subscriptions-web-flowthread": true,

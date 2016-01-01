@@ -94,6 +94,9 @@ class Page {
 	}
 
 	public function erase() {
+		global $wgTriggerFlowThreadHooks;
+		$wgTriggerFlowThreadHooks = false;
+
 		$dbw = wfGetDB(DB_MASTER);
 		foreach ($this->posts as $post) {
 			if ($post->isValid()) {

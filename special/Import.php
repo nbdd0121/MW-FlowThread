@@ -56,6 +56,9 @@ class SpecialImport extends \FormSpecialPage {
 	}
 
 	private function doImport(array $json) {
+		global $wgTriggerFlowThreadHooks;
+		$wgTriggerFlowThreadHooks = false;
+
 		$output = $this->getOutput();
 		foreach ($json as $articles) {
 			$title = \Title::newFromText($articles->title);

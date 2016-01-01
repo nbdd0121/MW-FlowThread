@@ -179,7 +179,10 @@ class API extends \ApiBase {
 				$postObject->post();
 
 				if ($spam) {
-					\Hooks::run('FlowThreadSpammed', array($postObject));
+					global $wgTriggerFlowThreadHooks;
+					if ($wgTriggerFlowThreadHooks) {
+						\Hooks::run('FlowThreadSpammed', array($postObject));
+					}
 				}
 
 				$this->getResult()->addValue(null, $this->getModuleName(), '');

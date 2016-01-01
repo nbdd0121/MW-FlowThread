@@ -171,7 +171,11 @@ class Post {
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
 
-		\Hooks::run('FlowThreadRecovered', array($this));
+		global $wgTriggerFlowThreadHooks;
+		if ($wgTriggerFlowThreadHooks) {
+			\Hooks::run('FlowThreadRecovered', array($this));
+		}
+
 	}
 
 	public function delete(\User $user) {
@@ -203,7 +207,11 @@ class Post {
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
 
-		\Hooks::run('FlowThreadDeleted', array($this));
+		global $wgTriggerFlowThreadHooks;
+		if ($wgTriggerFlowThreadHooks) {
+			\Hooks::run('FlowThreadDeleted', array($this));
+		}
+
 	}
 
 	// Recursively delete a thread and its children
@@ -270,7 +278,12 @@ class Post {
 			'flowthread_like' => $this->favorCount,
 			'flowthread_report' => $this->reportCount,
 		));
-		\Hooks::run('FlowThreadPosted', array($this));
+
+		global $wgTriggerFlowThreadHooks;
+		if ($wgTriggerFlowThreadHooks) {
+			\Hooks::run('FlowThreadPosted', array($this));
+		}
+
 	}
 
 	public function isDeleted() {
