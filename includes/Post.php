@@ -255,12 +255,6 @@ class Post {
 	}
 
 	public function post() {
-		global $wgMaxNestLevel;
-		// Restrict max nest level
-		if ($this->getNestLevel() > $wgMaxNestLevel) {
-			$this->parentid = $this->getParent()->parentid;
-			$this->parent = $this->getParent()->parent;
-		}
 		$dbw = wfGetDB(DB_MASTER);
 		if (!$this->id) {
 			$this->id = UUID::generate();

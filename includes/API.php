@@ -168,6 +168,14 @@ class API extends \ApiBase {
 				);
 
 				$postObject = new Post($data);
+
+				global $wgMaxNestLevel;
+				// Restrict max nest level
+				if ($postObject->getNestLevel() > $wgMaxNestLevel) {
+					$postObject->parentid = $postObject->getParent()->parentid;
+					$postObject->parent = $postObject->getParent()->parent;
+				}
+
 				$postObject->post();
 
 				if ($spam) {
