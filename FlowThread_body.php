@@ -4,6 +4,21 @@ if (!defined('MEDIAWIKI')) {
 }
 
 class FlowThread {
+
+	public static function getFilteredNamespace() {
+		$ret = array(
+			NS_MEDIAWIKI,
+			NS_TEMPLATE,
+			NS_CATEGORY,
+			NS_FILE,
+		);
+		if (defined('NS_MODULE')) {
+			$ret[] = NS_MODULE;
+		}
+
+		return $ret;
+	}
+
 	public static function onBeforePageDisplay(OutputPage &$output, Skin &$skin) {
 		$title = $output->getTitle();
 
@@ -41,11 +56,7 @@ class FlowThread {
 		}
 
 		// Blacklist several namespace
-		if (in_array($title->getNamespace(), array(
-			NS_MEDIAWIKI,
-			NS_TEMPLATE,
-			NS_CATEGORY,
-		))) {
+		if (in_array($title->getNamespace(), self::getFilteredNamespace())) {
 			return true;
 		}
 
