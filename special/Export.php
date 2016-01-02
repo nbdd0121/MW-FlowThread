@@ -36,6 +36,7 @@ class SpecialExport extends \SpecialPage {
 			// Got headers ready so browser triggers a download
 			$filename = urlencode($config->get('Sitename') . '-' . wfTimestampNow() . '-flowthread.json');
 			$request->response()->header("Content-disposition: attachment;filename={$filename}");
+			$request->response()->header("Cache-Control: no-cache");
 
 			// Got all data. NOTE that ORDER BY is essential since we are grouping comments
 			$dbr = wfGetDB(DB_SLAVE);

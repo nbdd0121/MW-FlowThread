@@ -210,13 +210,16 @@ class API extends \ApiBase {
 				\ApiBase::PARAM_TYPE => 'integer',
 			),
 			'postid' => array(
-				\ApiBase::PARAM_TYPE => 'integer',
+				\ApiBase::PARAM_TYPE => 'string',
 			),
 			'content' => array(
 				\ApiBase::PARAM_TYPE => 'string',
 			),
 			'wikitext' => array(
 				\ApiBase::PARAM_TYPE => 'boolean',
+			),
+			'offset' => array(
+				\ApiBase::PARAM_TYPE => 'integer',
 			),
 		);
 	}
@@ -228,6 +231,7 @@ class API extends \ApiBase {
 			'postid' => 'The id of a certain comment',
 			'content' => 'Content of comment',
 			'wikitext' => 'Specify whether content is intepreted as wikitext or not',
+			'offset' => 'Offset to start listing comments',
 		);
 	}
 
