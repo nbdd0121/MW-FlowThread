@@ -22,7 +22,7 @@ if(deleted){
 
 template += '</div>'
 		+ '</div></div></div>';
-var extAvatar = mw.config.get('wgExtAvatar');
+var extAvatar = mw.config.get('wgUseAvatar');
 
 function getAvatar(id, username) {
     if(id===0 || !extAvatar) {

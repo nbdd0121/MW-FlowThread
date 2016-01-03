@@ -138,6 +138,7 @@
 	"config": {
 		"DefaultAvatar": "http://static.mengniang.org/common/f/f2/645f3c7fgw1eszwigytqmj20m80m8whl.jpg",
 		"MaxNestLevel": 3,
+		"AutoHideAfterReport": 5,
 		"TriggerFlowThreadHooks": true
 	},
 	"DefaultUserOptions": {

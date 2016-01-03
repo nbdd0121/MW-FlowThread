@@ -21,7 +21,7 @@ if (mw.user.getId() !== 0) {
 template += '<span class="comment-delete">' + mw.msg('flowthread-ui-delete') + '</span>';
 template += '</div>'
   + '</div></div></div>';
-var extAvatar = mw.config.get('wgExtAvatar');
+var extAvatar = mw.config.get('wgUseAvatar');
 
 var replyBoxTemplate = '<div class="comment-replybox">'
   + '<div class="comment-avatar">'

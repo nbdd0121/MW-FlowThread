@@ -68,9 +68,9 @@ class FlowThread {
 			$output->addJsConfigVars(array('canpost' => ''));
 		}
 
-		global $wgExtAvatar, $wgDefaultAvatar;
-		if ($wgExtAvatar) {
-			$output->addJsConfigVars(array('wgExtAvatar' => true));
+		global $wgUseAvatar, $wgDefaultAvatar;
+		if ($wgUseAvatar) {
+			$output->addJsConfigVars(array('wgUseAvatar' => true));
 		}
 		$output->addJsConfigVars(array('wgDefaultAvatar' => $wgDefaultAvatar));
 		$output->addModules('ext.flowthread');
