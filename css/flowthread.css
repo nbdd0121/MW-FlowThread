@@ -126,7 +126,9 @@
     content: "";
     background: transparent url("sprites.png") no-repeat scroll 0% 0%;
     opacity: 0.6;
-    padding-left: 15px;
+    display: inline-block;
+    width: 15px;
+    height: 10px;
     transition: opacity 0.15s linear 0s;
     font-size: 9px;
     vertical-align: middle;
