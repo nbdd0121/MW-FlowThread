@@ -81,7 +81,7 @@ function Thread(post) {
 
   var userlink;
   if (post.userid !== 0) {
-    userlink = wrapPageLink('User: ' + post.username, post.username);
+    userlink = wrapPageLink('User:' + post.username, post.username);
   } else {
     userlink = wrapText(post.username);
   }
