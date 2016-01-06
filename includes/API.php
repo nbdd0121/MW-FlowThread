@@ -3,6 +3,10 @@ namespace FlowThread;
 
 class API extends \ApiBase {
 
+	private function dieNoParam($name) {
+		$this->dieUsage("The $name parameter must be set", "no$name");
+	}
+
 	private function fetchPosts($pageid) {
 		$offset = intval($this->getMain()->getVal('offset', 0));
 
@@ -46,7 +50,11 @@ class API extends \ApiBase {
 		}
 		$ret = array();
 		foreach (explode('|', $postList) as $id) {
-			$ret[] = Post::newFromId(UUID::fromHex($id));
+			try {
+				$ret[] = Post::newFromId(UUID::fromHex($id));
+			} catch (\Exception $ex) {
+				$this->dieUsage("There is no post with ID $id", 'nosuchpostid');
+			}
 		}
 		return $ret;
 	}
@@ -64,14 +72,14 @@ class API extends \ApiBase {
 			switch ($action) {
 			case 'list':
 				if (!$page) {
-					throw new \Exception("Page id must be specified");
+					$this->dieNoParam('pageid');
 				}
 				$this->getResult()->addValue(null, $this->getModuleName(), $this->fetchPosts($page));
 				break;
 
 			case 'like':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->setUserAttitude($this->getUser(), Post::ATTITUDE_LIKE);
@@ -81,7 +89,7 @@ class API extends \ApiBase {
 
 			case 'dislike':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->setUserAttitude($this->getUser(), Post::ATTITUDE_NORMAL);
@@ -91,7 +99,7 @@ class API extends \ApiBase {
 
 			case 'report':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->setUserAttitude($this->getUser(), Post::ATTITUDE_REPORT);
@@ -101,7 +109,7 @@ class API extends \ApiBase {
 
 			case 'delete':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->delete($this->getUser());
@@ -111,7 +119,7 @@ class API extends \ApiBase {
 
 			case 'recover':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->recover($this->getUser());
@@ -121,7 +129,7 @@ class API extends \ApiBase {
 
 			case 'erase':
 				if (!$postList) {
-					throw new \Exception("Post id must be specified");
+					$this->dieNoParam('postid');
 				}
 				foreach ($postList as $post) {
 					$post->erase($this->getUser());
@@ -131,11 +139,11 @@ class API extends \ApiBase {
 
 			case 'post':
 				if (!$page) {
-					throw new \Exception("Page id must be specified");
+					$this->dieNoParam('pageid');
 				}
 				$text = $this->getMain()->getVal('content');
 				if (!$text) {
-					throw new \Exception("Content must be specified");
+					$this->dieNoParam('content');
 				}
 
 				// Permission check
@@ -188,23 +196,22 @@ class API extends \ApiBase {
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;
 			default:
-				throw new \Exception("Unknown action");
+				$this->dieUsage("Unrecognized value for parameter 'type': $action", 'unknown_type');
 			}
+		} catch (\UsageException $e) {
+			throw $e;
 		} catch (\Exception $e) {
-			$this->getResult()->addValue("error", 'code', $e->getMessage());
+			$this->getResult()->addValue("error", 'code', 'unknown_error');
 			$this->getResult()->addValue("error", 'info', $e->getMessage());
 		}
 		return true;
-	}
-
-	public function getDescription() {
-		return 'FlowThread action API';
 	}
 
 	public function getAllowedParams() {
 		return array(
 			'type' => array(
 				\ApiBase::PARAM_TYPE => 'string',
+				\ApiBase::PARAM_REQUIRED => true,
 			),
 			'pageid' => array(
 				\ApiBase::PARAM_TYPE => 'integer',
@@ -224,20 +231,13 @@ class API extends \ApiBase {
 		);
 	}
 
-	public function getParamDescription() {
-		return array(
-			'type' => 'Type of action to take (post, list, like, dislike, delete, report, recover, erase)',
-			'pageid' => 'The page id of the commented page',
-			'postid' => 'The id of a certain comment',
-			'content' => 'Content of comment',
-			'wikitext' => 'Specify whether content is intepreted as wikitext or not',
-			'offset' => 'Offset to start listing comments',
-		);
-	}
-
 	public function getExamplesMessages() {
 		return array(
-			'action=flowthread&pageid=1&type=list' => 'List all comments in article 1',
+			'action=flowthread&pageid=1&type=list' => 'apihelp-flowthread-example-1',
+			'action=flowthread&pageid=1&type=post&content=Some+Text' => 'apihelp-flowthread-example-2',
+			'action=flowthread&pageid=1&postid=AValidPostID&type=post&content=Some+Text' => 'apihelp-flowthread-example-3',
+			'action=flowthread&postid=AValidPostID&type=like' => 'apihelp-flowthread-example-4',
+			'action=flowthread&postid=AValidPostID&type=delete' => 'apihelp-flowthread-example-5',
 		);
 	}
 }
