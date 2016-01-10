@@ -125,8 +125,4 @@ class SpecialImport extends \FormSpecialPage {
 		);
 		return $formDescriptor;
 	}
-
-	protected function getGroupName() {
-		return 'pagetools';
-	}
 }

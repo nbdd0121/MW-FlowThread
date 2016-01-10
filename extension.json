@@ -6,6 +6,9 @@
 	"version": "1.0.5",
 	"license-name": "BSD-2-Clause",
 	"type": "specialpage",
+	"ExtensionMessagesFiles": {
+		"FlowThreadAlias": "FlowThread.alias.php"
+	},
 	"MessagesDirs": {
 		"FlowThread": [
 			"i18n"

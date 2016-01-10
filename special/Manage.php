@@ -344,7 +344,4 @@ class SpecialManage extends \SpecialPage {
 		);
 	}
 
-	protected function getGroupName() {
-		return 'pagetools';
-	}
 }

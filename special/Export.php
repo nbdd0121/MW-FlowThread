@@ -103,8 +103,4 @@ class SpecialExport extends \SpecialPage {
 		}
 
 	}
-
-	protected function getGroupName() {
-		return 'pagetools';
-	}
 }
