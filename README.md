@@ -13,10 +13,10 @@ A commenting system for MediaWiki
 
 ## Configuration
 * If you haven't installed Avatar
-* * $wgDefaultAvatar (string), should be set to the URL of the default avatar.
+	* $wgDefaultAvatar (string), should be set to the URL of the default avatar.
 * $wgMaxNestLevel (int): Default to 3, this restricted max level of nested reply.
 * You can set user rights: 
-* * comment: User need this right to post
-* * commentadmin-restricted: User need this right to do basic management of comments
-* * commentadmin: User need this right to do full management of comments
+	* comment: User need this right to post
+	* commentadmin-restricted: User need this right to do basic management of comments
+	* commentadmin: User need this right to do full management of comments
 
