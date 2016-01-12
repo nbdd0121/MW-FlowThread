@@ -177,9 +177,9 @@ class API extends \ApiBase {
 
 				$postObject = new Post($data);
 
-				global $wgMaxNestLevel;
+				global $wgFlowThreadConfig;
 				// Restrict max nest level
-				if ($postObject->getNestLevel() > $wgMaxNestLevel) {
+				if ($postObject->getNestLevel() > $wgFlowThreadConfig['MaxNestLevel']) {
 					$postObject->parentid = $postObject->getParent()->parentid;
 					$postObject->parent = $postObject->getParent()->parent;
 				}
