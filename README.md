@@ -12,11 +12,16 @@ A commenting system for MediaWiki
 * You are done!
 
 ## Configuration
-* If you haven't installed Avatar
-	* $wgDefaultAvatar (string), should be set to the URL of the default avatar.
+* `$wgFlowThreadConfig['DefaultAvatarURL']` (string), should be set to the URL of the avatar for non-registered user.
+* `$wgFlowThreadConfig['AvatarURL']` (string), should be set to the URL of the avatar for registered user. You can use ${username} as a placeholder for user's name.
 * $wgMaxNestLevel (int): Default to 3, this restricted max level of nested reply.
 * You can set user rights: 
 	* comment: User need this right to post
 	* commentadmin-restricted: User need this right to do basic management of comments
 	* commentadmin: User need this right to do full management of comments
 
+## Avatar Presentation
+* FlowThread itself does not provide avatar feature, but it creates an extensible interface to allow other extensions/service to provide avatar for FlowThread.
+* See the above section to know how to configure this extension.
+* When the extension needs to show an avatar of a non-registered user, aka a IP user, it will use DefaultAvatarURL.
+* When the extension needs to show an avatar of a registered user, it will use AvatarURL and replace all occurrence of ${username} to the user's actual username.

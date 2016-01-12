@@ -104,11 +104,11 @@ class SpecialManage extends \SpecialPage {
 			));
 		}
 
-		global $wgUseAvatar, $wgDefaultAvatar;
-		if ($wgUseAvatar) {
-			$output->addJsConfigVars(array('wgUseAvatar' => true));
-		}
-		$output->addJsConfigVars(array('wgDefaultAvatar' => $wgDefaultAvatar));
+		global $wgFlowThreadConfig;
+		$output->addJsConfigVars(array('wgFlowThreadConfig' => array(
+			'AvatarURL' => $wgFlowThreadConfig['AvatarURL'],
+			'DefaultAvatarURL' => $wgFlowThreadConfig['DefaultAvatarURL'],
+		)));
 	}
 
 	private function queryDatabase() {

@@ -68,11 +68,11 @@ class FlowThread {
 			$output->addJsConfigVars(array('canpost' => ''));
 		}
 
-		global $wgUseAvatar, $wgDefaultAvatar;
-		if ($wgUseAvatar) {
-			$output->addJsConfigVars(array('wgUseAvatar' => true));
-		}
-		$output->addJsConfigVars(array('wgDefaultAvatar' => $wgDefaultAvatar));
+		global $wgFlowThreadConfig;
+		$output->addJsConfigVars(array('wgFlowThreadConfig' => array(
+			'AvatarURL' => $wgFlowThreadConfig['AvatarURL'],
+			'DefaultAvatarURL' => $wgFlowThreadConfig['DefaultAvatarURL'],
+		)));
 		$output->addModules('ext.flowthread');
 		return true;
 	}

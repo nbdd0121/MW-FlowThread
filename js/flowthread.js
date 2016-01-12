@@ -21,7 +21,15 @@ if (mw.user.getId() !== 0) {
 template += '<span class="comment-delete">' + mw.msg('flowthread-ui-delete') + '</span>';
 template += '</div>'
   + '</div></div></div>';
-var extAvatar = mw.config.get('wgUseAvatar');
+var config = mw.config.get('wgFlowThreadConfig');
+
+function getAvatar(id, username) {
+    if(id===0) {
+        return config.DefaultAvatarURL;
+    }else{
+        return config.AvatarURL.replace(/\$\{username\}/g, username);
+    }
+}
 
 var replyBoxTemplate = '<div class="comment-replybox">'
   + '<div class="comment-avatar">'
@@ -35,14 +43,6 @@ var replyBoxTemplate = '<div class="comment-replybox">'
   + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
   + '</div>'
   + '</div></div>';
-
-function getAvatar(id, username) {
-  if (id === 0 || !extAvatar) {
-    return mw.config.get('wgDefaultAvatar');
-  } else {
-    return mw.util.getUrl('Special:Avatar/' + username);
-  }
-}
 
 function getTimeString(time) {
   var m = moment(time).locale(mw.config.get('wgUserLanguage'));

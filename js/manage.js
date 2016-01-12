@@ -22,13 +22,13 @@ if(deleted){
 
 template += '</div>'
 		+ '</div></div></div>';
-var extAvatar = mw.config.get('wgUseAvatar');
+var config = mw.config.get('wgFlowThreadConfig');
 
 function getAvatar(id, username) {
-    if(id===0 || !extAvatar) {
-        return mw.config.get('wgDefaultAvatar');
+    if(id===0) {
+        return config.DefaultAvatarURL;
     }else{
-        return mw.util.getUrl('Special:Avatar/' + username);
+        return config.AvatarURL.replace(/\$\{username\}/g, username);
     }
 }
 
