@@ -70,8 +70,8 @@ class FlowThread {
 
 		global $wgFlowThreadConfig;
 		$output->addJsConfigVars(array('wgFlowThreadConfig' => array(
-			'AvatarURL' => $wgFlowThreadConfig['AvatarURL'],
-			'DefaultAvatarURL' => $wgFlowThreadConfig['DefaultAvatarURL'],
+			'Avatar' => $wgFlowThreadConfig['Avatar'],
+			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
 		)));
 		$output->addModules('ext.flowthread');
 		return true;

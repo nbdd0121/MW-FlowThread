@@ -106,8 +106,8 @@ class SpecialManage extends \SpecialPage {
 
 		global $wgFlowThreadConfig;
 		$output->addJsConfigVars(array('wgFlowThreadConfig' => array(
-			'AvatarURL' => $wgFlowThreadConfig['AvatarURL'],
-			'DefaultAvatarURL' => $wgFlowThreadConfig['DefaultAvatarURL'],
+			'Avatar' => $wgFlowThreadConfig['Avatar'],
+			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
 		)));
 	}
 

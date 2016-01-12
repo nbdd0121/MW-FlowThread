@@ -24,10 +24,11 @@ template += '</div>'
 var config = mw.config.get('wgFlowThreadConfig');
 
 function getAvatar(id, username) {
+    if(!config) return '';
     if(id===0) {
-        return config.DefaultAvatarURL;
+        return config.AnonymousAvatar;
     }else{
-        return config.AvatarURL.replace(/\$\{username\}/g, username);
+        return config.Avatar.replace(/\$\{username\}/g, username);
     }
 }
 
