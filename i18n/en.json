@@ -86,5 +86,8 @@
 	"apihelp-flowthread-example-2": "Post a comment on the page with ID of 1.",
 	"apihelp-flowthread-example-3": "Reply a comment on the page with ID of 1.",
 	"apihelp-flowthread-example-4": "Like a comment.",
-	"apihelp-flowthread-example-5": "Delete a comment."
+	"apihelp-flowthread-example-5": "Delete a comment.",
+
+	"sidebar-section-extension": "Extension",
+	"sidebar-usercomments": "User Comments"
 }

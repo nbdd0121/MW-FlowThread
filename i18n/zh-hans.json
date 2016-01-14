@@ -86,5 +86,8 @@
 	"apihelp-flowthread-example-2": "在页面ID为1的页面上发表一条评论。",
 	"apihelp-flowthread-example-3": "回复一条在页面ID为1的页面上发表的评论。",
 	"apihelp-flowthread-example-4": "赞一条评论。",
-	"apihelp-flowthread-example-5": "删除一条评论。"
+	"apihelp-flowthread-example-5": "删除一条评论。",
+
+	"sidebar-section-extension": "扩展程序",
+	"sidebar-usercomments": "用户评论"
 }

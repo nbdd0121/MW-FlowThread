@@ -101,4 +101,22 @@ class FlowThread {
 		$page->erase();
 		return true;
 	}
+
+	public static function onSkinBuildSidebar(\Skin $skin, &$bar) {
+		global $wgUser;
+
+		$relevUser = $skin->getRelevantUser();
+		if ($relevUser && $wgUser->isAllowed('commentadmin-restricted')) {
+			$bar['sidebar-section-extension'][] =
+			array(
+				'text' => wfMsg('sidebar-usercomments'),
+				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
+					'user' => $relevUser->getName(),
+				)),
+				'id' => 'n-usercomments',
+				'active' => '',
+			);
+		}
+		return true;
+	}
 }
