@@ -161,6 +161,8 @@ class API extends \ApiBase {
 					unset($parser);
 					unset($opt);
 					unset($output);
+				} else {
+					$text = htmlspecialchars($text);
 				}
 
 				$data = array(
