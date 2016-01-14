@@ -173,7 +173,7 @@ class Post {
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
-			\Hooks::run('FlowThreadRecovered', array($this));
+			\Hooks::run('FlowThreadRecovered', array($this, $user));
 		}
 
 	}
@@ -209,7 +209,7 @@ class Post {
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
-			\Hooks::run('FlowThreadDeleted', array($this));
+			\Hooks::run('FlowThreadDeleted', array($this, $user));
 		}
 
 	}

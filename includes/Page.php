@@ -44,7 +44,7 @@ class Page {
 		$res = $dbr->select('FlowThread', Post::getRequiredColumns(),
 			$cond, __METHOD__, $options);
 
-		$this->totalCount = $dbr->query('select FOUND_ROWS() as row')->fetchObject()->row;
+		$this->totalCount = intval($dbr->query('select FOUND_ROWS() as row')->fetchObject()->row);
 
 		$sqlPart = '';
 		foreach ($res as $row) {
