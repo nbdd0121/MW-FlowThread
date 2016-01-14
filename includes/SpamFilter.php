@@ -12,6 +12,10 @@ class SpamFilter {
 		return true;
 	}
 
+	public static function badCodeFilter($html) {
+		return preg_replace('/position(?:\/\*[^*]*\*+([^\/*][^*]*\*+)*\/|\s)*:(?:\/\*[^*]*\*+([^\/*][^*]*\*+)*\/|\s)*fixed/i', '', $html);
+	}
+
 	private static function stripLines($lines) {
 		return array_filter(array_map('trim', preg_replace('/#.*$/', '', $lines)));
 	}

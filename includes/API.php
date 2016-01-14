@@ -161,6 +161,8 @@ class API extends \ApiBase {
 					unset($parser);
 					unset($opt);
 					unset($output);
+
+					$text = SpamFilter::badCodeFilter($text);
 				} else {
 					$text = htmlspecialchars($text);
 				}

@@ -108,6 +108,10 @@
     line-height: 1.5em;
     margin: 0.5em 0px;
     word-wrap: break-word;
+    /* Added to guard against malacious position:absolute */
+    position: relative;
+    overflow: hidden;
+    min-height: 1em;
 }
 
 .comment-footer {
