@@ -167,8 +167,8 @@ class EchoHook {
 		return true;
 	}
 
-	public static function onFlowThreadDeleted($post, \User $initiater) {
-		if ($post->userid === 0 || $post->userid === $initiater->getId()) {
+	public static function onFlowThreadDeleted($post, \User $initiator) {
+		if ($post->userid === 0 || $post->userid === $initiator->getId()) {
 			return true;
 		}
 
@@ -187,8 +187,8 @@ class EchoHook {
 		return true;
 	}
 
-	public static function onFlowThreadRecovered($post, \User $initiater) {
-		if ($post->userid === 0 || $post->userid === $initiater->getId()) {
+	public static function onFlowThreadRecovered($post, \User $initiator) {
+		if ($post->userid === 0 || $post->userid === $initiator->getId()) {
 			return true;
 		}
 
