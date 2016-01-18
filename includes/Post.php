@@ -81,6 +81,7 @@ class Post {
 	}
 
 	public static function newFromId(UUID $id) {
+		// Do not apply cache here, it will seriously slow down the application
 		$dbr = wfGetDB(DB_SLAVE);
 
 		$row = $dbr->selectRow('FlowThread',
@@ -145,6 +146,25 @@ class Post {
 		}
 	}
 
+	private function publishSimpleLog($subtype, \User $initiator) {
+		$logEntry = new \ManualLogEntry('comments', $subtype);
+		$logEntry->setPerformer($initiator);
+		$logEntry->setTarget(\Title::newFromId($this->pageid));
+		$logEntry->setParameters(array(
+			'4::username' => $this->username,
+		));
+		$logId = $logEntry->insert();
+		$logEntry->publish($logId, 'udp');
+	}
+
+	private function switchStatus($newStatus) {
+		$dbw = wfGetDB(DB_MASTER);
+		$dbw->update('FlowThread', array(
+			'flowthread_status' => $newStatus,
+		), array(
+			'flowthread_id' => $this->id->getBin(),
+		));
+	}
 	public function recover(\User $user) {
 		self::checkIfAdmin($user);
 
@@ -154,22 +174,10 @@ class Post {
 		}
 
 		// Mark status as normal
-		$dbw = wfGetDB(DB_MASTER);
-		$dbw->update('FlowThread', array(
-			'flowthread_status' => static::STATUS_NORMAL,
-		), array(
-			'flowthread_id' => $this->id->getBin(),
-		));
+		$this->switchStatus(static::STATUS_NORMAL);
 
 		// Write a log
-		$logEntry = new \ManualLogEntry('comments', 'recover');
-		$logEntry->setPerformer($user);
-		$logEntry->setTarget(\Title::newFromId($this->pageid));
-		$logEntry->setParameters(array(
-			'4::postid' => $this->username,
-		));
-		$logId = $logEntry->insert();
-		$logEntry->publish($logId, 'udp');
+		$this->publishSimpleLog('recover', $user);
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
@@ -190,22 +198,10 @@ class Post {
 		}
 
 		// Mark status as deleted
-		$dbw = wfGetDB(DB_MASTER);
-		$dbw->update('FlowThread', array(
-			'flowthread_status' => static::STATUS_DELETED,
-		), array(
-			'flowthread_id' => $this->id->getBin(),
-		));
+		$this->switchStatus(static::STATUS_DELETED);
 
 		// Write a log
-		$logEntry = new \ManualLogEntry('comments', 'delete');
-		$logEntry->setPerformer($user);
-		$logEntry->setTarget(\Title::newFromId($this->pageid));
-		$logEntry->setParameters(array(
-			'4::postid' => $this->username,
-		));
-		$logId = $logEntry->insert();
-		$logEntry->publish($logId, 'udp');
+		$this->publishSimpleLog('delete', $user);
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {

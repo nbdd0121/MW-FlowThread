@@ -52,7 +52,7 @@ Thread.prototype.reply = function() {
     replyBox.remove();
   }
   replyBox = createReplyBox(this.post.id);
-  setFollowUp(this.post.id, replyBox);
+  this.prependChild({object: replyBox});
 }
 
 Thread.sendComment = function(postid, text, wikitext) {
@@ -84,7 +84,7 @@ function reloadComments(offset) {
       if (item.parentid === '') {
         $('.comment-container').append(createThread(item).object);
       } else {
-        setFollowUp(item.parentid, createThread(item).object);
+        Thread.fromId(item.parentid).prependChild(createThread(item));
       }
     });
     pager.current = Math.floor(offset / 10);

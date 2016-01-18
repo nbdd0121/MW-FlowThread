@@ -40,6 +40,10 @@ function Thread() {
   $.data(object[0], 'thread', this);
 }
 
+Thread.fromId = function(id) {
+  return $.data($('[comment-id=' + id + ']')[0], 'thread');
+}
+
 Thread.prototype.init = function(post) {
   var object = this.object;
   this.post = post;
@@ -67,6 +71,13 @@ Thread.prototype.addButton = function(type, text, listener) {
     .appendTo(this.object.find('.comment-footer'));
 }
 
+Thread.prototype.appendChild = function(thread) {
+  this.object.append(thread.object);
+}
+
+Thread.prototype.prependChild = function(thread) {
+  this.object.children('.comment-post').after(thread.object);
+}
 function wrapText(text) {
   var span = $('<span/>');
   span.text(text);
