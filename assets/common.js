@@ -1,4 +1,3 @@
-var canpost = mw.config.exists('canpost');
 var config = mw.config.get('wgFlowThreadConfig');
 
 /* Get avatar by user name */
@@ -38,6 +37,7 @@ function Thread() {
 
   this.post = null;
   this.object = object;
+  $.data(object[0], 'thread', this);
 }
 
 Thread.prototype.init = function(post) {

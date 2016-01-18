@@ -64,6 +64,7 @@
 				"mediawiki.user"
 			],
 			"scripts":[
+				"assets/common.js",
 				"js/flowthread.js"
 			],
 			"styles":[
@@ -86,6 +87,7 @@
 				"mediawiki.user"
 			],
 			"scripts": [
+				"assets/common.js",
 				"js/manage.js"
 			],
 			"styles": [

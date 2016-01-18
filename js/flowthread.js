@@ -1,3 +1,4 @@
+var canpost = mw.config.exists('canpost');
 var replyBox = null;
 
 function createThread(post) {
@@ -5,7 +6,7 @@ function createThread(post) {
   var object = thread.object;
   thread.init(post);
 
-   if (canpost) {
+  if (canpost) {
     thread.addButton('reply', mw.msg('flowthread-ui-reply'), function() {
       thread.reply();
     });

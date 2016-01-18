@@ -1,112 +1,42 @@
-var template = '<div class="comment-thread"><div class="comment-post">'
-		+ '<div class="comment-avatar">'
-			+ '<img src=""></img>'
-		+ '</div>'
-		+ '<div class="comment-body">'
-			+ '<div class="comment-user"></div>'
-			+ '<div class="comment-text"></div>'
-		+ '<div class="comment-footer">'
-			+ '<span class="comment-time"></span>'
-			+ '<span class="comment-like">' + mw.msg('flowthread-ui-like') + ' <span></span></span>'
-			+ '<span class="comment-report">' + mw.msg('flowthread-ui-report') + ' <span></span></span>';
-
 var deleted = mw.config.get('commentfilter') === 'deleted' || mw.config.get('commentfilter') == 'spam';
-if(deleted){
-	template += '<span class="comment-recover">' + mw.msg('flowthread-ui-recover') + '</span>';
-	if(mw.config.exists('commentadmin')) {
-		template += '<span class="comment-delete">' + mw.msg('flowthread-ui-erase') + '</span>';
-	}
-}else{
-	template += '<span class="comment-delete">' + mw.msg('flowthread-ui-delete') + '</span>';
-}
 
-template += '</div>'
-		+ '</div></div></div>';
-var config = mw.config.get('wgFlowThreadConfig');
+function createThread(post) {
+	var thread = new Thread();
+	var object = thread.object;
 
-function getAvatar(id, username) {
-	if(!config) return '';
-    if(id===0) {
-        return config.AnonymousAvatar;
-    }else{
-        return config.Avatar.replace(/\$\{username\}/g, username);
-    }
-}
+	thread.init(post);
 
-function getTimeString(time) {
-	var m = moment(time).locale(mw.config.get('wgUserLanguage'));
-	var diff = Date.now() - time;
-	if(0 < diff && diff < 24*3600*1000) {
-		return m.fromNow();
-	}else{
-		return m.format('LL, HH:mm:ss');
-	}
-}
-
-function wrapText(text) {
-	var span = $('<span/>');
-	span.text(text);
-	return span.wrapAll('<div/>').parent().html();
-}
-
-function wrapPageLink(page, name) {
-	var link = $('<a/>');
-	link.attr('href', mw.util.getUrl(page));
-	link.text(name);
-	return link.wrapAll('<div/>').parent().html();
-}
-
-function Thread(post) {
-	var self = this;
-	var object = $(template);
-
-	this.post = post;
-	this.object = object;
-	$.data(object[0], 'thread', this);
-
-	var userlink;
-	if (post.userid !== 0) {
-		userlink = wrapPageLink('User:' + post.username, post.username);
-	} else {
-		userlink = wrapText(post.username);
-	}
-
+	// Enhance the username by adding page title
 	var pageLink = wrapPageLink(post.title, post.title);
-	object.find('.comment-user').html(mw.msg('flowthread-ui-user-post-on-page', userlink, pageLink));
+	object.find('.comment-user').html(
+		mw.msg('flowthread-ui-user-post-on-page', object.find('.comment-user').html(), pageLink));
 
-	object.find('.comment-avatar img').attr('src', getAvatar(post.userid, post.username));
-	
-	object.find('.comment-text').html(post.text);
-	object.find('.comment-time').text(getTimeString(post.timestamp*1000));
+	thread.addButton('like', mw.msg('flowthread-ui-like') + '(' + post.like + ')', function() {
+	});
 
-	object.find('.comment-delete').click(function() {
-		self.delete(post.id);
-	});    
-	object.find('.comment-recover').click(function() {
-		self.recover(post.id);
+	thread.addButton('report', mw.msg('flowthread-ui-report') + '(' + post.report + ')', function() {
 	});
-	object.find('.comment-delete').click(function() {
-		self.erase(post.id);
-	});
+
+	if(!deleted){
+		thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
+			thread.delete();
+		});
+	}else{
+		thread.addButton('recover', mw.msg('flowthread-ui-recover'), function() {
+			thread.recover();
+		});
+		thread.addButton('delete', mw.msg('flowthread-ui-erase'), function() {
+			thread.erase();
+		});
+	}
+
 	object.find('.comment-avatar').click(function() {
 		object.toggleClass('comment-selected');
 		onSelect();
-	})
-
-	object.find('.comment-like span').text('(' + post.like + ')');
-	object.find('.comment-report span').text('(' + post.report + ')');
-	
-}
-
-Thread.prototype.delete = function() {
-	var api = new mw.Api();
-	api.get({
-		action: 'flowthread',
-		type: 'delete',
-		postid: this.post.id
 	});
-	this.object.remove();
-};
+
+	return thread;
+}
 
 Thread.prototype.recover = function() {
 	var api = new mw.Api();
@@ -174,7 +104,7 @@ function loadComments() {
 	var data = mw.config.get('commentjson');
 	$('.comment-container').html('');
 	data.forEach(function(item) {
-		$('.comment-container').append(new Thread(item).object);
+		$('.comment-container').append(createThread(item).object);
 	});
 }
 
