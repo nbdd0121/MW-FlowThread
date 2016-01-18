@@ -175,7 +175,7 @@
 	display: none;
 }
 
-.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete[enabled] {
+.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete {
 	display: initial;
 }
 
