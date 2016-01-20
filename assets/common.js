@@ -153,7 +153,7 @@ function ReplyBox() {
   this.object = object;
 
   object.find('textarea').keyup(function(e) {
-    if (e.ctrlKey && e.which === 13) submit.click();
+    if (e.ctrlKey && e.which === 13) object.find('.comment-submit').click();
     self.pack();
   });
 }

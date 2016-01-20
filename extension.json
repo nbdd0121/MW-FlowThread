@@ -25,7 +25,8 @@
 		"FlowThread\\UUID": "includes/UUID.php",
 		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
 		"FlowThread\\EchoHook": "/includes/Echo.php",
-		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php"
+		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php",
+		"FlowThread\\Helper": "/includes/Helper.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [

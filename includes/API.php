@@ -7,6 +7,24 @@ class API extends \ApiBase {
 		$this->dieUsage("The $name parameter must be set", "no$name");
 	}
 
+	private function convertPosts(array $posts) {
+		$attTable = Helper::batchGetUserAttitude($this->getUser(), $posts);
+		$ret = array();
+		foreach ($posts as $post) {
+			$ret[] = array(
+				'id' => $post->id->getHex(),
+				'userid' => $post->userid,
+				'username' => $post->username,
+				'text' => $post->text,
+				'timestamp' => $post->id->getTimestamp(),
+				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
+				'like' => $post->getFavorCount(),
+				'myatt' => $attTable[$post->id->getHex()],
+			);
+		}
+		return $ret;
+	}
+
 	private function fetchPosts($pageid) {
 		$offset = intval($this->getMain()->getVal('offset', 0));
 
@@ -15,26 +33,7 @@ class API extends \ApiBase {
 		$page->offset = $offset;
 		$page->fetch();
 
-		$comments = array();
-		foreach ($page->posts as $post) {
-			// No longer need to filter out invisible posts
-
-			$favorCount = $post->getFavorCount();
-			$myAtt = $post->getUserAttitude($this->getUser());
-
-			$data = array(
-				'id' => $post->id->getHex(),
-				'userid' => $post->userid,
-				'username' => $post->username,
-				'text' => $post->text,
-				'timestamp' => $post->id->getTimestamp(),
-				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
-				'like' => $favorCount,
-				'myatt' => $myAtt,
-			);
-
-			$comments[] = $data;
-		}
+		$comments = $this->convertPosts($page->posts);
 
 		$obj = array(
 			"posts" => $comments,
@@ -59,6 +58,14 @@ class API extends \ApiBase {
 		return $ret;
 	}
 
+	private function executeList() {
+		$page = $this->getMain()->getVal('pageid');
+		if (!$page) {
+			$this->dieNoParam('pageid');
+		}
+		$this->getResult()->addValue(null, $this->getModuleName(), $this->fetchPosts($page));
+	}
+
 	public function execute() {
 		$action = $this->getMain()->getVal('type');
 		$page = $this->getMain()->getVal('pageid');
@@ -71,10 +78,7 @@ class API extends \ApiBase {
 
 			switch ($action) {
 			case 'list':
-				if (!$page) {
-					$this->dieNoParam('pageid');
-				}
-				$this->getResult()->addValue(null, $this->getModuleName(), $this->fetchPosts($page));
+				$this->executeList();
 				break;
 
 			case 'like':
@@ -149,10 +153,14 @@ class API extends \ApiBase {
 				// Permission check
 				Post::checkIfCanPost($this->getUser());
 
-				$spam = !SpamFilter::validate($text);
+				// Need to feed this to spam filter
+				$useWikitext = $this->getMain()->getCheck('wikitext');
+
+				$filterResult = SpamFilter::validate($text, $this->getUser(), $useWikitext);
+				$text = $filterResult['text'];
 
 				// Parse as wikitext if specified
-				if ($this->getMain()->getCheck('wikitext')) {
+				if ($useWikitext) {
 					$parser = new \Parser();
 					$opt = new \ParserOptions($this->getUser());
 					$opt->setEditSection(false);
@@ -162,7 +170,7 @@ class API extends \ApiBase {
 					unset($opt);
 					unset($output);
 
-					$text = SpamFilter::badCodeFilter($text);
+					$text = SpamFilter::sanitize($text);
 				} else {
 					$text = htmlspecialchars($text);
 				}
@@ -174,7 +182,7 @@ class API extends \ApiBase {
 					'username' => $this->getUser()->getName(),
 					'text' => $text,
 					'parentid' => count($postList) ? $postList[0]->id : null,
-					'status' => $spam ? Post::STATUS_SPAM : Post::STATUS_NORMAL,
+					'status' => $filterResult['good'] ? Post::STATUS_NORMAL : Post::STATUS_SPAM,
 					'like' => 0,
 					'report' => 0,
 				);
@@ -190,7 +198,7 @@ class API extends \ApiBase {
 
 				$postObject->post();
 
-				if ($spam) {
+				if (!$filterResult['good']) {
 					global $wgTriggerFlowThreadHooks;
 					if ($wgTriggerFlowThreadHooks) {
 						\Hooks::run('FlowThreadSpammed', array($postObject));
