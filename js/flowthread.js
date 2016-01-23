@@ -165,5 +165,10 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after('<div class="comment-container"></div>', pager.object, canpost ? createReplyBox('') : null);
+$('#bodyContent').after('<div class="comment-container"></div>', pager.object, function(){
+  if (canpost) return createReplyBox('');
+  var noticeContainer = $('<div>').addClass('comment-bannotice');
+  noticeContainer.html(config.CantPostNotice);
+  return noticeContainer;
+}());
 reloadComments();

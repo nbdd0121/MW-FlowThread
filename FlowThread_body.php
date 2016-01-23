@@ -64,15 +64,20 @@ class FlowThread {
 			$output->addJsConfigVars(array('commentadmin' => ''));
 		}
 
+		global $wgFlowThreadConfig;
+		$config = array(
+			'Avatar' => $wgFlowThreadConfig['Avatar'],
+			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
+		);
+
 		if (\FlowThread\Post::canPost($output->getUser())) {
 			$output->addJsConfigVars(array('canpost' => ''));
+		} else {
+			$config['CantPostNotice'] = wfMessage('flowthread-ui-cantpost')->toString();
 		}
 
 		global $wgFlowThreadConfig;
-		$output->addJsConfigVars(array('wgFlowThreadConfig' => array(
-			'Avatar' => $wgFlowThreadConfig['Avatar'],
-			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
-		)));
+		$output->addJsConfigVars(array('wgFlowThreadConfig' => $config));
 		$output->addModules('ext.flowthread');
 		return true;
 	}
