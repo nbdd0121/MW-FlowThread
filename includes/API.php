@@ -169,7 +169,7 @@ class API extends \ApiBase {
 					unset($parser);
 					unset($opt);
 					unset($output);
-
+					$text = \Parser::stripOuterParagraph($text);
 					$text = SpamFilter::sanitize($text);
 				} else {
 					$text = htmlspecialchars($text);
