@@ -175,12 +175,12 @@
 	display: none;
 }
 
-.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete[enabled] {
+.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete {
 	display: initial;
 }
 
 .comment-thread .comment-replybox:not(:first-child) {
-	margin-left: 70px;
+	margin-left: 50px;
 }
 
 .comment-thread .comment-thread {
@@ -226,4 +226,12 @@
     color: #d32;
     border: 1px solid #ccc;
     background-color: rgba(0,0,0,0.03);
+}
+
+.comment-bannotice {
+    border-top: 1px solid rgba(0,0,0,0.13);
+    font-size: 13px;
+    text-align: center;
+    padding: 1em;
+    color: #777;
 }

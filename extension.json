@@ -3,7 +3,7 @@
 	"author": "Gary Guo",
 	"url": "https://github.com/nbdd0121/MW-FlowThread",
 	"descriptionmsg": "flowthread_desc",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"license-name": "BSD-2-Clause",
 	"type": "specialpage",
 	"ExtensionMessagesFiles": {
@@ -25,7 +25,8 @@
 		"FlowThread\\UUID": "includes/UUID.php",
 		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
 		"FlowThread\\EchoHook": "/includes/Echo.php",
-		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php"
+		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php",
+		"FlowThread\\Helper": "/includes/Helper.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
@@ -60,9 +61,11 @@
 	"ResourceModules": {
 		"ext.flowthread": {
 			"dependencies": [
-				"moment"
+				"moment",
+				"mediawiki.user"
 			],
 			"scripts":[
+				"assets/common.js",
 				"js/flowthread.js"
 			],
 			"styles":[
@@ -81,9 +84,11 @@
 		},
 		"ext.flowthread.manage": {
 			"dependencies": [
-				"moment"
+				"moment",
+				"mediawiki.user"
 			],
 			"scripts": [
+				"assets/common.js",
 				"js/manage.js"
 			],
 			"styles": [
