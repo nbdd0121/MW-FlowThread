@@ -180,7 +180,7 @@
 }
 
 .comment-thread .comment-replybox:not(:first-child) {
-	margin-left: 70px;
+	margin-left: 50px;
 }
 
 .comment-thread .comment-thread {
