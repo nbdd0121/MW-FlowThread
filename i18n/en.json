@@ -74,7 +74,16 @@
 	"notification-flowthread_spam-email-subject": "Your comment on {{SITENAME}} was marked as spam",
 	"notification-flowthread_spam-email-batch-body": "Your comment posted on $1 was marked as spam automatically",
 
+	"notification-flowthread_mention": "[[User:$1|$1]] mentioned you in {{gender:$1|his|her|his or her}} post on [[:$2]].",
+	"notification-flowthread_mention-flyout": "[[User:$1|$1]] mentioned your in {{gender:$1|his|her|his or her}} post on $2.",
+	"notification-flowthread_mention-email-subject": "$1 mentioned you in {{gender:$1|his|her|his or her}} post on {{SITENAME}}",
+	"notification-flowthread_mention-email-batch-body": "$1 mentioned you in {{gender:$1|his|her|his or her}} post on $2",
+	"notification-link-text-view-flowthread_mention": "View Message",
+
 	"flowthread-blacklist": "# Texts in this list will be blocked when posted as comment.\n# Syntax is as follows:\n#* Everything from a \"#\" character to the end of the line is a comment\n#* Every non-blank line is a regex fragment matching texts\n #<!-- leave this line exactly as it is --><pre>\n\n #</pre><!-- leave this line exactly as it is -->",
+
+	"flowthread-reply-user": "@[[User:$1|$1]] ",
+	"flowthread-reply-anonymous": "@$1 ",
 
 	"apihelp-flowthread-description": "FlowThread action API",
 	"apihelp-flowthread-param-type": "Type of action to take. (Must be one of list, like, dislike, report, delete, recover, erase or post)",

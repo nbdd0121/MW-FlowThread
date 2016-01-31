@@ -99,12 +99,30 @@ class EchoHook {
 			'email-body-batch-params' => array('title'),
 			'icon' => 'placeholder',
 		);
+		$notifications['flowthread_mention'] = array(
+			'primary-link' => array('message' => 'notification-link-text-view-flowthread_mention', 'destination' => 'title'),
+			'category' => 'flowthread',
+			'group' => 'interactive',
+			'section' => 'message',
+			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
+			'title-message' => 'notification-flowthread_mention',
+			'title-params' => array('agent', 'title'),
+			'flyout-message' => 'notification-flowthread_mention-flyout',
+			'flyout-params' => array('agent', 'title'),
+			'payload' => array('text'),
+			'email-subject-message' => 'notification-flowthread_mention-email-subject',
+			'email-subject-params' => array('agent'),
+			'email-body-batch-message' => 'notification-flowthread_mention-email-batch-body',
+			'email-body-batch-params' => array('agent', 'title'),
+			'icon' => 'chat',
+		);
 		return true;
 	}
 
 	public static function onEchoGetDefaultNotifiedUsers($event, &$users) {
 		switch ($event->getType()) {
 		case 'flowthread_reply':
+		case 'flowthread_mention':
 		case 'flowthread_userpage':
 			$extra = $event->getExtra();
 			if (!$extra || !isset($extra['target-user-id'])) {
@@ -220,6 +238,27 @@ class EchoHook {
 			'title' => $title,
 			'extra' => array(
 				'notifyAgent' => true,
+				'postid' => $post->id->getBin(),
+			),
+			'agent' => $poster,
+		));
+		return true;
+	}
+
+	public static function onFlowThreadMention($post, $mentioned) {
+		$targets = array();
+		foreach ($mentioned as $id => $id2) {
+			$targets[] = $id;
+		}
+
+		$poster = \User::newFromId($post->userid);
+		$title = \Title::newFromId($post->pageid);
+
+		\EchoEvent::create(array(
+			'type' => 'flowthread_mention',
+			'title' => $title,
+			'extra' => array(
+				'target-user-id' => $targets,
 				'postid' => $post->id->getBin(),
 			),
 			'agent' => $poster,

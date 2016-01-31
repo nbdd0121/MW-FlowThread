@@ -74,6 +74,12 @@
 	"notification-flowthread_spam-email-subject": "你在{{SITENAME}}上的评论被标记为垃圾评论",
 	"notification-flowthread_spam-email-batch-body": "你在$1上的评论被自动标记为垃圾评论",
 
+	"notification-flowthread_mention": "[[User:$1|$1]]在{{gender:$1|他|她|他/她}}在[[:$2]]上发表的评论中提及了您。",
+	"notification-flowthread_mention-flyout": "[[User:$1|$1]]在{{gender:$1|他|她|他/她}}在$2上发表的评论中提及了您。",
+	"notification-flowthread_mention-email-subject": "$1在{{gender:$1|他|她|他/她}}在{{SITENAME}}上发表的评论中提及了您。",
+	"notification-flowthread_mention-email-batch-body": "$1在{{gender:$1|他|她|他/她}}在$2上发表的评论中提及了您。",
+	"notification-link-text-view-flowthread_mention": "查看消息",
+
 	"flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->",
 
 	"apihelp-flowthread-description": "FlowThread操作API",
