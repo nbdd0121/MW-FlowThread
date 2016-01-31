@@ -42,6 +42,7 @@
 	"flowthread-ui-submit": "Submit",
 	"flowthread-ui-nocontent": "Content cannot be empty",
 	"flowthread-ui-cantpost": "You do not have right to post. Please check site's policy about commenting.",
+	"flowthread-ui-editblacklist": "Edit Blacklist",
 
 	"echo-category-title-flowthread": "FlowThread comment",
 	"echo-pref-tooltip-flowthread": "Notify me when my comment is replyed.",

@@ -181,6 +181,13 @@ class SpecialManage extends \SpecialPage {
 		// Wrap with a form
 		$html = \Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
 
+		if ($this->getUser()->isAllowed('editinterface')) {
+			$html .= \Xml::tags('small', array('style' => 'float:right;'), \Linker::linkKnown(
+				\Title::newFromText('MediaWiki:Flowthread-blacklist'),
+				$this->msg('flowthread-ui-editblacklist')
+			));
+		}
+
 		$this->getOutput()->addHTML($html);
 	}
 

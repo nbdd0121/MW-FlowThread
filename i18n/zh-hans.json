@@ -42,6 +42,7 @@
 	"flowthread-ui-submit": "提交",
 	"flowthread-ui-nocontent": "内容不能为空",
 	"flowthread-ui-cantpost": "您没有权限发表评论，请查看站点关于评论的政策。",
+	"flowthread-ui-editblacklist": "编辑屏蔽列表",
 
 	"echo-category-title-flowthread": "FlowThread评论",
 	"echo-pref-tooltip-flowthread": "当我的评论被回复时提醒我。",
