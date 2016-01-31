@@ -56,6 +56,9 @@
 		"FlowThreadSpammed": [
 			"FlowThread\\EchoHook::onFlowThreadSpammed"
 		],
+		"FlowThreadMention": [
+			"FlowThread\\EchoHook::onFlowThreadMention"
+		],
 		"SkinBuildSidebar": "FlowThread::onSkinBuildSidebar"
 	},
 	"ResourceModules": {
