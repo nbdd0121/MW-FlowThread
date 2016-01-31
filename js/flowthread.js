@@ -139,7 +139,7 @@ Paginator.prototype.addEllipse = function() {
 
 Paginator.prototype.repaint = function() {
   this.object.html('');
-  if (this.count === 1) {
+  if (this.count <= 1) {
     this.object.hide();
   } else {
     this.object.show();
