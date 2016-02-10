@@ -34,6 +34,8 @@
 	"flowthread-ui-delete": "Delete",
 	"flowthread-ui-recover": "Recover",
 	"flowthread-ui-erase": "Permantly Delete",
+	"flowthread-ui-pin": "Pin",
+	"flowthread-ui-unpin": "Unpin",
 	"flowthread-ui-selectall": "Select All",
 	"flowthread-ui-unselectall": "Unselect All",
 	"flowthread-ui-user-post-on-page": "$1 posted on $2",

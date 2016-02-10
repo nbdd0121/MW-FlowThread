@@ -83,7 +83,9 @@
 				"flowthread-ui-usewikitext",
 				"flowthread-ui-placeholder",
 				"flowthread-ui-submit",
-				"flowthread-ui-nocontent"
+				"flowthread-ui-nocontent",
+				"flowthread-ui-pin",
+				"flowthread-ui-unpin"
 			]
 		},
 		"ext.flowthread.manage": {

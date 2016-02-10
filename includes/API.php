@@ -42,18 +42,23 @@ class API extends \ApiBase {
 		$comments = $this->convertPosts($page->posts);
 
 		$cache = \ObjectCache::getMainWANInstance();
-		$posts = $cache->getWithSetCallback(
-			wfMemcKey('flowthead', 'pinned', $pageid), 0, function () use ($pageid) {
-				$page = new Page($pageid);
-				$page->type = Post::STATUS_PINNED;
-				$page->fetch();
-				$posts = $page->posts;
-				return $page->posts;
-			});
-		$pinned = $this->convertPosts($posts);
+		// $posts = $cache->getWithSetCallback(
+		// 	wfMemcKey('flowthead', 'pinned', $pageid), 1, function () use ($pageid) {
+		// 		$page = new Page($pageid);
+		// 		$page->type = Post::STATUS_PINNED;
+		// 		$page->fetch();
+		// 		$posts = $page->posts;
+		// 		return $page->posts;
+		// 	});
+		// $pinned = $this->convertPosts($posts);
+
+		$page = new Page($pageid);
+		$page->type = Post::STATUS_PINNED;
+		$page->fetch();
+		$pinned = $this->convertPosts($page->posts);
 
 		$popular = $cache->getWithSetCallback(
-			wfMemcKey('flowthread', 'popular', $pageid), 0, function () use ($pageid) {
+			wfMemcKey('flowthread', 'popular', $pageid), 60, function () use ($pageid) {
 				return PopularPosts::getFromPageId($pageid);
 			});
 		$popularRet = $this->convertPosts($popular);

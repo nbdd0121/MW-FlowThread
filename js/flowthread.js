@@ -1,4 +1,6 @@
 var canpost = mw.config.exists('canpost');
+var ownpage = mw.config.exists('commentadmin') || mw.config.get('wgNamespaceNumber') === 2 && mw.config.get('wgTitle').replace('/$', '') === mw.user.id();
+
 var replyBox = null;
 
 function createThread(post) {
@@ -38,6 +40,18 @@ function createThread(post) {
     });
   }
 
+  if (ownpage) {
+     thread.addButton('pin', mw.msg('flowthread-ui-pin'), function() {
+      if(object.find('.comment-pin').attr('pinned') !== undefined) {
+        thread.unpin();
+        object.find('.comment-pin').removeAttr('pinned').text(mw.msg('flowthread-ui-pin'));
+      }else{
+        thread.pin();
+        object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
+      }
+    });
+  }
+
   if (post.myatt === 1) {
     object.find('.comment-like').attr('liked', '');
   } else if (post.myatt === 2) {
@@ -52,7 +66,9 @@ Thread.prototype.reply = function() {
     replyBox.remove();
   }
   replyBox = createReplyBox(this.post.id);
-  this.appendChild({object: replyBox});
+  this.appendChild({
+    object: replyBox
+  });
 }
 
 Thread.sendComment = function(postid, text, wikitext) {
@@ -79,11 +95,14 @@ function reloadComments(offset) {
     pageid: mw.config.get('wgArticleId'),
     offset: offset
   }).done(function(data) {
-    $('.comment-container-top').html('<div>'+'Popular Posts'+'</div>').attr('disabled','');
+    $('.comment-container-top').html('<div>' + 'Popular Posts' + '</div>').attr('disabled', '');
     $('.comment-container').html('');
+    var canpostbak = canpost;
+    canpost = false; // No reply for topped comments
     data.flowthread.pinned.forEach(function(item) {
       var obj = createThread(item);
       obj.markAsPinned();
+      obj.object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
       $('.comment-container-top').removeAttr('disabled').append(obj.object);
     });
     data.flowthread.popular.forEach(function(item) {
@@ -91,6 +110,7 @@ function reloadComments(offset) {
       obj.markAsPopular();
       $('.comment-container-top').removeAttr('disabled').append(obj.object);
     });
+    canpost = canpostbak;
     data.flowthread.posts.forEach(function(item) {
       if (item.parentid === '') {
         $('.comment-container').append(createThread(item).object);
@@ -176,7 +196,7 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function(){
+$('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function() {
   if (canpost) return createReplyBox('');
   var noticeContainer = $('<div>').addClass('comment-bannotice');
   noticeContainer.html(config.CantPostNotice);

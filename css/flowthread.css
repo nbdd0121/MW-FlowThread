@@ -131,7 +131,7 @@
     vertical-align: middle;
 }
 
-.comment-reply, .comment-like, .comment-report, .comment-delete {
+.comment-reply, .comment-like, .comment-report, .comment-delete, .comment-pin {
     margin-left: 5px;
     cursor: pointer;
     transition: color 0.15s linear 0s;
@@ -139,7 +139,7 @@
 
 .comment-reply::before, .comment-like::before, .comment-report::before, .comment-delete::before {
     content: "";
-    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
+    background: transparent url("../assets/sprites.png") no-repeat scroll 0% 0%;
     opacity: 0.6;
     display: inline-block;
     width: 15px;
@@ -173,7 +173,7 @@
     background-position: 0px -40px;
 }
 
-.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover {
+.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover, .comment-pin:hover {
     opacity: 1.0;
     color: #555;
 }
@@ -182,11 +182,11 @@
     opacity: 1.0;
 }
 
-.comment-post .comment-report, .comment-post .comment-delete {
+.comment-post .comment-report, .comment-post .comment-delete, .comment-post .comment-pin {
 	display: none;
 }
 
-.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete {
+.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete, .comment-post:hover .comment-pin {
 	display: initial;
 }
 

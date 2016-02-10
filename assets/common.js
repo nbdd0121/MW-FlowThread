@@ -78,6 +78,7 @@ Thread.prototype.appendChild = function(thread) {
 Thread.prototype.prependChild = function(thread) {
   this.object.children('.comment-post').after(thread.object);
 }
+
 function wrapText(text) {
   var span = $('<span/>');
   span.text(text);
@@ -123,6 +124,25 @@ Thread.prototype.report = function() {
   this.object.find('.comment-like').first().removeAttr('liked');
   this.object.find('.comment-report').first().attr('reported', '');
 }
+
+Thread.prototype.pin = function() {
+  var api = new mw.Api();
+  api.get({
+    action: 'flowthread',
+    type: 'pin',
+    postid: this.post.id
+  });
+};
+
+Thread.prototype.unpin = function() {
+  var api = new mw.Api();
+  api.get({
+    action: 'flowthread',
+    type: 'unpin',
+    postid: this.post.id
+  });
+};
+
 
 Thread.prototype.delete = function() {
   var api = new mw.Api();

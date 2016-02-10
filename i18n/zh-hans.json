@@ -34,6 +34,8 @@
 	"flowthread-ui-delete": "删除",
 	"flowthread-ui-recover": "恢复",
 	"flowthread-ui-erase": "永久删除",
+	"flowthread-ui-pin": "置顶",
+	"flowthread-ui-unpin": "取消置顶",
 	"flowthread-ui-selectall": "全选",
 	"flowthread-ui-unselectall": "反选",
 	"flowthread-ui-user-post-on-page": "$1 发表于 $2",
