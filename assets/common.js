@@ -134,6 +134,16 @@ Thread.prototype.delete = function() {
   this.object.remove();
 }
 
+Thread.prototype.markAsPopular = function() {
+  this.object.addClass('comment-popular');
+  this.object.removeAttr('comment-id');
+}
+
+Thread.prototype.markAsPinned = function() {
+  this.object.addClass('comment-pinned');
+  this.object.removeAttr('comment-id');
+}
+
 function ReplyBox() {
   var template = '<div class="comment-replybox">'
     + '<div class="comment-avatar">'

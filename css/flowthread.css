@@ -10,7 +10,8 @@
     padding: 10px;
 }
 
-.comment-container {
+/* Only add margin if we do not have topped posts */
+.comment-container-top[disabled] + .comment-container {
     margin-top: 2em;
 }
 
@@ -118,6 +119,16 @@
     font-size: 12px;
     margin-right: 8px;
     color: #999;
+}
+
+.comment-pinned .comment-user::before{
+    content: "";
+    background: url('../assets/sprites.png') no-repeat;
+    background-position: 0px -72px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
 }
 
 .comment-reply, .comment-like, .comment-report, .comment-delete {
@@ -234,4 +245,33 @@
     text-align: center;
     padding: 1em;
     color: #777;
+}
+
+.comment-container-top {
+    border: 1px #CCC solid;
+    margin-top: 2em;
+    border-radius: 5px;
+}
+
+.comment-container-top[disabled] {
+    display: none;
+}
+
+/* The title bar */
+.comment-container-top > div:first-child {
+    background: transparent url(bg_sprites.png) repeat-x scroll 0px -60px;
+    height: 24px;
+    line-height: 24px;
+    color: #555;
+    text-indent: 1em;
+    font-size: small;
+    border-radius: 5px 5px 0 0;
+}
+
+.comment-container-top > div:last-child {
+    border-radius: 0 0 5px 5px;
+}
+
+.comment-container-top:not([disabled]) + .comment-container > div:first-child {
+    border-top: 0;
 }

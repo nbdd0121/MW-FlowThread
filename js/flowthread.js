@@ -79,7 +79,18 @@ function reloadComments(offset) {
     pageid: mw.config.get('wgArticleId'),
     offset: offset
   }).done(function(data) {
+    $('.comment-container-top').html('<div>'+'Popular Posts'+'</div>').attr('disabled','');
     $('.comment-container').html('');
+    data.flowthread.pinned.forEach(function(item) {
+      var obj = createThread(item);
+      obj.markAsPinned();
+      $('.comment-container-top').removeAttr('disabled').append(obj.object);
+    });
+    data.flowthread.popular.forEach(function(item) {
+      var obj = createThread(item);
+      obj.markAsPopular();
+      $('.comment-container-top').removeAttr('disabled').append(obj.object);
+    });
     data.flowthread.posts.forEach(function(item) {
       if (item.parentid === '') {
         $('.comment-container').append(createThread(item).object);
@@ -165,7 +176,7 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after('<div class="comment-container"></div>', pager.object, function(){
+$('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function(){
   if (canpost) return createReplyBox('');
   var noticeContainer = $('<div>').addClass('comment-bannotice');
   noticeContainer.html(config.CantPostNotice);

@@ -41,8 +41,27 @@ class API extends \ApiBase {
 
 		$comments = $this->convertPosts($page->posts);
 
+		$cache = \ObjectCache::getMainWANInstance();
+		$posts = $cache->getWithSetCallback(
+			wfMemcKey('flowthead', 'pinned', $pageid), 0, function () use ($pageid) {
+				$page = new Page($pageid);
+				$page->type = Post::STATUS_PINNED;
+				$page->fetch();
+				$posts = $page->posts;
+				return $page->posts;
+			});
+		$pinned = $this->convertPosts($posts);
+
+		$popular = $cache->getWithSetCallback(
+			wfMemcKey('flowthread', 'popular', $pageid), 0, function () use ($pageid) {
+				return PopularPosts::getFromPageId($pageid);
+			});
+		$popularRet = $this->convertPosts($popular);
+
 		$obj = array(
 			"posts" => $comments,
+			"pinned" => $pinned,
+			"popular" => $popularRet,
 			"count" => $page->totalCount,
 		);
 
@@ -123,6 +142,26 @@ class API extends \ApiBase {
 				}
 				foreach ($postList as $post) {
 					$post->delete($this->getUser());
+				}
+				$this->getResult()->addValue(null, $this->getModuleName(), '');
+				break;
+
+			case 'pin':
+				if (!$postList) {
+					$this->dieNoParam('postid');
+				}
+				foreach ($postList as $post) {
+					$post->pin($this->getUser());
+				}
+				$this->getResult()->addValue(null, $this->getModuleName(), '');
+				break;
+
+			case 'unpin':
+				if (!$postList) {
+					$this->dieNoParam('postid');
+				}
+				foreach ($postList as $post) {
+					$post->unpin($this->getUser());
 				}
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;

@@ -26,6 +26,7 @@
 		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
 		"FlowThread\\EchoHook": "/includes/Echo.php",
 		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php",
+		"FlowThread\\PopularPosts": "/includes/PopularPosts.php",
 		"FlowThread\\Helper": "/includes/Helper.php"
 	},
 	"Hooks": {
@@ -151,6 +152,8 @@
 		"FlowThreadConfig": {
 			"Avatar": "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
 			"AnonymousAvatar": "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
+			"PopularPostCount": 3,
+			"PopularPostThreshold": 1,
 			"MaxNestLevel": 3
 		},
 		"TriggerFlowThreadHooks": true
