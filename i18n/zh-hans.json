@@ -38,6 +38,7 @@
 	"flowthread-ui-unpin": "取消置顶",
 	"flowthread-ui-selectall": "全选",
 	"flowthread-ui-unselectall": "反选",
+	"flowthread-ui-popular": "热门评论",
 	"flowthread-ui-user-post-on-page": "$1 发表于 $2",
 	"flowthread-ui-usewikitext": "使用维基文本",
 	"flowthread-ui-placeholder": "说点什么吧...",

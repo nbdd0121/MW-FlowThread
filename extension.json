@@ -85,7 +85,8 @@
 				"flowthread-ui-submit",
 				"flowthread-ui-nocontent",
 				"flowthread-ui-pin",
-				"flowthread-ui-unpin"
+				"flowthread-ui-unpin",
+				"flowthread-ui-popular"
 			]
 		},
 		"ext.flowthread.manage": {

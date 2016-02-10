@@ -38,6 +38,7 @@
 	"flowthread-ui-unpin": "Unpin",
 	"flowthread-ui-selectall": "Select All",
 	"flowthread-ui-unselectall": "Unselect All",
+	"flowthread-ui-popular": "Popular Posts",
 	"flowthread-ui-user-post-on-page": "$1 posted on $2",
 	"flowthread-ui-usewikitext": "Use Wikitext",
 	"flowthread-ui-placeholder": "Say Something...",

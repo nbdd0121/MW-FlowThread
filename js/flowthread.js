@@ -95,7 +95,7 @@ function reloadComments(offset) {
     pageid: mw.config.get('wgArticleId'),
     offset: offset
   }).done(function(data) {
-    $('.comment-container-top').html('<div>' + 'Popular Posts' + '</div>').attr('disabled', '');
+    $('.comment-container-top').html('<div>' + mw.msg('flowthread-ui-popular') + '</div>').attr('disabled', '');
     $('.comment-container').html('');
     var canpostbak = canpost;
     canpost = false; // No reply for topped comments
