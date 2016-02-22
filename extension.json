@@ -55,8 +55,7 @@
 		],
 		"FlowThreadSpammed": [
 			"FlowThread\\EchoHook::onFlowThreadSpammed"
-		],
-		"SkinBuildSidebar": "FlowThread::onSkinBuildSidebar"
+		]
 	},
 	"ResourceModules": {
 		"ext.flowthread": {
