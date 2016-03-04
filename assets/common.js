@@ -171,8 +171,9 @@ function ReplyBox() {
     + '</div>'
     + '<div class="comment-body">'
     + '<textarea placeholder="' + mw.msg('flowthread-ui-placeholder') + '"></textarea>'
+    + '<div class="comment-preview" style="display:none;"></div>'
     + '<div class="comment-toolbar">'
-    + '<button class="flowthread-btn flowthread-btn-wikitext" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
+    + '<button class="flowthread-btn flowthread-btn-wikitext' + (localStorage.flowthread_use_wikitext ? ' on' : '') + '" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
     + '<button class="flowthread-btn flowthread-btn-preview"></button>'
     + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
     + '</div>'
@@ -186,10 +187,40 @@ function ReplyBox() {
     if (e.ctrlKey && e.which === 13) object.find('.comment-submit').click();
     self.pack();
   });
-  object.find('.flowthread-btn-wikitext').click(function() {
-    if (!$(this).toggleClass('on').hasClass('on')) {
-      object.find('.flowthread-btn-preview').removeClass('on');
+
+  object.find('.flowthread-btn-preview').click(function() {
+    var obj = $(this);
+    obj.toggleClass('on');
+
+    if (obj.hasClass('on')) {
+      object.find('textarea').hide();
+      object.find('.comment-preview').show();
+      var api = new mw.Api();
+      api.get({
+        action: 'parse',
+        title: mw.config.get('wgTitle'),
+        prop: 'text',
+        preview: true,
+        text: self.getValue()
+      }).done(function(result){
+        object.find('.comment-preview').html(result.parse.text['*']);
+      }).fail(function(error, obj) {
+        showErrorDialog(error, obj);
+      });
+    } else {
+      object.find('textarea').show();
+      object.find('.comment-preview').hide();
     }
+  });
+
+  object.find('.flowthread-btn-wikitext').click(function() {
+    var on = $(this).toggleClass('on').hasClass('on');
+    if (!on) {
+      object.find('.flowthread-btn-preview').removeClass('on');
+      object.find('textarea').show();
+      object.find('.comment-preview').hide();
+    }
+    localStorage.flowthread_use_wikitext = on;
   });
 
   object.find('.comment-submit').click(function() {
@@ -211,9 +242,18 @@ ReplyBox.prototype.setValue = function(t) {
 
 ReplyBox.prototype.pack = function() {
   var textarea = this.object.find('textarea');
-  textarea.height(1).height(textarea[0].scrollHeight);
+  textarea.height(1).height(Math.max(textarea[0].scrollHeight, 60));
 }
 
 function showMsgDialog(text) {
   alert(text);
+}
+
+function showErrorDialog(error, obj) {
+  if (obj.error)
+    showMsgDialog(obj.error.info);
+  else if (error === 'http')
+    showMsgDialog(mw.msg('flowthread-ui-networkerror'));
+  else
+    showMsgDialog(error);
 }

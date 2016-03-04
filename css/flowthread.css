@@ -19,15 +19,13 @@
     padding-left: 60px;
 }
 
-.comment-body textarea {
+.comment-body textarea, .comment-preview {
     /* Metrics */
-    height: 54px;
     margin: 0px;
     padding: 10px;
     resize: none;
     box-sizing: border-box;
     /* Styles */
-    color: #999;
     display: block;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
@@ -38,6 +36,20 @@
     border-color: #CCC #CCC #999;
     border-radius: 3px 3px 0px 0px;
     background: white;
+}
+
+.comment-body textarea {
+    color: #999;
+    height: 60px;
+}
+
+.comment-preview {
+    min-height: 70px;
+    padding-top: 0px;
+}
+
+.comment-preview {
+    background: #f8f8f8;
 }
 
 .comment-toolbar {
@@ -264,6 +276,8 @@
 }
 
 .flowthread-btn {
+    position: relative;
+    top: -1px;
     float: left;
     width: 24px;
     height: 24px;
