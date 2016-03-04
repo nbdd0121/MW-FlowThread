@@ -2,11 +2,11 @@ var config = mw.config.get('wgFlowThreadConfig');
 
 /* Get avatar by user name */
 function getAvatar(id, username) {
-    if(id===0) {
-        return config.AnonymousAvatar;
-    }else{
-        return config.Avatar.replace(/\$\{username\}/g, username);
-    }
+  if (id === 0) {
+    return config.AnonymousAvatar;
+  } else {
+    return config.Avatar.replace(/\$\{username\}/g, username);
+  }
 }
 
 /* Get user friendly time string (such as 1 hour age) */
@@ -172,8 +172,8 @@ function ReplyBox() {
     + '<div class="comment-body">'
     + '<textarea placeholder="' + mw.msg('flowthread-ui-placeholder') + '"></textarea>'
     + '<div class="comment-toolbar">'
-    + '<input type="checkbox" name="wikitext" value="" />'
-    + mw.msg('flowthread-ui-usewikitext')
+    + '<button class="flowthread-btn flowthread-btn-wikitext" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
+    + '<button class="flowthread-btn flowthread-btn-preview"></button>'
     + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
     + '</div>'
     + '</div></div>';
@@ -186,9 +186,34 @@ function ReplyBox() {
     if (e.ctrlKey && e.which === 13) object.find('.comment-submit').click();
     self.pack();
   });
+  object.find('.flowthread-btn-wikitext').click(function() {
+    if (!$(this).toggleClass('on').hasClass('on')) {
+      object.find('.flowthread-btn-preview').removeClass('on');
+    }
+  });
+
+  object.find('.comment-submit').click(function() {
+    if (self.onSubmit) self.onSubmit();
+  });
 }
+
+ReplyBox.prototype.isInWikitextMode = function() {
+  return this.object.find('.flowthread-btn-wikitext').hasClass('on');
+};
+
+ReplyBox.prototype.getValue = function() {
+  return this.object.find('textarea').val();
+};
+
+ReplyBox.prototype.setValue = function(t) {
+  return this.object.find('textarea').val(t);
+};
 
 ReplyBox.prototype.pack = function() {
   var textarea = this.object.find('textarea');
   textarea.height(1).height(textarea[0].scrollHeight);
+}
+
+function showMsgDialog(text) {
+  alert(text);
 }

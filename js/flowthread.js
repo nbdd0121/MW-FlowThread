@@ -25,7 +25,7 @@ function createThread(post) {
       }
     });
     thread.addButton('report', mw.msg('flowthread-ui-report'), function() {
-      if (object.find('.comment-like').attr('reported') !== undefined) {
+      if (object.find('.comment-report').attr('reported') !== undefined) {
         thread.dislike();
       } else {
         thread.report();
@@ -81,8 +81,13 @@ Thread.sendComment = function(postid, text, wikitext) {
     content: text,
     wikitext: wikitext
   };
-  api.get(req).done(reloadComments).fail(function(error) {
-    alert(error);
+  api.get(req).done(reloadComments).fail(function(error, obj) {
+    if (obj.error)
+      showMsgDialog(obj.error.info);
+    else if (error === 'http')
+      showMsgDialog(mw.msg('flowthread-ui-networkerror'));
+    else
+      showMsgDialog(error);
   });
 }
 
@@ -130,20 +135,18 @@ function setFollowUp(postid, follow) {
 }
 
 function createReplyBox(parentid) {
-  var replyBox = new ReplyBox().object;
-  var textarea = replyBox.find('textarea');
-  var submit = replyBox.find('.comment-submit');
-  var useWikitext = replyBox.find('[name=wikitext]');
-  submit.click(function() {
-    var text = textarea.val().trim();
+  var replyBox = new ReplyBox();
+
+  replyBox.onSubmit = function() {
+    var text = replyBox.getValue().trim();
     if (!text) {
-      alert(mw.msg('flowthread-ui-nocontent'));
+      showMsgDialog(mw.msg('flowthread-ui-nocontent'));
       return;
     }
-    textarea.val('');
-    Thread.sendComment(parentid, text, useWikitext[0].checked);
-  });
-  return replyBox;
+    replyBox.setValue('');
+    Thread.sendComment(parentid, text, replyBox.isInWikitextMode());
+  };
+  return replyBox.object;
 }
 
 /* Paginator support */

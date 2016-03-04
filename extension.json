@@ -86,7 +86,8 @@
 				"flowthread-ui-nocontent",
 				"flowthread-ui-pin",
 				"flowthread-ui-unpin",
-				"flowthread-ui-popular"
+				"flowthread-ui-popular",
+				"flowthread-ui-networkerror"
 			]
 		},
 		"ext.flowthread.manage": {
