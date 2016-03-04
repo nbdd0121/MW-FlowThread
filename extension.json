@@ -81,6 +81,7 @@
 				"flowthread-ui-report",
 				"flowthread-ui-delete",
 				"flowthread-ui-usewikitext",
+				"flowthread-ui-preview",
 				"flowthread-ui-placeholder",
 				"flowthread-ui-submit",
 				"flowthread-ui-nocontent",

@@ -174,7 +174,7 @@ function ReplyBox() {
     + '<div class="comment-preview" style="display:none;"></div>'
     + '<div class="comment-toolbar">'
     + '<button class="flowthread-btn flowthread-btn-wikitext' + (localStorage.flowthread_use_wikitext ? ' on' : '') + '" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
-    + '<button class="flowthread-btn flowthread-btn-preview"></button>'
+    + '<button class="flowthread-btn flowthread-btn-preview" title="' + mw.msg('flowthread-ui-preview') + '"></button>'
     + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
     + '</div>'
     + '</div></div>';

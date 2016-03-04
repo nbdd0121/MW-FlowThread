@@ -41,6 +41,7 @@
 	"flowthread-ui-popular": "热门评论",
 	"flowthread-ui-user-post-on-page": "$1 发表于 $2",
 	"flowthread-ui-usewikitext": "使用维基文本",
+	"flowthread-ui-preview": "预览",
 	"flowthread-ui-placeholder": "说点什么吧...",
 	"flowthread-ui-submit": "提交",
 	"flowthread-ui-nocontent": "内容不能为空",
