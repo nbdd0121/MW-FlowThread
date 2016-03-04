@@ -192,24 +192,29 @@ function ReplyBox() {
     var obj = $(this);
     obj.toggleClass('on');
 
+    var previewPanel = object.find('.comment-preview');
+
     if (obj.hasClass('on')) {
       object.find('textarea').hide();
-      object.find('.comment-preview').show();
-      var api = new mw.Api();
-      api.get({
-        action: 'parse',
-        title: mw.config.get('wgTitle'),
-        prop: 'text',
-        preview: true,
-        text: self.getValue()
-      }).done(function(result){
-        object.find('.comment-preview').html(result.parse.text['*']);
-      }).fail(function(error, obj) {
-        showErrorDialog(error, obj);
-      });
+      previewPanel.show();
+      var val = self.getValue().trim();
+      if (val) {
+        var api = new mw.Api();
+        api.get({
+          action: 'parse',
+          title: mw.config.get('wgTitle'),
+          prop: 'text',
+          preview: true,
+          text: val
+        }).done(function(result) {
+          previewPanel.html(result.parse.text['*']);
+        }).fail(function(error, obj) {
+          showErrorDialog(error, obj);
+        });
+      }
     } else {
       object.find('textarea').show();
-      object.find('.comment-preview').hide();
+      previewPanel.hide();
     }
   });
 

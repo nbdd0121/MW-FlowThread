@@ -293,6 +293,10 @@
     transition: all 0.3s ease-out;
 }
 
+.flowthread-btn::-moz-focus-inner, .comment-submit::-moz-focus-inner {
+    border: 0;
+}
+
 .flowthread-btn:hover {
     border: 1px solid #CCC;
     box-shadow: 0px 0px 0px white inset,0 5px 11px 0 rgba(0,0,0,0.18);
