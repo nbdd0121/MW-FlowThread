@@ -141,7 +141,7 @@ class SpecialManage extends \SpecialPage {
 		} else if ($this->filter === 'spam') {
 			$cond['flowthread_status'] = 2;
 		} else {
-			$cond['flowthread_status'] = 0;
+			$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
 			if ($this->filter === 'reported') {
 				$cond[] = 'flowthread_report > 0';
 				$orderBy = 'flowthread_report ' . $dir . ', ' . $orderBy;

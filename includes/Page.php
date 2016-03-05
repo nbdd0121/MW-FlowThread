@@ -1,12 +1,16 @@
 <?php
 namespace FlowThread;
 class Page {
+	const FILTER_ALL = 0;
+	const FILTER_NORMAL = 1;
+	const FILTER_PINNED = 4;
+
 	public $pageid = 0;
 	public $totalCount = 0;
 	public $offset = 0;
 	public $limit = 10;
 	public $posts = null;
-	public $type = null;
+	public $filter = FILTER_ALL;
 
 	public function __construct($id) {
 		// Invalid ID
@@ -36,8 +40,15 @@ class Page {
 			'flowthread_pageid' => $this->pageid,
 			'flowthread_parentid IS NULL',
 		);
-		if ($this->type !== null) {
-			$cond['flowthread_status'] = $this->type;
+		switch ($this->filter) {
+		case static::FILTER_ALL:
+			break;
+		case static::FILTER_NORMAL:
+			$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
+			break;
+		case static::FILTER_PINNED:
+			$cond['flowthread_status'] = Post::STATUS_PINNED;
+			break;
 		}
 
 		// Get all root posts
@@ -66,9 +77,17 @@ class Page {
 				'flowthread_pageid' => $this->pageid,
 				'flowthread_parentid IN(' . $sqlPart . ')',
 			);
-			if ($this->type !== null) {
-				$cond['flowthread_status'] = $this->type;
+			switch ($this->filter) {
+			case static::FILTER_ALL:
+				break;
+			case static::FILTER_NORMAL:
+				$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
+				break;
+			case static::FILTER_PINNED:
+				$cond['flowthread_status'] = Post::STATUS_PINNED;
+				break;
 			}
+
 			$res = $dbr->select('FlowThread', Post::getRequiredColumns(), $cond);
 
 			$sqlPart = '';
