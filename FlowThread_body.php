@@ -107,21 +107,28 @@ class FlowThread {
 		return true;
 	}
 
-	public static function onSkinBuildSidebar(\Skin $skin, &$bar) {
-		global $wgUser;
+	public static function onBaseTemplateToolbox(\BaseTemplate &$baseTemplate, array &$toolbox) {
+		if (isset($baseTemplate->data['nav_urls']['usercomments'])
+			&& $baseTemplate->data['nav_urls']['usercomments']) {
+			$toolbox['usercomments'] = $baseTemplate->data['nav_urls']['usercomments'];
+			$toolbox['usercomments']['id'] = 't-usercomments';
+		}
+	}
 
-		$relevUser = $skin->getRelevantUser();
-		if ($relevUser && $wgUser->isAllowed('commentadmin-restricted')) {
-			$bar['sidebar-section-extension'][] =
-			array(
+	public static function onSkinTemplateOutputPageBeforeExec(&$skinTemplate, &$tpl) {
+		$user = $skinTemplate->getRelevantUser();
+
+		if ($user && $skinTemplate->getUser()->isAllowed('commentadmin-restricted')) {
+			$nav_urls = $tpl->get('nav_urls');
+			$nav_urls['usercomments'] = [
 				'text' => wfMsg('sidebar-usercomments'),
 				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
-					'user' => $relevUser->getName(),
+					'user' => $user->getName(),
 				)),
-				'id' => 'n-usercomments',
-				'active' => '',
-			);
+			];
+			$tpl->set('nav_urls', $nav_urls);
 		}
+
 		return true;
 	}
 }

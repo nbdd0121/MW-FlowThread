@@ -60,7 +60,8 @@
 		"FlowThreadMention": [
 			"FlowThread\\EchoHook::onFlowThreadMention"
 		],
-		"SkinBuildSidebar": "FlowThread::onSkinBuildSidebar"
+		"BaseTemplateToolbox": "FlowThread::onBaseTemplateToolbox",
+		"SkinTemplateOutputPageBeforeExec": "FlowThread::onSkinTemplateOutputPageBeforeExec"
 	},
 	"ResourceModules": {
 		"ext.flowthread": {
