@@ -52,7 +52,7 @@
 
 .comment-like::before, .comment-report::before, .comment-delete::before, .comment-recover::before {
     content: "";
-    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
+    background: transparent url("../assets/sprites.png") no-repeat scroll 0% 0%;
     opacity: 0.6;
     display: inline-block;
     width: 15px;

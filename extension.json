@@ -74,6 +74,7 @@
 				"js/flowthread.js"
 			],
 			"styles":[
+				"assets/common.css",
 				"css/flowthread.css"
 			],
 			"messages": [
