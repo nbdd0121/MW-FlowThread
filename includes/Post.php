@@ -253,7 +253,10 @@ class Post {
 	public function delete(\User $user) {
 		// Poster himself can delete as well
 		if ($user->getId() === 0 || $user->getId() !== $this->userid) {
-			self::checkIfAdmin($user);
+			if (!self::canPerformAdmin($user) &&
+				!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
+				self::diePermission();
+			}
 		}
 
 		// Delete is not valid for deleted post
@@ -348,7 +351,7 @@ class Post {
 
 	public function isDeleted() {
 		// This include spam and deleted
-		return $this->status !== static::STATUS_NORMAL;
+		return $this->status !== static::STATUS_NORMAL && $this->status !== static::STATUS_PINNED;
 	}
 
 	public function isVisible() {

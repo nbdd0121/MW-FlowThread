@@ -34,18 +34,18 @@ function createThread(post) {
   }
 
   // commentadmin-restricted and poster himself can delete comment
-  if (mw.config.exists('commentadmin') || (post.userid && post.userid === mw.user.getId())) {
+  if (ownpage || (post.userid && post.userid === mw.user.getId())) {
     thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
       thread.delete();
     });
   }
 
   if (ownpage) {
-     thread.addButton('pin', mw.msg('flowthread-ui-pin'), function() {
-      if(object.find('.comment-pin').attr('pinned') !== undefined) {
+    thread.addButton('pin', mw.msg('flowthread-ui-pin'), function() {
+      if (object.find('.comment-pin').attr('pinned') !== undefined) {
         thread.unpin();
         object.find('.comment-pin').removeAttr('pinned').text(mw.msg('flowthread-ui-pin'));
-      }else{
+      } else {
         thread.pin();
         object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
       }

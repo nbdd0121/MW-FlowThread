@@ -3,6 +3,9 @@ namespace FlowThread;
 
 class SpamFilter {
 
+	/**
+	 * Validate if a regular expression is valid
+	 */
 	private static function validateRegex($regex) {
 		wfSuppressWarnings();
 		$ok = preg_match($regex, '');
@@ -15,6 +18,9 @@ class SpamFilter {
 		return true;
 	}
 
+	/**
+	 * Parse a line in spam blacklist
+	 */
 	private static function parseLine($line) {
 		$line = trim(preg_replace('/#.*$/', '', $line)); // Remove comments and trim space
 		if (!$line) {
@@ -50,6 +56,9 @@ class SpamFilter {
 		);
 	}
 
+	/**
+	 * Parse option part in blacklist line (enclosed in <>)
+	 */
 	private static function parseOptions($opts) {
 		$options = array();
 		$segments = explode('|', $opts);
@@ -85,6 +94,9 @@ class SpamFilter {
 		return $options;
 	}
 
+	/**
+	 * Parse whole spam blacklist
+	 */
 	private static function parseLines($lines) {
 		$batches = array();
 		foreach ($lines as $line) {
@@ -101,7 +113,7 @@ class SpamFilter {
 		$ret = array();
 		foreach ($batches as $opt => $regex) {
 			$ret[] = array(
-				'/' . $regex . '/i',
+				'/' . $regex . '/iu',
 				self::parseOptions($opt),
 			);
 		}
