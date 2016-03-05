@@ -18,14 +18,14 @@ function createThread(post) {
   if (mw.user.getId() !== 0) {
     var likeNum = post.like ? '(' + post.like + ')' : '';
     thread.addButton('like', mw.msg('flowthread-ui-like') + likeNum, function() {
-      if (object.find('.comment-like').attr('liked') !== undefined) {
+      if (object.find('.comment-like').first().attr('liked') !== undefined) {
         thread.dislike();
       } else {
         thread.like();
       }
     });
     thread.addButton('report', mw.msg('flowthread-ui-report'), function() {
-      if (object.find('.comment-report').attr('reported') !== undefined) {
+      if (object.find('.comment-report').first().attr('reported') !== undefined) {
         thread.dislike();
       } else {
         thread.report();
@@ -42,12 +42,12 @@ function createThread(post) {
 
   if (ownpage) {
     thread.addButton('pin', mw.msg('flowthread-ui-pin'), function() {
-      if (object.find('.comment-pin').attr('pinned') !== undefined) {
+      if (object.find('.comment-pin').first().attr('pinned') !== undefined) {
         thread.unpin();
-        object.find('.comment-pin').removeAttr('pinned').text(mw.msg('flowthread-ui-pin'));
+        object.find('.comment-pin').first().removeAttr('pinned').text(mw.msg('flowthread-ui-pin'));
       } else {
         thread.pin();
-        object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
+        object.find('.comment-pin').first().attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
       }
     });
   }
