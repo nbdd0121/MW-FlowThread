@@ -42,6 +42,10 @@
     color: #999;
 }
 
+.comment-pinned {
+    background: #EEE;
+}
+
 .comment-pinned .comment-user::before{
     content: "";
     background: url('../assets/sprites.png') no-repeat;

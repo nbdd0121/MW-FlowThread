@@ -103,6 +103,7 @@
 				"js/manage.js"
 			],
 			"styles": [
+				"assets/common.css",
 				"css/manage.css"
 			],
 			"messages": [

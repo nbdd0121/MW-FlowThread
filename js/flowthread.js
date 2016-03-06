@@ -104,11 +104,13 @@ function reloadComments(offset) {
     $('.comment-container').html('');
     var canpostbak = canpost;
     canpost = false; // No reply for topped comments
+    var pindict = Object.create(null);
     data.flowthread.pinned.forEach(function(item) {
       var obj = createThread(item);
       obj.markAsPinned();
       obj.object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
       $('.comment-container-top').removeAttr('disabled').append(obj.object);
+      pindict[item.id] = true;
     });
     data.flowthread.popular.forEach(function(item) {
       var obj = createThread(item);
@@ -117,10 +119,14 @@ function reloadComments(offset) {
     });
     canpost = canpostbak;
     data.flowthread.posts.forEach(function(item) {
+      var obj = createThread(item);
+      if(pindict[item.id]){
+        obj.object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
+      }
       if (item.parentid === '') {
-        $('.comment-container').append(createThread(item).object);
+        $('.comment-container').append(obj.object);
       } else {
-        Thread.fromId(item.parentid).appendChild(createThread(item));
+        Thread.fromId(item.parentid).appendChild(obj);
       }
     });
     pager.current = Math.floor(offset / 10);

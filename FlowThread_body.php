@@ -121,7 +121,7 @@ class FlowThread {
 		if ($user && $skinTemplate->getUser()->isAllowed('commentadmin-restricted')) {
 			$nav_urls = $tpl->get('nav_urls');
 			$nav_urls['usercomments'] = [
-				'text' => wfMsg('sidebar-usercomments'),
+				'text' => wfMessage('sidebar-usercomments')->text(),
 				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
 					'user' => $user->getName(),
 				)),
