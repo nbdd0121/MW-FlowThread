@@ -6,6 +6,7 @@ class Post {
 	const STATUS_DELETED = 1;
 	const STATUS_SPAM = 2;
 	const STATUS_PINNED = 3;
+
 	const ATTITUDE_NORMAL = 0;
 	const ATTITUDE_LIKE = 1;
 	const ATTITUDE_REPORT = 2;
@@ -207,6 +208,19 @@ class Post {
 		if (!self::canPerformAdmin($user) &&
 			!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
 			self::diePermission();
+		}
+
+		$db = wfGetDB(DB_SLAVE);
+		$row = $db->selectRow('FlowThread', array(
+			'count' => 'COUNT(*)',
+		), array(
+			'flowthread_pageid' => $this->pageid,
+			'flowthread_status' => static::STATUS_PINNED,
+		));
+
+		global $wgFlowThreadConfig;
+		if ($row !== false && $row->count >= $wgFlowThreadConfig['PinnedPostLimit']) {
+			throw new \Exception("Maximum number of pinned posts reached");
 		}
 
 		if ($this->status !== static::STATUS_NORMAL) {
