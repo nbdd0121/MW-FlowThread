@@ -131,7 +131,7 @@ Thread.prototype.pin = function() {
     action: 'flowthread',
     type: 'pin',
     postid: this.post.id
-  });
+  }).fail(showErrorDialog);
 };
 
 Thread.prototype.unpin = function() {
@@ -140,7 +140,7 @@ Thread.prototype.unpin = function() {
     action: 'flowthread',
     type: 'unpin',
     postid: this.post.id
-  });
+  }).fail(showErrorDialog);
 };
 
 
@@ -173,7 +173,7 @@ function ReplyBox() {
     + '<textarea placeholder="' + mw.msg('flowthread-ui-placeholder') + '"></textarea>'
     + '<div class="comment-preview" style="display:none;"></div>'
     + '<div class="comment-toolbar">'
-    + '<button class="flowthread-btn flowthread-btn-wikitext' + (localStorage.flowthread_use_wikitext ? ' on' : '') + '" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
+    + '<button class="flowthread-btn flowthread-btn-wikitext' + (localStorage.flowthread_use_wikitext === 'true' ? ' on' : '') + '" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
     + '<button class="flowthread-btn flowthread-btn-preview" title="' + mw.msg('flowthread-ui-preview') + '"></button>'
     + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
     + '</div>'
