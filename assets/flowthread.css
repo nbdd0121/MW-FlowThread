@@ -48,18 +48,6 @@
     transition: color 0.15s linear 0s;
 }
 
-.comment-reply::before, .comment-like::before, .comment-report::before, .comment-delete::before {
-    content: "";
-    background: transparent url("../assets/sprites.png") no-repeat scroll 0% 0%;
-    opacity: 0.6;
-    display: inline-block;
-    width: 15px;
-    height: 10px;
-    transition: opacity 0.15s linear 0s;
-    font-size: 9px;
-    vertical-align: middle;
-}
-
 .comment-reply::before {
     background-position: 0px 0px;
 }
