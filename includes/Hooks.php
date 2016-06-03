@@ -1,9 +1,7 @@
 <?php
-if (!defined('MEDIAWIKI')) {
-	die('Wrong Entracne Point');
-}
+namespace FlowThread;
 
-class FlowThread {
+class Hooks {
 
 	public static function getFilteredNamespace() {
 		$ret = array(
@@ -19,7 +17,7 @@ class FlowThread {
 		return $ret;
 	}
 
-	public static function onBeforePageDisplay(OutputPage &$output, Skin &$skin) {
+	public static function onBeforePageDisplay(\OutputPage &$output, \Skin &$skin) {
 		$title = $output->getTitle();
 
 		// Disallow commenting on pages without article id
@@ -88,7 +86,7 @@ class FlowThread {
 		$dbType = $updater->getDB()->getType();
 		// For non-MySQL/MariaDB/SQLite DBMSes, use the appropriately named file
 		if (!in_array($dbType, array('mysql', 'sqlite'))) {
-			throw new Exception('Database type not currently supported');
+			throw new \Exception('Database type not currently supported');
 		} else {
 			$filename = 'mysql.sql';
 		}
@@ -99,8 +97,8 @@ class FlowThread {
 		return true;
 	}
 
-	public static function onArticleDeleteComplete(&$article, User &$user, $reason, $id, Content $content = null, LogEntry $logEntry) {
-		$page = new \FlowThread\Page($id);
+	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, \Content $content = null, \LogEntry $logEntry) {
+		$page = new Page($id);
 		$page->limit = -1;
 		$page->fetch();
 		$page->erase();

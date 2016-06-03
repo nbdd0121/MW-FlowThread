@@ -37,6 +37,9 @@ function createThread(post) {
   if (ownpage || (post.userid && post.userid === mw.user.getId())) {
     thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
       thread.delete();
+      if($('.comment-container-top').children('.comment-thread').length === 0) {
+        $('.comment-container-top').attr('disabled', '');
+      }
     });
   }
 

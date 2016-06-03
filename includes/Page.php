@@ -1,5 +1,6 @@
 <?php
 namespace FlowThread;
+
 class Page {
 	const FILTER_ALL = 0;
 	const FILTER_NORMAL = 1;

@@ -238,6 +238,8 @@ class Post {
 			throw new \Exception("Post is already deleted");
 		}
 
+		PopularPosts::invalidateCache($this);
+
 		// Mark status as deleted
 		$this->switchStatus(static::STATUS_DELETED);
 

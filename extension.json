@@ -15,7 +15,7 @@
 		]
 	},
 	"AutoloadClasses": {
-		"FlowThread": "FlowThread_body.php",
+		"FlowThread\\Hooks": "includes/Hooks.php",
 		"FlowThread\\API": "includes/API.php",
 		"FlowThread\\Post": "includes/Post.php",
 		"FlowThread\\Page": "includes/Page.php",
@@ -31,13 +31,13 @@
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
-			"FlowThread::onBeforePageDisplay"
+			"FlowThread\\Hooks::onBeforePageDisplay"
 		],
 		"LoadExtensionSchemaUpdates": [
-			"FlowThread::onLoadExtensionSchemaUpdates"
+			"FlowThread\\Hooks::onLoadExtensionSchemaUpdates"
 		],
 		"ArticleDeleteComplete": [
-			"FlowThread::onArticleDeleteComplete"
+			"FlowThread\\Hooks::onArticleDeleteComplete"
 		],
 		"BeforeCreateEchoEvent": [
 			"FlowThread\\EchoHook::onBeforeCreateEchoEvent"
@@ -60,8 +60,12 @@
 		"FlowThreadMention": [
 			"FlowThread\\EchoHook::onFlowThreadMention"
 		],
-		"BaseTemplateToolbox": "FlowThread::onBaseTemplateToolbox",
-		"SkinTemplateOutputPageBeforeExec": "FlowThread::onSkinTemplateOutputPageBeforeExec"
+		"BaseTemplateToolbox": [
+			"FlowThread\\Hooks::onBaseTemplateToolbox"
+		],
+		"SkinTemplateOutputPageBeforeExec": [
+			"FlowThread\\Hooks::onSkinTemplateOutputPageBeforeExec"
+		]
 	},
 	"ResourceModules": {
 		"ext.flowthread": {
@@ -71,11 +75,11 @@
 			],
 			"scripts":[
 				"assets/common.js",
-				"js/flowthread.js"
+				"assets/flowthread.js"
 			],
 			"styles":[
 				"assets/common.css",
-				"css/flowthread.css"
+				"assets/flowthread.css"
 			],
 			"messages": [
 				"flowthread-ui-reply",
@@ -98,11 +102,11 @@
 			],
 			"scripts": [
 				"assets/common.js",
-				"js/manage.js"
+				"assets/manage.js"
 			],
 			"styles": [
 				"assets/common.css",
-				"css/manage.css"
+				"assets/manage.css"
 			],
 			"messages": [
 				"flowthread-ui-like",

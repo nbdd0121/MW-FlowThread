@@ -43,10 +43,7 @@ class API extends \ApiBase {
 
 		// This is slow, use cache
 		$cache = \ObjectCache::getMainWANInstance();
-		$popular = $cache->getWithSetCallback(
-			wfMemcKey('flowthread', 'popular', $pageid), 60, function () use ($pageid) {
-				return PopularPosts::getFromPageId($pageid);
-			});
+		$popular = PopularPosts::getFromPageId($pageid);
 		$popularRet = $this->convertPosts($popular);
 
 		$obj = array(

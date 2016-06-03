@@ -6,10 +6,22 @@ class PopularPosts {
 	const CACHE_TTL = 3600;
 
 	public static function getFromPageId($pageid) {
-		return self::fetchFromDB($pageid);
+		return self::fetchFromCache($pageid);
 	}
 
-	// Surprise, surprise. Caching is much slower when using APC
+	public static function invalidateCache($post) {
+		$pageid = $post->pageid;
+		$cache = \ObjectCache::getMainWANInstance();
+		$key = wfMemcKey('flowthread', 'popular', $pageid);
+		$cachedValue = $cache->get($key);
+		if ($cachedValue === false) {
+			return;
+		}
+		if (isset($cachedValue[$post->id->getBin()])) {
+			$cache->delete($key);
+		}
+	}
+
 	private static function fetchFromCache($pageid) {
 		$cache = \ObjectCache::getMainWANInstance();
 		$key = wfMemcKey('flowthread', 'popular', $pageid);
