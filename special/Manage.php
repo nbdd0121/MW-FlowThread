@@ -88,6 +88,7 @@ class SpecialManage extends \SpecialPage {
 				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
 				'like' => $post->getFavorCount(),
 				'report' => $post->getReportCount(),
+				'status' => $post->status,
 			);
 		}
 
@@ -137,11 +138,11 @@ class SpecialManage extends \SpecialPage {
 		$orderBy = 'flowthread_id ' . $dir;
 
 		if ($this->filter === 'deleted') {
-			$cond['flowthread_status'] = 1;
+			$cond['flowthread_status'] = Post::STATUS_DELETED;
 		} else if ($this->filter === 'spam') {
-			$cond['flowthread_status'] = 2;
+			$cond['flowthread_status'] = Post::STATUS_SPAM;
 		} else {
-			$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
+			$cond['flowthread_status'] = Post::STATUS_NORMAL;
 			if ($this->filter === 'reported') {
 				$cond[] = 'flowthread_report > 0';
 				$orderBy = 'flowthread_report ' . $dir . ', ' . $orderBy;

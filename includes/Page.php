@@ -3,7 +3,6 @@ namespace FlowThread;
 class Page {
 	const FILTER_ALL = 0;
 	const FILTER_NORMAL = 1;
-	const FILTER_PINNED = 4;
 
 	public $pageid = 0;
 	public $totalCount = 0;
@@ -44,10 +43,7 @@ class Page {
 		case static::FILTER_ALL:
 			break;
 		case static::FILTER_NORMAL:
-			$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
-			break;
-		case static::FILTER_PINNED:
-			$cond['flowthread_status'] = Post::STATUS_PINNED;
+			$cond['flowthread_status'] = Post::STATUS_NORMAL;
 			break;
 		}
 
@@ -81,10 +77,7 @@ class Page {
 			case static::FILTER_ALL:
 				break;
 			case static::FILTER_NORMAL:
-				$cond[] = 'flowthread_status in (' . Post::STATUS_NORMAL . ', ' . Post::STATUS_PINNED . ')';
-				break;
-			case static::FILTER_PINNED:
-				$cond['flowthread_status'] = Post::STATUS_PINNED;
+				$cond['flowthread_status'] = Post::STATUS_NORMAL;
 				break;
 			}
 

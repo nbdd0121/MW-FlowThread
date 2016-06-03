@@ -87,8 +87,6 @@
 				"flowthread-ui-placeholder",
 				"flowthread-ui-submit",
 				"flowthread-ui-nocontent",
-				"flowthread-ui-pin",
-				"flowthread-ui-unpin",
 				"flowthread-ui-popular",
 				"flowthread-ui-networkerror"
 			]
@@ -162,7 +160,6 @@
 			"AnonymousAvatar": "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
 			"PopularPostCount": 3,
 			"PopularPostThreshold": 1,
-			"PinnedPostLimit": 3,
 			"MaxNestLevel": 3
 		},
 		"TriggerFlowThreadHooks": true

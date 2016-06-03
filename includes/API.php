@@ -41,12 +41,6 @@ class API extends \ApiBase {
 
 		$comments = $this->convertPosts($page->posts);
 
-		// Query pinned posts are fast, so we don't go through cache
-		$page = new Page($pageid);
-		$page->filter = Page::FILTER_PINNED;
-		$page->fetch();
-		$pinned = $this->convertPosts($page->posts);
-
 		// This is slow, use cache
 		$cache = \ObjectCache::getMainWANInstance();
 		$popular = $cache->getWithSetCallback(
@@ -57,7 +51,6 @@ class API extends \ApiBase {
 
 		$obj = array(
 			"posts" => $comments,
-			"pinned" => $pinned,
 			"popular" => $popularRet,
 			"count" => $page->totalCount,
 		);
@@ -139,26 +132,6 @@ class API extends \ApiBase {
 				}
 				foreach ($postList as $post) {
 					$post->delete($this->getUser());
-				}
-				$this->getResult()->addValue(null, $this->getModuleName(), '');
-				break;
-
-			case 'pin':
-				if (!$postList) {
-					$this->dieNoParam('postid');
-				}
-				foreach ($postList as $post) {
-					$post->pin($this->getUser());
-				}
-				$this->getResult()->addValue(null, $this->getModuleName(), '');
-				break;
-
-			case 'unpin':
-				if (!$postList) {
-					$this->dieNoParam('postid');
-				}
-				foreach ($postList as $post) {
-					$post->unpin($this->getUser());
 				}
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;

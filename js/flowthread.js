@@ -40,18 +40,6 @@ function createThread(post) {
     });
   }
 
-  if (ownpage) {
-    thread.addButton('pin', mw.msg('flowthread-ui-pin'), function() {
-      if (object.find('.comment-pin').first().attr('pinned') !== undefined) {
-        thread.unpin();
-        object.find('.comment-pin').first().removeAttr('pinned').text(mw.msg('flowthread-ui-pin'));
-      } else {
-        thread.pin();
-        object.find('.comment-pin').first().attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
-      }
-    });
-  }
-
   if (post.myatt === 1) {
     object.find('.comment-like').attr('liked', '');
   } else if (post.myatt === 2) {
@@ -104,14 +92,6 @@ function reloadComments(offset) {
     $('.comment-container').html('');
     var canpostbak = canpost;
     canpost = false; // No reply for topped comments
-    var pindict = Object.create(null);
-    data.flowthread.pinned.forEach(function(item) {
-      var obj = createThread(item);
-      obj.markAsPinned();
-      obj.object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
-      $('.comment-container-top').removeAttr('disabled').append(obj.object);
-      pindict[item.id] = true;
-    });
     data.flowthread.popular.forEach(function(item) {
       var obj = createThread(item);
       obj.markAsPopular();
@@ -120,9 +100,6 @@ function reloadComments(offset) {
     canpost = canpostbak;
     data.flowthread.posts.forEach(function(item) {
       var obj = createThread(item);
-      if(pindict[item.id]){
-        obj.object.find('.comment-pin').attr('pinned', '').text(mw.msg('flowthread-ui-unpin'));
-      }
       if (item.parentid === '') {
         $('.comment-container').append(obj.object);
       } else {

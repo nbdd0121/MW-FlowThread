@@ -5,7 +5,6 @@ class Post {
 	const STATUS_NORMAL = 0;
 	const STATUS_DELETED = 1;
 	const STATUS_SPAM = 2;
-	const STATUS_PINNED = 3;
 
 	const ATTITUDE_NORMAL = 0;
 	const ATTITUDE_LIKE = 1;
@@ -204,45 +203,6 @@ class Post {
 		));
 	}
 
-	public function pin(\User $user) {
-		if (!self::canPerformAdmin($user) &&
-			!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
-			self::diePermission();
-		}
-
-		$db = wfGetDB(DB_SLAVE);
-		$row = $db->selectRow('FlowThread', array(
-			'count' => 'COUNT(*)',
-		), array(
-			'flowthread_pageid' => $this->pageid,
-			'flowthread_status' => static::STATUS_PINNED,
-		));
-
-		global $wgFlowThreadConfig;
-		if ($row !== false && $row->count >= $wgFlowThreadConfig['PinnedPostLimit']) {
-			throw new \Exception("Maximum number of pinned posts reached");
-		}
-
-		if ($this->status !== static::STATUS_NORMAL) {
-			throw new \Exception("Post cannot not pinned");
-		}
-
-		$this->switchStatus(static::STATUS_PINNED);
-	}
-
-	public function unpin(\User $user) {
-		if (!self::canPerformAdmin($user) &&
-			!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
-			self::diePermission();
-		}
-
-		if ($this->status !== static::STATUS_PINNED) {
-			throw new \Exception("Post is not pinned");
-		}
-
-		$this->switchStatus(static::STATUS_NORMAL);
-	}
-
 	public function recover(\User $user) {
 		self::checkIfAdmin($user);
 
@@ -365,7 +325,7 @@ class Post {
 
 	public function isDeleted() {
 		// This include spam and deleted
-		return $this->status !== static::STATUS_NORMAL && $this->status !== static::STATUS_PINNED;
+		return $this->status !== static::STATUS_NORMAL;
 	}
 
 	public function isVisible() {

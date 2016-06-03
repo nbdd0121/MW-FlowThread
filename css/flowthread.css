@@ -42,21 +42,7 @@
     color: #999;
 }
 
-.comment-pinned {
-    background: #EEE;
-}
-
-.comment-pinned .comment-user::before{
-    content: "";
-    background: url('../assets/sprites.png') no-repeat;
-    background-position: 0px -72px;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-}
-
-.comment-reply, .comment-like, .comment-report, .comment-delete, .comment-pin {
+.comment-reply, .comment-like, .comment-report, .comment-delete {
     margin-left: 5px;
     cursor: pointer;
     transition: color 0.15s linear 0s;
@@ -98,7 +84,7 @@
     background-position: 0px -40px;
 }
 
-.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover, .comment-pin:hover {
+.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover {
     opacity: 1.0;
     color: #555;
 }
@@ -107,11 +93,11 @@
     opacity: 1.0;
 }
 
-.comment-post .comment-report, .comment-post .comment-delete, .comment-post .comment-pin {
+.comment-post .comment-report, .comment-post .comment-delete {
 	display: none;
 }
 
-.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete, .comment-post:hover .comment-pin {
+.comment-post:hover .comment-report, .comment-report[reported], .comment-post:hover .comment-delete {
 	display: initial;
 }
 

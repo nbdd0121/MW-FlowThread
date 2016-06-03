@@ -125,25 +125,6 @@ Thread.prototype.report = function() {
   this.object.find('.comment-report').first().attr('reported', '');
 }
 
-Thread.prototype.pin = function() {
-  var api = new mw.Api();
-  api.get({
-    action: 'flowthread',
-    type: 'pin',
-    postid: this.post.id
-  }).fail(showErrorDialog);
-};
-
-Thread.prototype.unpin = function() {
-  var api = new mw.Api();
-  api.get({
-    action: 'flowthread',
-    type: 'unpin',
-    postid: this.post.id
-  }).fail(showErrorDialog);
-};
-
-
 Thread.prototype.delete = function() {
   var api = new mw.Api();
   api.get({
@@ -156,11 +137,6 @@ Thread.prototype.delete = function() {
 
 Thread.prototype.markAsPopular = function() {
   this.object.addClass('comment-popular');
-  this.object.removeAttr('comment-id');
-}
-
-Thread.prototype.markAsPinned = function() {
-  this.object.addClass('comment-pinned');
   this.object.removeAttr('comment-id');
 }
 
