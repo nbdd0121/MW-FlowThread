@@ -113,6 +113,7 @@
 				"flowthread-ui-report",
 				"flowthread-ui-delete",
 				"flowthread-ui-recover",
+				"flowthread-ui-markchecked",
 				"flowthread-ui-erase",
 				"flowthread-ui-selectall",
 				"flowthread-ui-unselectall",
@@ -151,7 +152,8 @@
 		"comments/delete": "LogFormatter",
 		"comments/recover": "LogFormatter",
 		"comments/erase": "LogFormatter",
-		"comments/import": "LogFormatter"
+		"comments/import": "LogFormatter",
+		"comments/markchecked": "LogFormatter"
 	},
 	"SpecialPages": {
 		"FlowThreadExport": "FlowThread\\SpecialExport",

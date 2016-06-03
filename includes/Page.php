@@ -10,7 +10,7 @@ class Page {
 	public $offset = 0;
 	public $limit = 10;
 	public $posts = null;
-	public $filter = FILTER_ALL;
+	public $filter = self::FILTER_ALL;
 
 	public function __construct($id) {
 		// Invalid ID

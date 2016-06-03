@@ -41,11 +41,11 @@
     color: #999;
 }
 
-.comment-like, .comment-report, .comment-delete, .comment-recover {
+.comment-like, .comment-report, .comment-delete, .comment-recover, .comment-markchecked {
     margin-left: 5px;
 }
 
-.comment-delete, .comment-recover {
+.comment-delete, .comment-recover, .comment-markchecked {
     cursor: pointer;
     transition: color 0.15s linear 0s;
 }

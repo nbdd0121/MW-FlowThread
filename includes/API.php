@@ -35,7 +35,7 @@ class API extends \ApiBase {
 		$offset = intval($this->getMain()->getVal('offset', 0));
 
 		$page = new Page($pageid);
-		$page->filter = PAGE::FILTER_NORMAL;
+		$page->filter = Page::FILTER_NORMAL;
 		$page->offset = $offset;
 		$page->fetch();
 
@@ -139,6 +139,16 @@ class API extends \ApiBase {
 				}
 				foreach ($postList as $post) {
 					$post->recover($this->getUser());
+				}
+				$this->getResult()->addValue(null, $this->getModuleName(), '');
+				break;
+
+			case 'markchecked':
+				if (!$postList) {
+					$this->dieNoParam('postid');
+				}
+				foreach ($postList as $post) {
+					$post->markchecked($this->getUser());
 				}
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;

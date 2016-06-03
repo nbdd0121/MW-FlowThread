@@ -221,7 +221,27 @@ class Post {
 		if ($wgTriggerFlowThreadHooks) {
 			\Hooks::run('FlowThreadRecovered', array($this, $user));
 		}
+	}
 
+	public function markchecked(\User $user) {
+		self::checkIfAdminFull($user);
+
+		// Mark-as-checked is invalid for a deleted post
+		if ($this->isDeleted()) {
+			throw new \Exception("Post is deleted");
+		}
+
+		// Write a log
+		$this->publishSimpleLog('markchecked', $user);
+
+		$this->reportCount = 0;
+		$this->updateFavorReportCount();
+
+		$db = wfGetDB(DB_MASTER);
+		$db->delete('FlowThreadAttitude', array(
+			'flowthread_att_id' => $this->id->getBin(),
+			'flowthread_att_type' => self::ATTITUDE_REPORT,
+		));
 	}
 
 	public function delete(\User $user) {
