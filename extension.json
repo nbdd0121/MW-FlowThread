@@ -3,7 +3,7 @@
 	"author": "Gary Guo",
 	"url": "https://github.com/nbdd0121/MW-FlowThread",
 	"descriptionmsg": "flowthread_desc",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"license-name": "BSD-2-Clause",
 	"type": "specialpage",
 	"ExtensionMessagesFiles": {
