@@ -8,7 +8,7 @@ function createThread(post) {
 	thread.init(post);
 
 	// Enhance the username by adding page title
-	var pageLink = wrapPageLink(post.title, post.title);
+	var pageLink = wrapPageLink('Special:FlowThreadLink/' + post.id, post.title);
 	object.find('.comment-user').html(
 		mw.msg('flowthread-ui-user-post-on-page', object.find('.comment-user').html(), pageLink));
 

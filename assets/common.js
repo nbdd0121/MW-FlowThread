@@ -41,13 +41,13 @@ function Thread() {
 }
 
 Thread.fromId = function(id) {
-  return $.data($('[comment-id=' + id + ']')[0], 'thread');
+  return $.data($('#comment-' + id)[0], 'thread');
 }
 
 Thread.prototype.init = function(post) {
   var object = this.object;
   this.post = post;
-  object.attr('comment-id', post.id);
+  object.attr('id', 'comment-' + post.id);
 
   var userlink;
   if (post.userid !== 0) {
@@ -137,7 +137,7 @@ Thread.prototype.delete = function() {
 
 Thread.prototype.markAsPopular = function() {
   this.object.addClass('comment-popular');
-  this.object.removeAttr('comment-id');
+  this.object.removeAttr('id');
 }
 
 function ReplyBox() {

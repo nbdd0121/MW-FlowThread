@@ -19,15 +19,16 @@
 		"FlowThread\\API": "includes/API.php",
 		"FlowThread\\Post": "includes/Post.php",
 		"FlowThread\\Page": "includes/Page.php",
+		"FlowThread\\UUID": "includes/UUID.php",
+		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
+		"FlowThread\\PopularPosts": "includes/PopularPosts.php",
+		"FlowThread\\Helper": "includes/Helper.php",
 		"FlowThread\\SpecialExport": "special/Export.php",
 		"FlowThread\\SpecialImport": "special/Import.php",
 		"FlowThread\\SpecialManage": "special/Manage.php",
-		"FlowThread\\UUID": "includes/UUID.php",
-		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
 		"FlowThread\\EchoHook": "/includes/Echo.php",
 		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php",
-		"FlowThread\\PopularPosts": "/includes/PopularPosts.php",
-		"FlowThread\\Helper": "/includes/Helper.php"
+		"FlowThread\\SpecialLink": "special/Link.php",
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
@@ -70,6 +71,7 @@
 	"ResourceModules": {
 		"ext.flowthread": {
 			"dependencies": [
+				"mediawiki.language",
 				"moment",
 				"mediawiki.user"
 			],
@@ -97,6 +99,7 @@
 		},
 		"ext.flowthread.manage": {
 			"dependencies": [
+				"mediawiki.language",
 				"moment",
 				"mediawiki.user"
 			],
@@ -158,7 +161,8 @@
 	"SpecialPages": {
 		"FlowThreadExport": "FlowThread\\SpecialExport",
 		"FlowThreadImport": "FlowThread\\SpecialImport",
-		"FlowThreadManage": "FlowThread\\SpecialManage"
+		"FlowThreadManage": "FlowThread\\SpecialManage",
+		"FlowThreadLink": "FlowThread\\SpecialLink"
 	},
 	"config": {
 		"FlowThreadConfig": {

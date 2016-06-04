@@ -37,7 +37,7 @@ function createThread(post) {
   if (ownpage || (post.userid && post.userid === mw.user.getId())) {
     thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
       thread.delete();
-      if($('.comment-container-top').children('.comment-thread').length === 0) {
+      if ($('.comment-container-top').children('.comment-thread').length === 0) {
         $('.comment-container-top').attr('disabled', '');
       }
     });
@@ -112,11 +112,17 @@ function reloadComments(offset) {
     pager.current = Math.floor(offset / 10);
     pager.count = Math.ceil(data.flowthread.count / 10);
     pager.repaint();
+
+    if (location.hash.substring(0, 9) === '#comment-') {
+      var hash = location.hash;
+      location.replace('#');
+      location.replace(hash);
+    }
   });
 }
 
 function setFollowUp(postid, follow) {
-  var obj = $('[comment-id=' + postid + '] > .comment-post');
+  var obj = $('#comment-' + postid + ' > .comment-post');
   obj.after(follow);
 }
 
@@ -191,4 +197,9 @@ $('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<
   noticeContainer.html(config.CantPostNotice);
   return noticeContainer;
 }());
-reloadComments();
+
+if (mw.util.getParamValue('flowthread-page')) {
+  reloadComments((parseInt(mw.util.getParamValue('flowthread-page')) - 1) * 10);
+} else {
+  reloadComments();
+}
