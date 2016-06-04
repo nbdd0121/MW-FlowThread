@@ -51,40 +51,21 @@
 
 	"echo-category-title-flowthread": "FlowThread comment",
 	"echo-pref-tooltip-flowthread": "Notify me when my comment is replyed.",
-	"notification-flowthread-payload-error": "Post no longer exists",
 
-	"notification-flowthread_reply": "[[User:$1|$1]] replied your post on [[:$2]].",
-	"notification-flowthread_reply-flyout": "[[User:$1|$1]] replied your post on $2.",
-	"notification-flowthread_reply-email-subject": "$1 replied your post on {{SITENAME}}",
-	"notification-flowthread_reply-email-batch-body": "$1 replied your post on $2",
+	"notification-header-flowthread_reply": "$1 {{GENDER:$2|replied}} {{GENDER:$4|your}} post on '''$3'''.",
+	"notification-header-flowthread_userpage": "$1 {{GENDER:$2|posted}} on '''{{GENDER:$4|your}} user page'''.",
+	"notification-header-flowthread_mention": "$1 mentioned {{GENDER:$4|you}} in {{GENDER:$2|his|her|his or her}} post on '''$3'''.",
+	"notification-header-flowthread_delete": "{{GENDER:$4|Your}} comment on '''$3''' was deleted.",
+	"notification-header-flowthread_recover": "{{GENDER:$4|Your}} comment on '''$3''' was recovered.",
+	"notification-header-flowthread_spam": "{{GENDER:$4|Your}} comment on '''$3''' was marked as spam automatically.",
+
+	"notification-body-flowthread": "$1",
+	"notification-body-flowthread-error": "Post no longer exists",
+
 	"notification-link-text-view-flowthread_reply": "View Reply",
-
-	"notification-flowthread_userpage": "[[User:$1|$1]] posted in [[:$2|your user page]].",
-	"notification-flowthread_userpage-flyout": "[[User:$1|$1]] posted in your user page.",
-	"notification-flowthread_userpage-email-subject": "$1 posted in your user page on {{SITENAME}}",
-	"notification-flowthread_userpage-email-batch-body": "$1 posted in your user page",
-	"notification-link-text-view-flowthread_userpage": "View Post",
-
-	"notification-flowthread_delete": "Your comment on [[:$1]] was deleted.",
-	"notification-flowthread_delete-flyout": "Your comment on [[:$1]] was deleted.",
-	"notification-flowthread_delete-email-subject": "Your comment on {{SITENAME}} was deleted",
-	"notification-flowthread_delete-email-batch-body": "Your comment posted on $1 was deleted",
-
-	"notification-flowthread_recover": "Your comment on [[:$1]] was recovered.",
-	"notification-flowthread_recover-flyout": "Your comment on [[:$1]] was recovered.",
-	"notification-flowthread_recover-email-subject": "Your comment on {{SITENAME}} was recovered",
-	"notification-flowthread_recover-email-batch-body": "Your comment posted on $1 was recovered",
-
-	"notification-flowthread_spam": "Your comment on [[:$1]] was marked as spam automatically.",
-	"notification-flowthread_spam-flyout": "Your comment on [[:$1]] was marked as spam automatically.",
-	"notification-flowthread_spam-email-subject": "Your comment on {{SITENAME}} was marked as spam",
-	"notification-flowthread_spam-email-batch-body": "Your comment posted on $1 was marked as spam automatically",
-
-	"notification-flowthread_mention": "[[User:$1|$1]] mentioned you in {{gender:$1|his|her|his or her}} post on [[:$2]].",
-	"notification-flowthread_mention-flyout": "[[User:$1|$1]] mentioned your in {{gender:$1|his|her|his or her}} post on $2.",
-	"notification-flowthread_mention-email-subject": "$1 mentioned you in {{gender:$1|his|her|his or her}} post on {{SITENAME}}",
-	"notification-flowthread_mention-email-batch-body": "$1 mentioned you in {{gender:$1|his|her|his or her}} post on $2",
 	"notification-link-text-view-flowthread_mention": "View Message",
+	"notification-link-text-view-flowthread-page": "View Page",
+	"notification-link-text-view-flowthread-post": "View Post",
 
 	"flowthread-blacklist": "# Texts in this list will be blocked when posted as comment.\n# Syntax is as follows:\n#* Everything from a \"#\" character to the end of the line is a comment\n#* Every non-blank line is a regex fragment matching texts\n #<!-- leave this line exactly as it is --><pre>\n\n #</pre><!-- leave this line exactly as it is -->",
 

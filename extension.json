@@ -26,9 +26,10 @@
 		"FlowThread\\SpecialExport": "special/Export.php",
 		"FlowThread\\SpecialImport": "special/Import.php",
 		"FlowThread\\SpecialManage": "special/Manage.php",
-		"FlowThread\\EchoHook": "/includes/Echo.php",
-		"FlowThread\\EchoReplyFormatter": "/includes/Echo.php",
 		"FlowThread\\SpecialLink": "special/Link.php",
+		"FlowThread\\EchoHooks": "echo/Hooks.php",
+		"FlowThread\\EchoPresentationModel": "echo/PresentationModel.php",
+		"FlowThread\\EchoAlertPresentationModel": "echo/AlertPresentationModel.php"
 	},
 	"Hooks": {
 		"BeforePageDisplay": [
@@ -41,25 +42,25 @@
 			"FlowThread\\Hooks::onArticleDeleteComplete"
 		],
 		"BeforeCreateEchoEvent": [
-			"FlowThread\\EchoHook::onBeforeCreateEchoEvent"
+			"FlowThread\\EchoHooks::onBeforeCreateEchoEvent"
 		],
 		"EchoGetDefaultNotifiedUsers": [
-			"FlowThread\\EchoHook::onEchoGetDefaultNotifiedUsers"
+			"FlowThread\\EchoHooks::onEchoGetDefaultNotifiedUsers"
 		],
 		"FlowThreadPosted": [
-			"FlowThread\\EchoHook::onFlowThreadPosted"
+			"FlowThread\\EchoHooks::onFlowThreadPosted"
 		],
 		"FlowThreadDeleted": [
-			"FlowThread\\EchoHook::onFlowThreadDeleted"
+			"FlowThread\\EchoHooks::onFlowThreadDeleted"
 		],
 		"FlowThreadRecovered": [
-			"FlowThread\\EchoHook::onFlowThreadRecovered"
+			"FlowThread\\EchoHooks::onFlowThreadRecovered"
 		],
 		"FlowThreadSpammed": [
-			"FlowThread\\EchoHook::onFlowThreadSpammed"
+			"FlowThread\\EchoHooks::onFlowThreadSpammed"
 		],
 		"FlowThreadMention": [
-			"FlowThread\\EchoHook::onFlowThreadMention"
+			"FlowThread\\EchoHooks::onFlowThreadMention"
 		],
 		"BaseTemplateToolbox": [
 			"FlowThread\\Hooks::onBaseTemplateToolbox"

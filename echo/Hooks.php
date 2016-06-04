@@ -1,7 +1,7 @@
 <?php
 namespace FlowThread;
 
-class EchoHook {
+class EchoHooks {
 
 	public static function onBeforeCreateEchoEvent(&$notifications, &$notificationCategories, &$icons) {
 		$notificationCategories['flowthread'] = array(
@@ -9,38 +9,22 @@ class EchoHook {
 			'tooltip' => 'echo-pref-tooltip-flowthread',
 		);
 		$notifications['flowthread_reply'] = array(
-			'primary-link' => array('message' => 'notification-link-text-view-flowthread_reply', 'destination' => 'title'),
 			'category' => 'flowthread',
 			'group' => 'interactive',
 			'section' => 'message',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_reply',
-			'title-params' => array('agent', 'title'),
-			'flyout-message' => 'notification-flowthread_reply-flyout',
-			'flyout-params' => array('agent', 'title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_reply-email-subject',
-			'email-subject-params' => array('agent'),
-			'email-body-batch-message' => 'notification-flowthread_reply-email-batch-body',
-			'email-body-batch-params' => array('agent', 'title'),
-			'icon' => 'chat',
+			'presentation-model' => 'FlowThread\\EchoPresentationModel',
 		);
 		$notifications['flowthread_userpage'] = array(
-			'primary-link' => array('message' => 'notification-link-text-view-flowthread_userpage', 'destination' => 'title'),
 			'category' => 'flowthread',
 			'group' => 'interactive',
 			'section' => 'message',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_userpage',
-			'title-params' => array('agent', 'title'),
-			'flyout-message' => 'notification-flowthread_userpage-flyout',
-			'flyout-params' => array('agent', 'title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_userpage-email-subject',
-			'email-subject-params' => array('agent'),
-			'email-body-batch-message' => 'notification-flowthread_userpage-email-batch-body',
-			'email-body-batch-params' => array('agent', 'title'),
-			'icon' => 'chat',
+			'presentation-model' => 'FlowThread\\EchoPresentationModel',
+		);
+		$notifications['flowthread_mention'] = array(
+			'category' => 'flowthread',
+			'group' => 'interactive',
+			'section' => 'message',
+			'presentation-model' => 'FlowThread\\EchoPresentationModel',
 		);
 		$notifications['flowthread_delete'] = array(
 			'user-locators' => array(
@@ -49,17 +33,7 @@ class EchoHook {
 			'category' => 'flowthread',
 			'group' => 'negative',
 			'section' => 'alert',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_delete',
-			'title-params' => array('title'),
-			'flyout-message' => 'notification-flowthread_delete-flyout',
-			'flyout-params' => array('title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_delete-email-subject',
-			'email-subject-params' => array(),
-			'email-body-batch-message' => 'notification-flowthread_delete-email-batch-body',
-			'email-body-batch-params' => array('title'),
-			'icon' => 'trash',
+			'presentation-model' => 'FlowThread\\EchoAlertPresentationModel',
 		);
 		$notifications['flowthread_recover'] = array(
 			'user-locators' => array(
@@ -68,17 +42,7 @@ class EchoHook {
 			'category' => 'flowthread',
 			'group' => 'positive',
 			'section' => 'alert',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_recover',
-			'title-params' => array('title'),
-			'flyout-message' => 'notification-flowthread_recover-flyout',
-			'flyout-params' => array('title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_recover-email-subject',
-			'email-subject-params' => array(),
-			'email-body-batch-message' => 'notification-flowthread_recover-email-batch-body',
-			'email-body-batch-params' => array('title'),
-			'icon' => 'reviewed',
+			'presentation-model' => 'FlowThread\\EchoAlertPresentationModel',
 		);
 		$notifications['flowthread_spam'] = array(
 			'user-locators' => array(
@@ -87,34 +51,7 @@ class EchoHook {
 			'category' => 'flowthread',
 			'group' => 'negative',
 			'section' => 'alert',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_spam',
-			'title-params' => array('title'),
-			'flyout-message' => 'notification-flowthread_spam-flyout',
-			'flyout-params' => array('title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_spam-email-subject',
-			'email-subject-params' => array(),
-			'email-body-batch-message' => 'notification-flowthread_spam-email-batch-body',
-			'email-body-batch-params' => array('title'),
-			'icon' => 'placeholder',
-		);
-		$notifications['flowthread_mention'] = array(
-			'primary-link' => array('message' => 'notification-link-text-view-flowthread_mention', 'destination' => 'title'),
-			'category' => 'flowthread',
-			'group' => 'interactive',
-			'section' => 'message',
-			'formatter-class' => 'FlowThread\\EchoReplyFormatter',
-			'title-message' => 'notification-flowthread_mention',
-			'title-params' => array('agent', 'title'),
-			'flyout-message' => 'notification-flowthread_mention-flyout',
-			'flyout-params' => array('agent', 'title'),
-			'payload' => array('text'),
-			'email-subject-message' => 'notification-flowthread_mention-email-subject',
-			'email-subject-params' => array('agent'),
-			'email-body-batch-message' => 'notification-flowthread_mention-email-batch-body',
-			'email-body-batch-params' => array('agent', 'title'),
-			'icon' => 'chat',
+			'presentation-model' => 'FlowThread\\EchoAlertPresentationModel',
 		);
 		return true;
 	}
@@ -266,20 +203,4 @@ class EchoHook {
 		return true;
 	}
 
-}
-
-class EchoReplyFormatter extends \EchoBasicFormatter {
-	protected function formatPayload($payload, $event, $user) {
-		switch ($payload) {
-		case 'text':
-			try {
-				return Post::newFromId(UUID::fromBin($event->getExtraParam('postid')))->text;
-			} catch (\Exception $e) {
-				return wfMessage('notification-flowthread-payload-error');
-			}
-		default:
-			return parent::formatPayload($payload, $event, $user);
-			break;
-		}
-	}
 }

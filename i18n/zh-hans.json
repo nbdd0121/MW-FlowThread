@@ -51,40 +51,21 @@
 
 	"echo-category-title-flowthread": "FlowThread评论",
 	"echo-pref-tooltip-flowthread": "当我的评论被回复时提醒我。",
-	"notification-flowthread-payload-error": "评论不存在",
 
-	"notification-flowthread_reply": "[[User:$1|$1]]回复了你在[[:$2]]上发表的评论。",
-	"notification-flowthread_reply-flyout": "[[User:$1|$1]]回复了你在$2上发表的评论。",
-	"notification-flowthread_reply-email-subject": "$1回复了你在{{SITENAME}}上发表的评论",
-	"notification-flowthread_reply-email-batch-body": "$1回复了你在$2上发表的评论。",
+	"notification-header-flowthread_reply": "$1{{GENDER:$2|回复了}}{{GENDER:$4|您}}在'''$3'''上发表的评论。",
+	"notification-header-flowthread_userpage": "$1在'''{{GENDER:$4|您}}的用户页'''上{{GENDER:$2|发表了}}评论。",
+	"notification-header-flowthread_mention": "$1在{{GENDER:$2|他|她|他/她}}在'''$3'''上发表的评论中提及了{{GENDER:$4|您}}。",
+	"notification-header-flowthread_delete": "{{GENDER:$4|您}}在'''$3'''上的评论被删除了。",
+	"notification-header-flowthread_recover": "{{GENDER:$4|您}}在'''$3'''上的评论被恢复了。",
+	"notification-header-flowthread_spam": "{{GENDER:$4|您}}在'''$3'''上的评论被自动标记为垃圾评论。",
+
+	"notification-body-flowthread": "$1",
+	"notification-body-flowthread-error": "评论不存在",
+
 	"notification-link-text-view-flowthread_reply": "查看回复",
-
-	"notification-flowthread_userpage": "[[User:$1|$1]]在[[:$2|你的用户页]]上发表了评论。",
-	"notification-flowthread_userpage-flyout": "[[User:$1|$1]]在你的用户页上发表了评论。",
-	"notification-flowthread_userpage-email-subject": "$1在你在{{SITENAME}}上的用户页上发表了评论",
-	"notification-flowthread_userpage-email-batch-body": "$1在你的用户页上发表了评论。",
-	"notification-link-text-view-flowthread_userpage": "查看评论",
-
-	"notification-flowthread_delete": "你在[[:$1]]上的评论被删除了。",
-	"notification-flowthread_delete-flyout": "你在[[:$1]]上的评论被删除了。",
-	"notification-flowthread_delete-email-subject": "你在{{SITENAME}}上的评论被删除了",
-	"notification-flowthread_delete-email-batch-body": "你在$1上的评论被删除了",
-
-	"notification-flowthread_recover": "你在[[:$1]]上的评论被恢复了。",
-	"notification-flowthread_recover-flyout": "你在[[:$1]]上的评论被恢复了。",
-	"notification-flowthread_recover-email-subject": "你在{{SITENAME}}上的评论被恢复了",
-	"notification-flowthread_recover-email-batch-body": "你在$1上的评论被恢复了",
-
-	"notification-flowthread_spam": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
-	"notification-flowthread_spam-flyout": "你在[[:$1]]上的评论被自动标记为垃圾评论。",
-	"notification-flowthread_spam-email-subject": "你在{{SITENAME}}上的评论被标记为垃圾评论",
-	"notification-flowthread_spam-email-batch-body": "你在$1上的评论被自动标记为垃圾评论",
-
-	"notification-flowthread_mention": "[[User:$1|$1]]在{{gender:$1|他|她|他/她}}在[[:$2]]上发表的评论中提及了您。",
-	"notification-flowthread_mention-flyout": "[[User:$1|$1]]在{{gender:$1|他|她|他/她}}在$2上发表的评论中提及了您。",
-	"notification-flowthread_mention-email-subject": "$1在{{gender:$1|他|她|他/她}}在{{SITENAME}}上发表的评论中提及了您。",
-	"notification-flowthread_mention-email-batch-body": "$1在{{gender:$1|他|她|他/她}}在$2上发表的评论中提及了您。",
 	"notification-link-text-view-flowthread_mention": "查看消息",
+	"notification-link-text-view-flowthread-page": "查看页面",
+	"notification-link-text-view-flowthread-post": "查看评论",
 
 	"flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->",
 
