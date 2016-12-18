@@ -1,0 +1,148 @@
+.comment-body textarea, .comment-preview {
+    /* Metrics */
+    margin: 0px;
+    padding: 10px;
+    resize: none;
+    box-sizing: border-box;
+    /* Styles */
+    display: block;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    /* Borders */
+    border-width: 1px 1px medium;
+    border-style: solid solid none;
+    border-color: #CCC #CCC #999;
+    border-radius: 3px 3px 0px 0px;
+    background: white;
+}
+
+.comment-body textarea {
+    color: #999;
+    height: 60px;
+}
+
+.comment-preview {
+    min-height: 70px;
+    padding-top: 0px;
+}
+
+.comment-preview {
+    background: #f8f8f8;
+}
+
+.comment-toolbar {
+    position: relative;
+    height: 32px;
+    color: #555;
+    padding-left: 10px;
+    font-size: 12px;
+    line-height: 32px;
+    border: 1px solid #CCC;
+    border-radius: 0px 0px 3px 3px;
+    background: white;
+    box-sizing: border-box;
+    margin-bottom: 1em;
+}
+
+.comment-submit {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    right: -1px;
+    top: -1px;
+    height: 32px;
+    width: 100px;
+    text-align: center;
+    text-shadow: 0px 1px 0px #FFF;
+    color: #555;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #CCC;
+    background-color: white;
+    transition: all 0.3s ease-out;
+    box-shadow: 0px 0px 0px white inset, 0px 0px 0px white;
+    cursor: pointer;
+    margin: 0px;
+    padding: 0px;
+    border-radius: 0px 0px 3px 0px;
+    outline: 0;
+}
+
+.comment-submit:hover {
+    box-shadow: 0px 0px 0px white inset, 0 5px 11px 0 rgba(0,0,0,0.18);
+}
+
+.comment-submit:active {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15) inset, 0px 0px 0px white;
+}
+
+.flowthread-btn {
+    position: relative;
+    top: -1px;
+    float: left;
+    width: 24px;
+    height: 24px;
+    margin: 4px;
+    padding: 0px;
+    border-radius: 10%;
+    outline: 0;
+    border: 0 white;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    transition: all 0.3s ease-out;
+}
+
+.flowthread-btn::-moz-focus-inner, .comment-submit::-moz-focus-inner {
+    border: 0;
+}
+
+.flowthread-btn:hover {
+    border: 1px solid #CCC;
+    box-shadow: 0px 0px 0px white inset,0 5px 11px 0 rgba(0,0,0,0.18);
+}
+
+.flowthread-btn:active, .flowthread-btn.on{
+    border: 1px solid #CCC;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15) inset, 0px 0px 0px white;
+}
+
+.flowthread-btn.on:hover {
+    border: 1px solid #CCC;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15) inset, 0 5px 11px 0 rgba(0,0,0,0.18);
+}
+
+.flowthread-btn.on:active {
+    border: 1px solid #CCC;
+    box-shadow: 0px 0px 0px white inset,0 0 0 0 white;
+}
+
+.flowthread-btn-preview {
+    width: 0px;
+    margin: 4px 0;
+    opacity: 0;
+    background-image: url(preview.svg);
+}
+
+.flowthread-btn-wikitext {
+    background-image: url(wikitext.svg);
+}
+
+.flowthread-btn-wikitext.on+.flowthread-btn-preview {
+    width: 24px;
+    margin: 4px;
+    opacity: 1;
+}
+
+.comment-reply::before, .comment-like::before, .comment-report::before, .comment-delete::before, .comment-recover::before {
+    content: "";
+    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
+    opacity: 0.6;
+    display: inline-block;
+    width: 15px;
+    height: 10px;
+    transition: opacity 0.15s linear 0s;
+    font-size: 9px;
+    vertical-align: middle;
+}

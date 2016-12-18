@@ -2,11 +2,11 @@ var config = mw.config.get('wgFlowThreadConfig');
 
 /* Get avatar by user name */
 function getAvatar(id, username) {
-    if(id===0) {
-        return config.AnonymousAvatar;
-    }else{
-        return config.Avatar.replace(/\$\{username\}/g, username);
-    }
+  if (id === 0) {
+    return config.AnonymousAvatar;
+  } else {
+    return config.Avatar.replace(/\$\{username\}/g, username);
+  }
 }
 
 /* Get user friendly time string (such as 1 hour age) */
@@ -41,13 +41,13 @@ function Thread() {
 }
 
 Thread.fromId = function(id) {
-  return $.data($('[comment-id=' + id + ']')[0], 'thread');
+  return $.data($('#comment-' + id)[0], 'thread');
 }
 
 Thread.prototype.init = function(post) {
   var object = this.object;
   this.post = post;
-  object.attr('comment-id', post.id);
+  object.attr('id', 'comment-' + post.id);
 
   var userlink;
   if (post.userid !== 0) {
@@ -78,6 +78,7 @@ Thread.prototype.appendChild = function(thread) {
 Thread.prototype.prependChild = function(thread) {
   this.object.children('.comment-post').after(thread.object);
 }
+
 function wrapText(text) {
   var span = $('<span/>');
   span.text(text);
@@ -134,6 +135,11 @@ Thread.prototype.delete = function() {
   this.object.remove();
 }
 
+Thread.prototype.markAsPopular = function() {
+  this.object.addClass('comment-popular');
+  this.object.removeAttr('id');
+}
+
 function ReplyBox() {
   var template = '<div class="comment-replybox">'
     + '<div class="comment-avatar">'
@@ -141,9 +147,10 @@ function ReplyBox() {
     + '</div>'
     + '<div class="comment-body">'
     + '<textarea placeholder="' + mw.msg('flowthread-ui-placeholder') + '"></textarea>'
+    + '<div class="comment-preview" style="display:none;"></div>'
     + '<div class="comment-toolbar">'
-    + '<input type="checkbox" name="wikitext" value="" />'
-    + mw.msg('flowthread-ui-usewikitext')
+    + '<button class="flowthread-btn flowthread-btn-wikitext' + (localStorage.flowthread_use_wikitext === 'true' ? ' on' : '') + '" title="' + mw.msg('flowthread-ui-usewikitext') + '"></button>'
+    + '<button class="flowthread-btn flowthread-btn-preview" title="' + mw.msg('flowthread-ui-preview') + '"></button>'
     + '<button class="comment-submit">' + mw.msg('flowthread-ui-submit') + '</button>'
     + '</div>'
     + '</div></div>';
@@ -156,9 +163,78 @@ function ReplyBox() {
     if (e.ctrlKey && e.which === 13) object.find('.comment-submit').click();
     self.pack();
   });
+
+  object.find('.flowthread-btn-preview').click(function() {
+    var obj = $(this);
+    obj.toggleClass('on');
+
+    var previewPanel = object.find('.comment-preview');
+
+    if (obj.hasClass('on')) {
+      object.find('textarea').hide();
+      previewPanel.show();
+      var val = self.getValue().trim();
+      if (val) {
+        var api = new mw.Api();
+        api.get({
+          action: 'parse',
+          title: mw.config.get('wgTitle'),
+          prop: 'text',
+          preview: true,
+          text: val
+        }).done(function(result) {
+          previewPanel.html(result.parse.text['*']);
+        }).fail(function(error, obj) {
+          showErrorDialog(error, obj);
+        });
+      }
+    } else {
+      object.find('textarea').show();
+      previewPanel.hide();
+    }
+  });
+
+  object.find('.flowthread-btn-wikitext').click(function() {
+    var on = $(this).toggleClass('on').hasClass('on');
+    if (!on) {
+      object.find('.flowthread-btn-preview').removeClass('on');
+      object.find('textarea').show();
+      object.find('.comment-preview').hide();
+    }
+    localStorage.flowthread_use_wikitext = on;
+  });
+
+  object.find('.comment-submit').click(function() {
+    if (self.onSubmit) self.onSubmit();
+  });
 }
+
+ReplyBox.prototype.isInWikitextMode = function() {
+  return this.object.find('.flowthread-btn-wikitext').hasClass('on');
+};
+
+ReplyBox.prototype.getValue = function() {
+  return this.object.find('textarea').val();
+};
+
+ReplyBox.prototype.setValue = function(t) {
+  return this.object.find('textarea').val(t);
+};
 
 ReplyBox.prototype.pack = function() {
   var textarea = this.object.find('textarea');
-  textarea.height(1).height(textarea[0].scrollHeight);
+  textarea.height(1).height(Math.max(textarea[0].scrollHeight, 60));
+}
+
+function showMsgDialog(text) {
+  alert(text);
+}
+
+function showErrorDialog(error, obj) {
+  if (obj.error)
+    showMsgDialog(obj.error.info);
+  else if (error === 'http')
+    showMsgDialog(mw.msg('flowthread-ui-networkerror'));
+  else
+    showMsgDialog(error);
 }

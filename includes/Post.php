@@ -5,6 +5,7 @@ class Post {
 	const STATUS_NORMAL = 0;
 	const STATUS_DELETED = 1;
 	const STATUS_SPAM = 2;
+
 	const ATTITUDE_NORMAL = 0;
 	const ATTITUDE_LIKE = 1;
 	const ATTITUDE_REPORT = 2;
@@ -96,6 +97,25 @@ class Post {
 		return self::newFromDatabaseRow($row);
 	}
 
+	/**
+	 * Terminate the API execution for permission reason
+	 */
+	private static function diePermission() {
+		throw new \Exception("Current user cannot perform comment the specified administration action");
+	}
+
+	/**
+	 * Check if the user can perform basic administration action
+	 *
+	 * @param User $user
+	 *   User who is acting the action
+	 * @return
+	 *   True if the user can performe admin
+	 */
+	private static function canPerformAdmin(\User $user) {
+		return $user->isAllowed('commentadmin-restricted');
+	}
+
 	private static function checkIfAdmin(\User $user) {
 		if (!$user->isAllowed('commentadmin-restricted')) {
 			throw new \Exception("Current user cannot perform comment admin");
@@ -106,6 +126,23 @@ class Post {
 		if (!$user->isAllowed('commentadmin')) {
 			throw new \Exception("Current user cannot perform full comment admin");
 		}
+	}
+
+	/**
+	 * Check if the a page is one's user page or user subpage
+	 *
+	 * @param User $user
+	 *   User who is acting the action
+	 * @param Title $title
+	 *   Page on which the action is acting
+	 * @return
+	 *   True if the page belongs to the user
+	 */
+	private static function userOwnsPage(\User $user, \Title $title) {
+		if ($title->getNamespace() === NS_USER && $title->getRootText() === $user->getName()) {
+			return true;
+		}
+		return false;
 	}
 
 	public static function canPost(\User $user) {
@@ -165,6 +202,7 @@ class Post {
 			'flowthread_id' => $this->id->getBin(),
 		));
 	}
+
 	public function recover(\User $user) {
 		self::checkIfAdmin($user);
 
@@ -183,19 +221,44 @@ class Post {
 		if ($wgTriggerFlowThreadHooks) {
 			\Hooks::run('FlowThreadRecovered', array($this, $user));
 		}
+	}
 
+	public function markchecked(\User $user) {
+		self::checkIfAdminFull($user);
+
+		// Mark-as-checked is invalid for a deleted post
+		if ($this->isDeleted()) {
+			throw new \Exception("Post is deleted");
+		}
+
+		// Write a log
+		$this->publishSimpleLog('markchecked', $user);
+
+		$this->reportCount = 0;
+		$this->updateFavorReportCount();
+
+		$db = wfGetDB(DB_MASTER);
+		$db->delete('FlowThreadAttitude', array(
+			'flowthread_att_id' => $this->id->getBin(),
+			'flowthread_att_type' => self::ATTITUDE_REPORT,
+		));
 	}
 
 	public function delete(\User $user) {
 		// Poster himself can delete as well
 		if ($user->getId() === 0 || $user->getId() !== $this->userid) {
-			self::checkIfAdmin($user);
+			if (!self::canPerformAdmin($user) &&
+				!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
+				self::diePermission();
+			}
 		}
 
 		// Delete is not valid for deleted post
 		if ($this->isDeleted()) {
 			throw new \Exception("Post is already deleted");
 		}
+
+		PopularPosts::invalidateCache($this);
 
 		// Mark status as deleted
 		$this->switchStatus(static::STATUS_DELETED);

@@ -53,4 +53,37 @@ class Helper {
 
 		return $ret;
 	}
+
+	public static function generateMentionedList(\ParserOutput $output, Post $post) {
+		$pageTitle = \Title::newFromId($post->pageid);
+		$mentioned = array();
+		$links = $output->getLinks();
+		if (isset($links[NS_USER]) && is_array($links[NS_USER])) {
+			foreach ($links[NS_USER] as $titleName => $pageId) {
+				$user = \User::newFromName($titleName);
+				if (!$user) {
+					continue; // Invalid user
+				}
+				if ($user->isAnon()) {
+					continue;
+				}
+				if ($user->getId() == $post->userid) {
+					continue; // Mention oneself
+				}
+				if ($pageTitle->getNamespace() === NS_USER && $pageTitle->getDBkey() === $titleName) {
+					continue; // Do mentioning in one's own page.
+				}
+				$mentioned[$user->getId()] = $user->getId();
+			}
+		}
+
+		// Exclude all users that will be notified on Post hook
+		$parent = $post->getParent();
+		for (; $parent; $parent = $parent->getParent()) {
+			if (isset($mentioned[$parent->userid])) {
+				unset($mentioned[$parent->userid]);
+			}
+		}
+		return $mentioned;
+	}
 }

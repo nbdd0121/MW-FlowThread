@@ -10,91 +10,13 @@
     padding: 10px;
 }
 
-.comment-container {
+/* Only add margin if we do not have topped posts */
+.comment-container-top[disabled] + .comment-container {
     margin-top: 2em;
 }
 
 .comment-body {
     padding-left: 60px;
-}
-
-.comment-body textarea {
-    /* Metrics */
-    height: 54px;
-    margin: 0px;
-    padding: 10px;
-    resize: none;
-    /* Styles */
-    color: #999;
-    display: block;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    line-height: 20px;
-    /* Borders */
-    border-width: 1px 1px medium;
-    border-style: solid solid none;
-    border-color: #CCC #CCC #999;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
-    background: #FFF url("bg_sprites.png") repeat-x scroll 0px -90px;
-}
-
-.comment-toolbar {
-    position: relative;
-    height: 32px;
-    color: #555;
-    padding-left: 10px;
-    font-size: 12px;
-    line-height: 32px;
-    border-width: 1px;
-    border-style: solid none solid solid;
-    border-color: #CCC;
-    border-image: none;
-    border-bottom-left-radius: 3px;
-    background: transparent url("bg_sprites.png") repeat-x scroll 0px -60px;
-    box-sizing: border-box;
-    margin-bottom: 1em;
-}
-
-.comment-submit {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    position: absolute;
-    right: 0px;
-    top: -1px;
-    height: 32px;
-    width: 100px;
-    text-align: center;
-    text-shadow: 0px 1px 0px #FFF;
-    color: #555;
-    font-size: 14px;
-    font-weight: bold;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #CCC #CCC #AAA;
-    -moz-border-top-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    border-image: none;
-    border-bottom-right-radius: 3px;
-    background-color: #E6E6E6;
-    background-repeat: no-repeat;
-    background-image: linear-gradient(#FCFCFC, #FCFCFC 25%, #E6E6E6);
-    transition: all 0.15s linear 0s;
-    box-shadow: 0px 0px 1px #FFF inset;
-    cursor: pointer;
-    margin: 0px;
-    padding: 0px;
-    border-radius: 0px;
-}
-
-.comment-submit:hover {
-    background-position: 0px -15px;
-    color: #333;
-}
-
-.comment-submit:active {
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15) inset, 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .comment-user, .comment-user a {
@@ -124,18 +46,6 @@
     margin-left: 5px;
     cursor: pointer;
     transition: color 0.15s linear 0s;
-}
-
-.comment-reply::before, .comment-like::before, .comment-report::before, .comment-delete::before {
-    content: "";
-    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
-    opacity: 0.6;
-    display: inline-block;
-    width: 15px;
-    height: 10px;
-    transition: opacity 0.15s linear 0s;
-    font-size: 9px;
-    vertical-align: middle;
 }
 
 .comment-reply::before {
@@ -234,4 +144,33 @@
     text-align: center;
     padding: 1em;
     color: #777;
+}
+
+.comment-container-top {
+    border: 1px #CCC solid;
+    margin-top: 2em;
+    border-radius: 5px;
+}
+
+.comment-container-top[disabled] {
+    display: none;
+}
+
+/* The title bar */
+.comment-container-top > div:first-child {
+    background: #f8f8f8;
+    height: 24px;
+    line-height: 24px;
+    color: #555;
+    text-indent: 1em;
+    font-size: small;
+    border-radius: 5px 5px 0 0;
+}
+
+.comment-container-top > div:last-child {
+    border-radius: 0 0 5px 5px;
+}
+
+.comment-container-top:not([disabled]) + .comment-container > div:first-child {
+    border-top: 0;
 }

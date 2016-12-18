@@ -7,6 +7,12 @@ class API extends \ApiBase {
 		$this->dieUsage("The $name parameter must be set", "no$name");
 	}
 
+	private function validatePageId($pageid) {
+		if (!\Title::newFromId($pageid)) {
+			$this->dieUsageMsg(array('nosuchpageid', $pageid));
+		}
+	}
+
 	private function convertPosts(array $posts) {
 		$attTable = Helper::batchGetUserAttitude($this->getUser(), $posts);
 		$ret = array();
@@ -29,14 +35,20 @@ class API extends \ApiBase {
 		$offset = intval($this->getMain()->getVal('offset', 0));
 
 		$page = new Page($pageid);
-		$page->type = Post::STATUS_NORMAL;
+		$page->filter = Page::FILTER_NORMAL;
 		$page->offset = $offset;
 		$page->fetch();
 
 		$comments = $this->convertPosts($page->posts);
 
+		// This is slow, use cache
+		$cache = \ObjectCache::getMainWANInstance();
+		$popular = PopularPosts::getFromPageId($pageid);
+		$popularRet = $this->convertPosts($popular);
+
 		$obj = array(
 			"posts" => $comments,
+			"popular" => $popularRet,
 			"count" => $page->totalCount,
 		);
 
@@ -131,6 +143,16 @@ class API extends \ApiBase {
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;
 
+			case 'markchecked':
+				if (!$postList) {
+					$this->dieNoParam('postid');
+				}
+				foreach ($postList as $post) {
+					$post->markchecked($this->getUser());
+				}
+				$this->getResult()->addValue(null, $this->getModuleName(), '');
+				break;
+
 			case 'erase':
 				if (!$postList) {
 					$this->dieNoParam('postid');
@@ -153,49 +175,72 @@ class API extends \ApiBase {
 				// Permission check
 				Post::checkIfCanPost($this->getUser());
 
-				// Need to feed this to spam filter
-				$useWikitext = $this->getMain()->getCheck('wikitext');
+				$this->validatePageId($page);
 
-				$filterResult = SpamFilter::validate($text, $this->getUser(), $useWikitext);
-				$text = $filterResult['text'];
-
-				// Parse as wikitext if specified
-				if ($useWikitext) {
-					$parser = new \Parser();
-					$opt = new \ParserOptions($this->getUser());
-					$opt->setEditSection(false);
-					$output = $parser->parse($text, \Title::newFromId($page), $opt);
-					$text = $output->getText();
-					unset($parser);
-					unset($opt);
-					unset($output);
-					$text = \Parser::stripOuterParagraph($text);
-					$text = SpamFilter::sanitize($text);
-				} else {
-					$text = htmlspecialchars($text);
-				}
-
+				// Construct the object first without setting the text
+				// As we need to use some useful functions on the post object
 				$data = array(
 					'id' => null,
 					'pageid' => $page,
 					'userid' => $this->getUser()->getId(),
 					'username' => $this->getUser()->getName(),
-					'text' => $text,
+					'text' => '', // Will be changed later
 					'parentid' => count($postList) ? $postList[0]->id : null,
-					'status' => $filterResult['good'] ? Post::STATUS_NORMAL : Post::STATUS_SPAM,
+					'status' => Post::STATUS_NORMAL, // Will be changed later
 					'like' => 0,
 					'report' => 0,
 				);
-
 				$postObject = new Post($data);
 
-				global $wgFlowThreadConfig;
-				// Restrict max nest level
-				if ($postObject->getNestLevel() > $wgFlowThreadConfig['MaxNestLevel']) {
-					$postObject->parentid = $postObject->getParent()->parentid;
-					$postObject->parent = $postObject->getParent()->parent;
+				// Need to feed this to spam filter
+				$useWikitext = $this->getMain()->getCheck('wikitext');
+				$filterResult = SpamFilter::validate($text, $this->getUser(), $useWikitext);
+				$text = $filterResult['text'];
+
+				// We need to do this step, as we might need to transform
+				// the text, so unify both cases will be more convenient.
+				if (!$useWikitext) {
+					$text = '<nowiki>' . htmlspecialchars($text) . '</nowiki>';
 				}
 
+				// Restrict max nest level. If exceeded, automatically prepend a @ before
+				global $wgFlowThreadConfig;
+				if ($postObject->getNestLevel() > $wgFlowThreadConfig['MaxNestLevel']) {
+					$parent = $postObject->getParent();
+					$postObject->parentid = $parent->parentid;
+					$postObject->parent = $parent->parent;
+					if ($parent->userid) {
+						$text = $this->msg('flowthread-reply-user', $parent->username)->plain() . $text;
+					} else {
+						$text = $this->msg('flowthread-reply-anonymous', $parent->username)->plain() . $text;
+					}
+				}
+
+				$parser = new \Parser();
+
+				// Set options for parsing
+				$opt = new \ParserOptions($this->getUser());
+				$opt->setEditSection(false); // Edit button will not work!
+
+				$output = $parser->parse($text, \Title::newFromId($page), $opt);
+				$text = $output->getText();
+
+				// Get all mentioned user
+				$mentioned = Helper::generateMentionedList($output, $postObject);
+
+				unset($parser);
+				unset($opt);
+				unset($output);
+
+				// Useless p wrapper
+				$text = \Parser::stripOuterParagraph($text);
+				$text = SpamFilter::sanitize($text);
+
+				// Fix object
+				if (!$filterResult['good']) {
+					$postObject->status = Post::STATUS_SPAM;
+				}
+				$postObject->text = $text;
 				$postObject->post();
 
 				if (!$filterResult['good']) {
@@ -203,6 +248,10 @@ class API extends \ApiBase {
 					if ($wgTriggerFlowThreadHooks) {
 						\Hooks::run('FlowThreadSpammed', array($postObject));
 					}
+				}
+
+				if (count($mentioned)) {
+					\Hooks::run('FlowThreadMention', array($postObject, $mentioned));
 				}
 
 				$this->getResult()->addValue(null, $this->getModuleName(), '');

@@ -1,9 +1,7 @@
 <?php
-if (!defined('MEDIAWIKI')) {
-	die('Wrong Entracne Point');
-}
+namespace FlowThread;
 
-class FlowThread {
+class Hooks {
 
 	public static function getFilteredNamespace() {
 		$ret = array(
@@ -19,7 +17,7 @@ class FlowThread {
 		return $ret;
 	}
 
-	public static function onBeforePageDisplay(OutputPage &$output, Skin &$skin) {
+	public static function onBeforePageDisplay(\OutputPage &$output, \Skin &$skin) {
 		$title = $output->getTitle();
 
 		// Disallow commenting on pages without article id
@@ -88,7 +86,7 @@ class FlowThread {
 		$dbType = $updater->getDB()->getType();
 		// For non-MySQL/MariaDB/SQLite DBMSes, use the appropriately named file
 		if (!in_array($dbType, array('mysql', 'sqlite'))) {
-			throw new Exception('Database type not currently supported');
+			throw new \Exception('Database type not currently supported');
 		} else {
 			$filename = 'mysql.sql';
 		}
@@ -99,29 +97,36 @@ class FlowThread {
 		return true;
 	}
 
-	public static function onArticleDeleteComplete(&$article, User &$user, $reason, $id, Content $content = null, LogEntry $logEntry) {
-		$page = new \FlowThread\Page($id);
+	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, \Content $content = null, \LogEntry $logEntry) {
+		$page = new Page($id);
 		$page->limit = -1;
 		$page->fetch();
 		$page->erase();
 		return true;
 	}
 
-	public static function onSkinBuildSidebar(\Skin $skin, &$bar) {
-		global $wgUser;
-
-		$relevUser = $skin->getRelevantUser();
-		if ($relevUser && $wgUser->isAllowed('commentadmin-restricted')) {
-			$bar['sidebar-section-extension'][] =
-			array(
-				'text' => wfMsg('sidebar-usercomments'),
-				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
-					'user' => $relevUser->getName(),
-				)),
-				'id' => 'n-usercomments',
-				'active' => '',
-			);
+	public static function onBaseTemplateToolbox(\BaseTemplate &$baseTemplate, array &$toolbox) {
+		if (isset($baseTemplate->data['nav_urls']['usercomments'])
+			&& $baseTemplate->data['nav_urls']['usercomments']) {
+			$toolbox['usercomments'] = $baseTemplate->data['nav_urls']['usercomments'];
+			$toolbox['usercomments']['id'] = 't-usercomments';
 		}
+	}
+
+	public static function onSkinTemplateOutputPageBeforeExec(&$skinTemplate, &$tpl) {
+		$user = $skinTemplate->getRelevantUser();
+
+		if ($user && $skinTemplate->getUser()->isAllowed('commentadmin-restricted')) {
+			$nav_urls = $tpl->get('nav_urls');
+			$nav_urls['usercomments'] = [
+				'text' => wfMessage('sidebar-usercomments')->text(),
+				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
+					'user' => $user->getName(),
+				)),
+			];
+			$tpl->set('nav_urls', $nav_urls);
+		}
+
 		return true;
 	}
 }

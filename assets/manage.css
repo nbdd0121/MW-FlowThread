@@ -41,25 +41,13 @@
     color: #999;
 }
 
-.comment-like, .comment-report, .comment-delete, .comment-recover {
+.comment-like, .comment-report, .comment-delete, .comment-recover, .comment-markchecked {
     margin-left: 5px;
 }
 
-.comment-delete, .comment-recover {
+.comment-delete, .comment-recover, .comment-markchecked {
     cursor: pointer;
     transition: color 0.15s linear 0s;
-}
-
-.comment-like::before, .comment-report::before, .comment-delete::before, .comment-recover::before {
-    content: "";
-    background: transparent url("sprites.png") no-repeat scroll 0% 0%;
-    opacity: 0.6;
-    display: inline-block;
-    width: 15px;
-    height: 10px;
-    transition: opacity 0.15s linear 0s;
-    font-size: 9px;
-    vertical-align: middle;
 }
 
 .comment-like::before {
