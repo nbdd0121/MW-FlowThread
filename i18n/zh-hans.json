@@ -33,6 +33,7 @@
 	"flowthread-ui-like": "赞",
 	"flowthread-ui-report": "举报",
 	"flowthread-ui-delete": "删除",
+	"flowthread-ui-delete-confirmation": "确认删除",
 	"flowthread-ui-recover": "恢复",
 	"flowthread-ui-markchecked": "已检查",
 	"flowthread-ui-erase": "永久删除",
