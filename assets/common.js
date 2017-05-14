@@ -133,13 +133,14 @@ Thread.prototype.delete = function() {
     this.deletionLock = true;
     this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete_confirmation'));
     this.object.find('.comment-delete').first().css('color', 'rgb(163, 31,8)');
+    var _this = this;
     // Set timer
     setTimeout(function () {
       console.info("TRACE: Confirmation timeout");
-      this.deletionLock = false;
-      this.object.find('.comment-delete').first().removeAttr('style');
-      this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete'));
-    }, 5000);
+      _this.deletionLock = false;
+      _this.object.find('.comment-delete').first().removeAttr('style');
+      _this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete'));
+    }, 3000);
   } else {
     var api = new mw.Api();
     api.get({
