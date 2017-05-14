@@ -37,6 +37,8 @@ function Thread() {
 
   this.post = null;
   this.object = object;
+  this.deletionLock = false;
+
   $.data(object[0], 'thread', this);
 }
 
@@ -126,13 +128,27 @@ Thread.prototype.report = function() {
 }
 
 Thread.prototype.delete = function() {
-  var api = new mw.Api();
-  api.get({
-    action: 'flowthread',
-    type: 'delete',
-    postid: this.post.id
-  });
-  this.object.remove();
+  // Implements a mechanism for delete confirmation
+  if (!this.deletionLock) {
+    this.deletionLock = true;
+    this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete_confirmation'));
+    this.object.find('.comment-delete').first().css('color', 'rgb(163, 31,8)');
+    var _this = this;
+    setTimeout(function () {
+      _this.deletionLock = false;
+      _this.object.find('.comment-delete').first().removeAttr('style');
+      _this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete'));
+    }, 1500);
+  } else {
+    var api = new mw.Api();
+    api.get({
+      action: 'flowthread',
+      type: 'delete',
+      postid: this.post.id
+    });
+    this.deletionLock = false;
+    this.object.remove();
+  }
 }
 
 Thread.prototype.markAsPopular = function() {

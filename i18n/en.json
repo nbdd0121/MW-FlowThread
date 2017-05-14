@@ -33,6 +33,7 @@
 	"flowthread-ui-like": "Like",
 	"flowthread-ui-report": "Report",
 	"flowthread-ui-delete": "Delete",
+	"flowthread-ui-delete_confirmation": "Confirm deletion",
 	"flowthread-ui-recover": "Recover",
 	"flowthread-ui-markchecked": "Checked",
 	"flowthread-ui-erase": "Permantly Delete",

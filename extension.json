@@ -89,6 +89,7 @@
 				"flowthread-ui-like",
 				"flowthread-ui-report",
 				"flowthread-ui-delete",
+				"flowthread-ui-delete_confirmation",
 				"flowthread-ui-usewikitext",
 				"flowthread-ui-preview",
 				"flowthread-ui-placeholder",
@@ -116,6 +117,7 @@
 				"flowthread-ui-like",
 				"flowthread-ui-report",
 				"flowthread-ui-delete",
+				"flowthread-ui-delete_confirmation",
 				"flowthread-ui-recover",
 				"flowthread-ui-markchecked",
 				"flowthread-ui-erase",
@@ -167,8 +169,8 @@
 	},
 	"config": {
 		"FlowThreadConfig": {
-			"Avatar": "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
-			"AnonymousAvatar": "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
+			"Avatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
+			"AnonymousAvatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
 			"PopularPostCount": 3,
 			"PopularPostThreshold": 1,
 			"MaxNestLevel": 3
