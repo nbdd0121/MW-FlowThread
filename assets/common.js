@@ -138,7 +138,7 @@ Thread.prototype.delete = function() {
       _this.deletionLock = false;
       _this.object.find('.comment-delete').first().removeAttr('style');
       _this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete'));
-    }, 1000);
+    }, 1500);
   } else {
     var api = new mw.Api();
     api.get({
