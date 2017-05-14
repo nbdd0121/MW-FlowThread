@@ -131,10 +131,13 @@ Thread.prototype.delete = function() {
   // Implements a mechanism for delete confirmation
   if (!this.deletionLock) {
     this.deletionLock = true;
-    this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete-confirmation'));
+    this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete_confirmation'));
+    this.object.find('.comment-delete').first().css('color', 'rgb(163, 31,8)');
     // Set timer
     setTimeout(function () {
+      console.info("TRACE: Confirmation timeout");
       this.deletionLock = false;
+      this.object.find('.comment-delete').first().removeAttr('style');
       this.object.find('.comment-delete').first().text(mw.msg('flowthread-ui-delete'));
     }, 5000);
   } else {
