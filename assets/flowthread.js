@@ -6,15 +6,14 @@ var replyBox = null;
 /* Get user preference */
 /* Returns positive result for non-user namespaces */
 function getUserCommentPreference() {
-    var optFlag = document.getElementById("flowthread-user-optout");
+  var optFlag = document.getElementById("flowthread-user-optout");
 
-    // No one will even change the default user namespace ID in MediaWiki
-    // Changing this value considered unsupported
-    if (optFlag && mw.config.get("wgNamespaceNumber") === 2) {
-        return false;
-    }
-
-    return true;
+  // No one will even change the default user namespace ID in MediaWiki
+  // Changing this value considered unsupported
+  if (optFlag && mw.config.get("wgNamespaceNumber") === 2) {
+      return false;
+  }
+  return true;
 }
 
 function createThread(post) {

@@ -1,89 +1,89 @@
 {
-	"name": "FlowThread",
-	"author": "Gary Guo",
-	"url": "https://github.com/nbdd0121/MW-FlowThread",
-	"descriptionmsg": "flowthread_desc",
-	"version": "1.2.0",
-	"license-name": "BSD-2-Clause",
-	"type": "specialpage",
-	"ExtensionMessagesFiles": {
-		"FlowThreadAlias": "FlowThread.alias.php"
-	},
-	"MessagesDirs": {
-		"FlowThread": [
-			"i18n"
-		]
-	},
-	"AutoloadClasses": {
-		"FlowThread\\Hooks": "includes/Hooks.php",
-		"FlowThread\\API": "includes/API.php",
-		"FlowThread\\Post": "includes/Post.php",
-		"FlowThread\\Page": "includes/Page.php",
-		"FlowThread\\UUID": "includes/UUID.php",
-		"FlowThread\\SpamFilter": "includes/SpamFilter.php",
-		"FlowThread\\PopularPosts": "includes/PopularPosts.php",
-		"FlowThread\\Helper": "includes/Helper.php",
-		"FlowThread\\SpecialExport": "special/Export.php",
-		"FlowThread\\SpecialImport": "special/Import.php",
-		"FlowThread\\SpecialManage": "special/Manage.php",
-		"FlowThread\\SpecialLink": "special/Link.php",
-		"FlowThread\\EchoHooks": "echo/Hooks.php",
-		"FlowThread\\EchoPresentationModel": "echo/PresentationModel.php",
-		"FlowThread\\EchoAlertPresentationModel": "echo/AlertPresentationModel.php"
-	},
-	"Hooks": {
-		"BeforePageDisplay": [
-			"FlowThread\\Hooks::onBeforePageDisplay"
-		],
-		"LoadExtensionSchemaUpdates": [
-			"FlowThread\\Hooks::onLoadExtensionSchemaUpdates"
-		],
-		"ArticleDeleteComplete": [
-			"FlowThread\\Hooks::onArticleDeleteComplete"
-		],
-		"BeforeCreateEchoEvent": [
-			"FlowThread\\EchoHooks::onBeforeCreateEchoEvent"
-		],
-		"EchoGetDefaultNotifiedUsers": [
-			"FlowThread\\EchoHooks::onEchoGetDefaultNotifiedUsers"
-		],
-		"FlowThreadPosted": [
-			"FlowThread\\EchoHooks::onFlowThreadPosted"
-		],
-		"FlowThreadDeleted": [
-			"FlowThread\\EchoHooks::onFlowThreadDeleted"
-		],
-		"FlowThreadRecovered": [
-			"FlowThread\\EchoHooks::onFlowThreadRecovered"
-		],
-		"FlowThreadSpammed": [
-			"FlowThread\\EchoHooks::onFlowThreadSpammed"
-		],
-		"FlowThreadMention": [
-			"FlowThread\\EchoHooks::onFlowThreadMention"
-		],
-		"BaseTemplateToolbox": [
-			"FlowThread\\Hooks::onBaseTemplateToolbox"
-		],
-		"SkinTemplateOutputPageBeforeExec": [
-			"FlowThread\\Hooks::onSkinTemplateOutputPageBeforeExec"
-		]
-	},
-	"ResourceModules": {
-		"ext.flowthread": {
-			"dependencies": [
-				"mediawiki.language",
-				"moment",
-				"mediawiki.user"
-			],
-			"scripts":[
-				"assets/common.js",
-				"assets/flowthread.js"
-			],
-			"styles":[
-				"assets/common.css",
-				"assets/flowthread.css"
-			],
+  "name": "FlowThread",
+  "author": "Gary Guo",
+  "url": "https://github.com/nbdd0121/MW-FlowThread",
+  "descriptionmsg": "flowthread_desc",
+  "version": "1.2.0",
+  "license-name": "BSD-2-Clause",
+  "type": "specialpage",
+  "ExtensionMessagesFiles": {
+    "FlowThreadAlias": "FlowThread.alias.php"
+  },
+  "MessagesDirs": {
+    "FlowThread": [
+      "i18n"
+    ]
+  },
+  "AutoloadClasses": {
+    "FlowThread\\Hooks": "includes/Hooks.php",
+    "FlowThread\\API": "includes/API.php",
+    "FlowThread\\Post": "includes/Post.php",
+    "FlowThread\\Page": "includes/Page.php",
+    "FlowThread\\UUID": "includes/UUID.php",
+    "FlowThread\\SpamFilter": "includes/SpamFilter.php",
+    "FlowThread\\PopularPosts": "includes/PopularPosts.php",
+    "FlowThread\\Helper": "includes/Helper.php",
+    "FlowThread\\SpecialExport": "special/Export.php",
+    "FlowThread\\SpecialImport": "special/Import.php",
+    "FlowThread\\SpecialManage": "special/Manage.php",
+    "FlowThread\\SpecialLink": "special/Link.php",
+    "FlowThread\\EchoHooks": "echo/Hooks.php",
+    "FlowThread\\EchoPresentationModel": "echo/PresentationModel.php",
+    "FlowThread\\EchoAlertPresentationModel": "echo/AlertPresentationModel.php"
+  },
+  "Hooks": {
+    "BeforePageDisplay": [
+      "FlowThread\\Hooks::onBeforePageDisplay"
+    ],
+    "LoadExtensionSchemaUpdates": [
+      "FlowThread\\Hooks::onLoadExtensionSchemaUpdates"
+    ],
+    "ArticleDeleteComplete": [
+      "FlowThread\\Hooks::onArticleDeleteComplete"
+    ],
+    "BeforeCreateEchoEvent": [
+      "FlowThread\\EchoHooks::onBeforeCreateEchoEvent"
+    ],
+    "EchoGetDefaultNotifiedUsers": [
+      "FlowThread\\EchoHooks::onEchoGetDefaultNotifiedUsers"
+    ],
+    "FlowThreadPosted": [
+      "FlowThread\\EchoHooks::onFlowThreadPosted"
+    ],
+    "FlowThreadDeleted": [
+      "FlowThread\\EchoHooks::onFlowThreadDeleted"
+    ],
+    "FlowThreadRecovered": [
+      "FlowThread\\EchoHooks::onFlowThreadRecovered"
+    ],
+    "FlowThreadSpammed": [
+      "FlowThread\\EchoHooks::onFlowThreadSpammed"
+    ],
+    "FlowThreadMention": [
+      "FlowThread\\EchoHooks::onFlowThreadMention"
+    ],
+    "BaseTemplateToolbox": [
+      "FlowThread\\Hooks::onBaseTemplateToolbox"
+    ],
+    "SkinTemplateOutputPageBeforeExec": [
+      "FlowThread\\Hooks::onSkinTemplateOutputPageBeforeExec"
+    ]
+  },
+  "ResourceModules": {
+    "ext.flowthread": {
+      "dependencies": [
+        "mediawiki.language",
+        "moment",
+        "mediawiki.user"
+      ],
+      "scripts": [
+        "assets/common.js",
+        "assets/flowthread.js"
+      ],
+      "styles": [
+        "assets/common.css",
+        "assets/flowthread.css"
+      ],
       "messages": [
         "flowthread-ui-reply",
         "flowthread-ui-like",
@@ -99,88 +99,88 @@
         "flowthread-ui-networkerror",
         "flowthread-ui-useroptout"
       ]
-		},
-		"ext.flowthread.manage": {
-			"dependencies": [
-				"mediawiki.language",
-				"moment",
-				"mediawiki.user"
-			],
-			"scripts": [
-				"assets/common.js",
-				"assets/manage.js"
-			],
-			"styles": [
-				"assets/common.css",
-				"assets/manage.css"
-			],
-			"messages": [
-				"flowthread-ui-like",
-				"flowthread-ui-report",
-				"flowthread-ui-delete",
-				"flowthread-ui-delete_confirmation",
-				"flowthread-ui-recover",
-				"flowthread-ui-markchecked",
-				"flowthread-ui-erase",
-				"flowthread-ui-selectall",
-				"flowthread-ui-unselectall",
-				"flowthread-ui-user-post-on-page"
-			]
-		}
-	},
-	"ResourceFileModulePaths": {
-		"localBasePath": "",
-		"remoteExtPath": "FlowThread"
-	},
-	"APIModules": {
-		"flowthread": "FlowThread\\API"
-	},
-	"AvailableRights": [
-		"comment",
-		"commentadmin-restricted",
-		"commentadmin"
-	],
-	"GroupPermissions": {
-		"*": {
-			"comment": true
-		},
-		"sysop": {
-			"commentadmin": true,
-			"commentadmin-restricted": true
-		}
-	},
-	"LogTypes": [
-		"comments"
-	],
-	"FilterLogTypes": {
-		"comments": true
-	},
-	"LogActionsHandlers": {
-		"comments/delete": "LogFormatter",
-		"comments/recover": "LogFormatter",
-		"comments/erase": "LogFormatter",
-		"comments/import": "LogFormatter",
-		"comments/markchecked": "LogFormatter"
-	},
-	"SpecialPages": {
-		"FlowThreadExport": "FlowThread\\SpecialExport",
-		"FlowThreadImport": "FlowThread\\SpecialImport",
-		"FlowThreadManage": "FlowThread\\SpecialManage",
-		"FlowThreadLink": "FlowThread\\SpecialLink"
-	},
-	"config": {
-		"FlowThreadConfig": {
-			"Avatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
-			"AnonymousAvatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
-			"PopularPostCount": 3,
-			"PopularPostThreshold": 1,
-			"MaxNestLevel": 3
-		},
-		"TriggerFlowThreadHooks": true
-	},
-	"DefaultUserOptions": {
-		"echo-subscriptions-web-flowthread": true,
-		"echo-subscriptions-email-flowthread": false
-	},
-	"manifest_version": 1
+    },
+    "ext.flowthread.manage": {
+      "dependencies": [
+        "mediawiki.language",
+        "moment",
+        "mediawiki.user"
+      ],
+      "scripts": [
+        "assets/common.js",
+        "assets/manage.js"
+      ],
+      "styles": [
+        "assets/common.css",
+        "assets/manage.css"
+      ],
+      "messages": [
+        "flowthread-ui-like",
+        "flowthread-ui-report",
+        "flowthread-ui-delete",
+        "flowthread-ui-delete_confirmation",
+        "flowthread-ui-recover",
+        "flowthread-ui-markchecked",
+        "flowthread-ui-erase",
+        "flowthread-ui-selectall",
+        "flowthread-ui-unselectall",
+        "flowthread-ui-user-post-on-page"
+      ]
+    }
+  },
+  "ResourceFileModulePaths": {
+    "localBasePath": "",
+    "remoteExtPath": "FlowThread"
+  },
+  "APIModules": {
+    "flowthread": "FlowThread\\API"
+  },
+  "AvailableRights": [
+    "comment",
+    "commentadmin-restricted",
+    "commentadmin"
+  ],
+  "GroupPermissions": {
+    "*": {
+      "comment": true
+    },
+    "sysop": {
+      "commentadmin": true,
+      "commentadmin-restricted": true
+    }
+  },
+  "LogTypes": [
+    "comments"
+  ],
+  "FilterLogTypes": {
+    "comments": true
+  },
+  "LogActionsHandlers": {
+    "comments/delete": "LogFormatter",
+    "comments/recover": "LogFormatter",
+    "comments/erase": "LogFormatter",
+    "comments/import": "LogFormatter",
+    "comments/markchecked": "LogFormatter"
+  },
+  "SpecialPages": {
+    "FlowThreadExport": "FlowThread\\SpecialExport",
+    "FlowThreadImport": "FlowThread\\SpecialImport",
+    "FlowThreadManage": "FlowThread\\SpecialManage",
+    "FlowThreadLink": "FlowThread\\SpecialLink"
+  },
+  "config": {
+    "FlowThreadConfig": {
+      "Avatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
+      "AnonymousAvatar": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y",
+      "PopularPostCount": 3,
+      "PopularPostThreshold": 1,
+      "MaxNestLevel": 3
+    },
+    "TriggerFlowThreadHooks": true
+  },
+  "DefaultUserOptions": {
+    "echo-subscriptions-web-flowthread": true,
+    "echo-subscriptions-email-flowthread": false
+  },
+  "manifest_version": 1
 }
