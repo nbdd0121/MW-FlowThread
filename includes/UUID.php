@@ -56,7 +56,10 @@ class UUID {
 
 	public function getTimestamp() {
 		if(!$this->timestamp) {
-			$this->timestamp = intval((hexdec(substr($this->getHex(), 0, 12)) >> 2) / 1000);
+			// Originally we have
+			//   $this->timestamp = intval((hexdec(substr($this->getHex(), 0, 12)) >> 2) / 1000);
+			// but this does not work in 32-bit PHP. So we changed to following
+			$this->timestamp = floor(hexdec(substr($this->getHex(), 0, 12)) / 4000);
 		}
 		return $this->timestamp;
 	}
