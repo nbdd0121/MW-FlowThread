@@ -14,7 +14,7 @@ A commenting system for MediaWiki
 ## Configuration
 * All configurations are stored in `$wgFlowThreadConfig`
 	* `$wgFlowThreadConfig['AnonymousAvatar']` (string), should be set to the URL of the avatar for non-registered user.
-	* `$wgFlowThreadConfig['Avatar']` (string), should be set to the URL of the avatar for registered user. You can use ${username} as a placeholder for user's name.
+	* `$wgFlowThreadConfig['Avatar']` (string), should be set to the URL of the avatar for registered user. You can use ${username} as a placeholder for user's name. Please note that you need to use single quotes ('') to include the placeholder, otherwise PHP will substitute it right away.
 	* `$wgFlowThreadConfig['MaxNestLevel']` (int): Default to 3, this restricted max level of nested reply.
 * You can set user rights: 
 	* comment: User need this right to post
