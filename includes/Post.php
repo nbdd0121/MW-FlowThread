@@ -303,9 +303,7 @@ class Post {
 		}
 
 		$dbw = wfGetDB(DB_MASTER);
-		$dbw->begin();
 		$counter = $this->eraseSilently($dbw);
-		$dbw->commit();
 
 		// Add to log
 		$logEntry = new \ManualLogEntry('comments', 'erase');
