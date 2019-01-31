@@ -185,7 +185,7 @@ class API extends \ApiBase {
 					'userid' => $this->getUser()->getId(),
 					'username' => $this->getUser()->getName(),
 					'text' => '', // Will be changed later
-					'parentid' => count($postList) ? $postList[0]->id : null,
+					'parentid' => $postList && count($postList) ? $postList[0]->id : null,
 					'status' => Post::STATUS_NORMAL, // Will be changed later
 					'like' => 0,
 					'report' => 0,
