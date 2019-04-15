@@ -147,3 +147,42 @@
     font-size: 9px;
     vertical-align: middle;
 }
+
+.comment-reply, .comment-like, .comment-report, .comment-delete {
+    margin-left: 5px;
+    cursor: pointer;
+    transition: color 0.15s linear 0s;
+}
+
+.comment-reply:hover, .comment-like:hover, .comment-report:hover, .comment-delete:hover {
+    opacity: 1.0;
+    color: #555;
+}
+
+.comment-reply:hover::before, .comment-like:hover::before, .comment-report:hover::before, .comment-delete:hover::before {
+    opacity: 1.0;
+}
+
+.comment-reply::before {
+    background-position: 0px 0px;
+}
+
+.comment-like::before {
+    background-position: 0px -14px;
+}
+
+.comment-like[liked]::before {
+    background-position: 0px -27px;
+}
+
+.comment-report::before {
+    background-position: 0px -50px;
+}
+
+.comment-report[reported]::before {
+    background-position: 0px -62px;
+}
+
+.comment-delete::before {
+    background-position: 0px -40px;
+}

@@ -41,36 +41,24 @@
     color: #999;
 }
 
-.comment-like, .comment-report, .comment-delete, .comment-recover, .comment-markchecked {
+.comment-markchecked {
     margin-left: 5px;
 }
 
-.comment-delete, .comment-recover, .comment-markchecked {
+.comment-markchecked {
     cursor: pointer;
     transition: color 0.15s linear 0s;
-}
-
-.comment-like::before {
-    background-position: 0px -14px;
-}
-
-.comment-report::before {
-    background-position: 0px -50px;
-}
-
-.comment-delete::before {
-    background-position: 0px -40px;
 }
 
 .comment-recover::before {
     background-position: 0px 0px;
 }
 
-.comment-like:hover::before, .comment-report:hover::before, .comment-delete:hover::before, .comment-recover:hover::before {
+.comment-recover:hover::before {
     opacity: 1.0;
 }
 
-.comment-report:hover, .comment-like:hover, .comment-delete:hover, .comment-recover:hover {
+.comment-recover:hover, .comment-markchecked:hover {
     opacity: 1.0;
     color: #555;
 }

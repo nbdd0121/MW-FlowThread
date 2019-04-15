@@ -13,9 +13,22 @@ function createThread(post) {
 	object.find('.comment-user').html(
 		mw.msg('flowthread-ui-user-post-on-page', object.find('.comment-user').html(), pageLink));
 
-	thread.addButton('like', mw.msg('flowthread-ui-like') + '(' + post.like + ')', function() {});
+	// Users with management privilege should have signed in.
+	thread.addButton('like', mw.msg('flowthread-ui-like') + '(' + post.like + ')', function() {
+		if (object.find('.comment-like').first().attr('liked') !== undefined) {
+			thread.dislike();
+		} else {
+			thread.like();
+		}
+	});
 
-	thread.addButton('report', mw.msg('flowthread-ui-report') + '(' + post.report + ')', function() {});
+	thread.addButton('report', mw.msg('flowthread-ui-report') + '(' + post.report + ')', function() {
+		if (object.find('.comment-report').first().attr('reported') !== undefined) {
+			thread.dislike();
+		} else {
+			thread.report();
+		}
+	});
 
 	if (!deleted) {
 		thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
@@ -42,6 +55,12 @@ function createThread(post) {
 		object.toggleClass('comment-selected');
 		onSelect();
 	});
+
+  if (post.myatt === 1) {
+    object.find('.comment-like').attr('liked', '');
+  } else if (post.myatt === 2) {
+    object.find('.comment-report').attr('reported', '');
+  }
 
 	return thread;
 }
