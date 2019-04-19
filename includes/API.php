@@ -78,6 +78,14 @@ class API extends \ApiBase {
 		$this->getResult()->addValue(null, $this->getModuleName(), $this->fetchPosts($page));
 	}
 
+	public static function stripWrapper( $html ) {
+		$m = [];
+		if ( preg_match( '/^<div class="mw-parser-output">(.*)<\/div>$/sU', $html, $m ) ) {
+			$html = $m[1];
+		}
+		return $html;
+	}
+
 	public function execute() {
 		$action = $this->getMain()->getVal('type');
 		$page = $this->getMain()->getVal('pageid');
@@ -233,6 +241,7 @@ class API extends \ApiBase {
 				unset($output);
 
 				// Useless p wrapper
+				$text = self::stripWrapper($text);
 				$text = \Parser::stripOuterParagraph($text);
 				$text = SpamFilter::sanitize($text);
 
