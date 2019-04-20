@@ -69,10 +69,10 @@ class Hooks {
 		);
 
 		if (\FlowThread\Post::canPost($output->getUser())) {
-			$config['UserOptOutNotice'] = wfMessage('flowthread-ui-useroptout')->toString();
+			$config['UserOptOutNotice'] = wfMessage('flowthread-ui-useroptout')->parse();
 			$output->addJsConfigVars(array('canpost' => ''));
 		} else {
-			$config['CantPostNotice'] = wfMessage('flowthread-ui-cantpost')->toString();
+			$config['CantPostNotice'] = wfMessage('flowthread-ui-cantpost')->parse();
 		}
 
 		global $wgFlowThreadConfig;
