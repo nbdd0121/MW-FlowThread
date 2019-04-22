@@ -87,6 +87,7 @@
   "apihelp-flowthread-example-3": "Reply a comment on the page with ID of 1.",
   "apihelp-flowthread-example-4": "Like a comment.",
   "apihelp-flowthread-example-5": "Delete a comment.",
+  "apierror-nosuchpostid": "There is no post with ID $1.",
 
   "sidebar-section-extension": "Extension",
   "sidebar-usercomments": "User Comments"

@@ -4,12 +4,12 @@ namespace FlowThread;
 class API extends \ApiBase {
 
 	private function dieNoParam($name) {
-		$this->dieUsage("The $name parameter must be set", "no$name");
+		$this->dieWithError([ 'apierror-paramempty', $name ], 'noprop');
 	}
 
 	private function validatePageId($pageid) {
 		if (!\Title::newFromId($pageid)) {
-			$this->dieUsageMsg(array('nosuchpageid', $pageid));
+			$this->dieWithError( [ 'apierror-nosuchpageid', $pageid ] );
 		}
 	}
 
@@ -43,7 +43,7 @@ class API extends \ApiBase {
 		$offset = max(intval($this->getMain()->getVal('offset', 0)), 0);
 
 		if (!is_numeric($pageid) || $pageid == 0) {
-			throw new Exception("Invalid ID");
+			$this->dieWithError( [ 'apierror-nosuchpageid', $pageid ] );
 		}
 
 		$page = new Query();
@@ -78,7 +78,7 @@ class API extends \ApiBase {
 			try {
 				$ret[] = Post::newFromId(UID::fromHex($id));
 			} catch (\Exception $ex) {
-				$this->dieUsage("There is no post with ID $id", 'nosuchpostid');
+				$this->dieWithError(['apierror-nosuchpostid', $id]);
 			}
 		}
 		return $ret;
@@ -280,9 +280,9 @@ class API extends \ApiBase {
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
 				break;
 			default:
-				$this->dieUsage("Unrecognized value for parameter 'type': $action", 'unknown_type');
+				$this->dieWithError(['apierror-unrecognizedvalue', 'type', $action]);
 			}
-		} catch (\UsageException $e) {
+		} catch (\ApiUsageException $e) {
 			throw $e;
 		} catch (\Exception $e) {
 			$this->getResult()->addValue("error", 'code', 'unknown_error');
