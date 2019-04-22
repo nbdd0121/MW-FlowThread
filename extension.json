@@ -98,6 +98,10 @@
         "flowthread-ui-popular",
         "flowthread-ui-networkerror",
         "flowthread-ui-useroptout"
+      ],
+      "targets": [
+        "desktop",
+        "mobile"
       ]
     },
     "ext.flowthread.manage": {

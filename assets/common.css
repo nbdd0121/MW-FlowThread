@@ -4,6 +4,7 @@
     padding: 10px;
     resize: none;
     box-sizing: border-box;
+    width: 100%;
     /* Styles */
     display: block;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
