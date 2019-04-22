@@ -32,11 +32,20 @@ class API extends \ApiBase {
 	}
 
 	private function fetchPosts($pageid) {
-		$offset = intval($this->getMain()->getVal('offset', 0));
+		$limit = $this->getMain()->getVal('limit', 10);
+		if ($limit === 'max') {
+			$limit = -1;
+		} else {
+			// Limit must be positive
+			$limit = max(intval($limit), 1);
+		}
+		// Offset must be non-negative
+		$offset = max(intval($this->getMain()->getVal('offset', 0)), 0);
 
 		$page = new Page($pageid);
 		$page->filter = Page::FILTER_NORMAL;
 		$page->offset = $offset;
+		$page->limit = $limit;
 		$page->fetch();
 
 		$comments = $this->convertPosts($page->posts);
@@ -298,12 +307,15 @@ class API extends \ApiBase {
 			'offset' => array(
 				\ApiBase::PARAM_TYPE => 'integer',
 			),
+			'limit' => array(
+				\ApiBase::PARAM_TYPE => 'integer',
+			),
 		);
 	}
 
 	public function getExamplesMessages() {
 		return array(
-			'action=flowthread&pageid=1&type=list' => 'apihelp-flowthread-example-1',
+			'action=flowthread&pageid=1&type=list&limit=max' => 'apihelp-flowthread-example-1',
 			'action=flowthread&pageid=1&type=post&content=Some+Text' => 'apihelp-flowthread-example-2',
 			'action=flowthread&pageid=1&postid=AValidPostID&type=post&content=Some+Text' => 'apihelp-flowthread-example-3',
 			'action=flowthread&postid=AValidPostID&type=like' => 'apihelp-flowthread-example-4',

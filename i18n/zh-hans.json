@@ -78,6 +78,7 @@
   "apihelp-flowthread-param-content": "要发表的评论的内容。对于 post 操作是必须的。",
   "apihelp-flowthread-param-wikitext": "指明发表的内容是否应当被作为维基文本处理。",
   "apihelp-flowthread-param-offset": "开始列举评论的偏移。",
+  "apihelp-flowthread-param-limit": "列举评论的数量上限。设置为 'max' 时列举当前页面的所有评论。",
   "apihelp-flowthread-example-1": "列举页面ID为1的页面上的所有评论。",
   "apihelp-flowthread-example-2": "在页面ID为1的页面上发表一条评论。",
   "apihelp-flowthread-example-3": "回复一条在页面ID为1的页面上发表的评论。",

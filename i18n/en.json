@@ -81,6 +81,7 @@
   "apihelp-flowthread-param-content": "Content of the comment to post. Required when type is post.",
   "apihelp-flowthread-param-wikitext": "Specify whether the content should be regarded as wikitext.",
   "apihelp-flowthread-param-offset": "Offset to start listing posts.",
+  "apihelp-flowthread-param-limit": "Number of posts to list. Can be set to 'max' to fetch all posts of a page.",
   "apihelp-flowthread-example-1": "List all comments posted on the page with ID of 1.",
   "apihelp-flowthread-example-2": "Post a comment on the page with ID of 1.",
   "apihelp-flowthread-example-3": "Reply a comment on the page with ID of 1.",
