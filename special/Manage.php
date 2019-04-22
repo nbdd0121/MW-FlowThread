@@ -66,18 +66,17 @@ class SpecialManage extends \SpecialPage {
 		$this->showForm();
 
 		$json = array();
-		$res = $this->queryDatabase();
+		$posts = $this->queryDatabase();
 
 		$count = 0;
-		foreach ($res as $row) {
+		foreach ($posts as $post) {
 			if ($count === $this->limit) {
 				$this->haveMore = true;
 				break;
 			} else {
 				$count++;
 			}
-			$post = Post::newFromDatabaseRow($row);
-			$title = \Title::newFromId($row->flowthread_pageid);
+			$title = \Title::newFromId($post->pageid);
 			$json[] = array(
 				'id' => $post->id->getHex(),
 				'userid' => $post->userid,
@@ -113,51 +112,35 @@ class SpecialManage extends \SpecialPage {
 	}
 
 	private function queryDatabase() {
-		$dbr = wfGetDB(DB_SLAVE);
-		$cond = array();
-
-		if ($this->user) {
-			$cond['flowthread_username'] = $this->user;
-		}
-
+		$query = new Query();
 		if ($this->page) {
 			$title = \Title::newFromText($this->page);
 			if ($title !== null && $title->exists()) {
-				$cond['flowthread_pageid'] = $title->getArticleID();
+				$query->pageid = $title->getArticleID();
 			} else {
 				return array();
 			}
 		}
 
-		if ($this->keyword) {
-			$query = $dbr->buildLike($dbr->anyString(), $this->keyword, $dbr->anyString());
-			$cond[] = 'flowthread_text' . $query;
-		}
-
-		$dir = $this->revDir ? 'ASC' : 'DESC';
-		$orderBy = 'flowthread_id ' . $dir;
+		$query->user = $this->user;
+		$query->keyword = $this->keyword;
+		$query->dir = $this->revDir ? 'newer' : 'older';
+		$query->limit = $this->limit + 1;
+		$query->offset = $this->offset;
+		$query->threadMode = false;
 
 		if ($this->filter === 'deleted') {
-			$cond['flowthread_status'] = Post::STATUS_DELETED;
+			$query->filter = Query::FILTER_DELETED;
 		} else if ($this->filter === 'spam') {
-			$cond['flowthread_status'] = Post::STATUS_SPAM;
+			$query->filter = Query::FILTER_SPAM;
+		} else if ($this->filter === 'reported') {
+			$query->filter = Query::FILTER_REPORTED;
 		} else {
-			$cond['flowthread_status'] = Post::STATUS_NORMAL;
-			if ($this->filter === 'reported') {
-				$cond[] = 'flowthread_report > 0';
-				$orderBy = 'flowthread_report ' . $dir . ', ' . $orderBy;
-			}
+			$query->filter = Query::FILTER_NORMAL;
 		}
 
-		$res = $dbr->select(array(
-			'FlowThread',
-		), Post::getRequiredColumns(), $cond, __METHOD__, array(
-			'ORDER BY' => $orderBy,
-			'OFFSET' => $this->offset,
-			'LIMIT' => $this->limit + 1,
-		));
-
-		return $res;
+		$query->fetch();
+		return $query->posts;
 	}
 
 	private function showForm() {

@@ -42,8 +42,13 @@ class API extends \ApiBase {
 		// Offset must be non-negative
 		$offset = max(intval($this->getMain()->getVal('offset', 0)), 0);
 
-		$page = new Page($pageid);
-		$page->filter = Page::FILTER_NORMAL;
+		if (!is_numeric($pageid) || $pageid == 0) {
+			throw new Exception("Invalid ID");
+		}
+
+		$page = new Query();
+		$page->pageid = $pageid;
+		$page->filter = Query::FILTER_NORMAL;
 		$page->offset = $offset;
 		$page->limit = $limit;
 		$page->fetch();

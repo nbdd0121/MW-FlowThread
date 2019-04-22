@@ -18,7 +18,7 @@
     "FlowThread\\Hooks": "includes/Hooks.php",
     "FlowThread\\API": "includes/API.php",
     "FlowThread\\Post": "includes/Post.php",
-    "FlowThread\\Page": "includes/Page.php",
+    "FlowThread\\Query": "includes/Query.php",
     "FlowThread\\UID": "includes/UID.php",
     "FlowThread\\SpamFilter": "includes/SpamFilter.php",
     "FlowThread\\PopularPosts": "includes/PopularPosts.php",

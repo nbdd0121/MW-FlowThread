@@ -99,8 +99,10 @@ class Hooks {
 	}
 
 	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, \Content $content = null, \LogEntry $logEntry) {
-		$page = new Page($id);
+		$page = new Query();
+		$page->pageid = $id;
 		$page->limit = -1;
+		$page->threadMode = false;
 		$page->fetch();
 		$page->erase();
 		return true;

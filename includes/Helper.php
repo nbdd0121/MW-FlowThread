@@ -25,6 +25,30 @@ class Helper {
 		return ' IN(' . $range . ')';
 	}
 
+	public static function batchFetchParent(array $posts) {
+		$needed = [];
+		foreach ($posts as $post) {
+			if ($post->parent === null && $post->parentid !== null) {
+				$needed[] = $post->parentid->getBin();
+			}
+		}
+
+		$dbr = wfGetDB(DB_SLAVE);
+		$inExpr = self::buildSQLInExpr($dbr, $needed);
+		$res = $dbr->select('FlowThread', Post::getRequiredColumns(), [
+			'flowthread_id' . $inExpr
+		]);
+
+		$ret = [];
+		foreach ($res as $row) {
+			$ret[UID::fromBin($row->flowthread_id)->getHex()] = $row;
+		}
+		foreach ($posts as $post) {
+			if ($post->parent !== null || $post->parentid === null) continue;
+			$posts->parent = Post::newFromDatabaseRow($ret[$post->parentid->getHex()]);
+		}
+	}
+
 	public static function batchGetUserAttitude(\User $user, array $posts) {
 		if (!count($posts)) {
 			return array();
