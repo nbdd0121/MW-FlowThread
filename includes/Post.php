@@ -11,12 +11,12 @@ class Post {
 	const ATTITUDE_REPORT = 2;
 
 	/**
-	 * @var UUID
+	 * @var UID
 	 */
 	public $id = null;
 
 	/**
-	 * @var UUID
+	 * @var UID
 	 */
 	public $parentid = null;
 
@@ -58,12 +58,12 @@ class Post {
 	}
 
 	public static function newFromDatabaseRow(\stdClass $row) {
-		$id = UUID::fromBin($row->flowthread_id);
+		$id = UID::fromBin($row->flowthread_id);
 
-		// This is either NULL or a binary UUID
+		// This is either NULL or a binary UID
 		$parentid = $row->flowthread_parentid;
 		if ($parentid !== null) {
-			$parentid = UUID::fromBin($parentid);
+			$parentid = UID::fromBin($parentid);
 		}
 
 		$data = array(
@@ -81,7 +81,7 @@ class Post {
 		return new self($data);
 	}
 
-	public static function newFromId(UUID $id) {
+	public static function newFromId(UID $id) {
 		// Do not apply cache here, it will seriously slow down the application
 		$dbr = wfGetDB(DB_SLAVE);
 
@@ -322,7 +322,7 @@ class Post {
 	public function post() {
 		$dbw = wfGetDB(DB_MASTER);
 		if (!$this->id) {
-			$this->id = UUID::generate();
+			$this->id = UID::generate();
 		}
 		$dbw->insert('FlowThread', array(
 			'flowthread_id' => $this->id->getBin(),

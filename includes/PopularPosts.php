@@ -36,7 +36,7 @@ class PopularPosts {
 		} else {
 			$posts = array();
 			foreach ($cachedValue as $id => $count) {
-				$posts[] = Post::newFromId(UUID::fromBin($id));
+				$posts[] = Post::newFromId(UID::fromBin($id));
 			}
 		}
 		return $posts;

@@ -19,7 +19,7 @@
     "FlowThread\\API": "includes/API.php",
     "FlowThread\\Post": "includes/Post.php",
     "FlowThread\\Page": "includes/Page.php",
-    "FlowThread\\UUID": "includes/UUID.php",
+    "FlowThread\\UID": "includes/UID.php",
     "FlowThread\\SpamFilter": "includes/SpamFilter.php",
     "FlowThread\\PopularPosts": "includes/PopularPosts.php",
     "FlowThread\\Helper": "includes/Helper.php",

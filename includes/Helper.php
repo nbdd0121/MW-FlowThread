@@ -43,7 +43,7 @@ class Helper {
 
 		$ret = array();
 		foreach ($res as $row) {
-			$ret[UUID::fromBin($row->flowthread_att_id)->getHex()] = intval($row->flowthread_att_type);
+			$ret[UID::fromBin($row->flowthread_att_id)->getHex()] = intval($row->flowthread_att_type);
 		}
 		foreach ($posts as $post) {
 			if (!isset($ret[$post->id->getHex()])) {

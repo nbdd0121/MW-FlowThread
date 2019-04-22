@@ -11,7 +11,7 @@ class SpecialLink extends \RedirectSpecialPage {
 
 	public function getRedirect($subpage) {
 		if ($subpage) {
-			$post = Post::newFromId(UUID::fromHex($subpage));
+			$post = Post::newFromId(UID::fromHex($subpage));
 			if ($post) {
 				while ($post->getParent()) {
 					$post = $post->getParent();

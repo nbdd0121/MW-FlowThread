@@ -1,12 +1,12 @@
 <?php
 namespace FlowThread;
 
-class UUID {
+class UID {
 	const HEX_LEN = 22;
 	const BIN_LEN = 11;
 
 	/**
-	 * Hex UUID String
+	 * Hex UID String
 	 * @var string
 	 */
 	private $binValue = null;

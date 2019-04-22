@@ -8,7 +8,7 @@ class EchoPresentationModel extends \EchoEventPresentationModel {
 	protected function load() {
 		if ($this->post === false) {
 			try {
-				$this->post = Post::newFromId(UUID::fromBin($this->event->getExtraParam('postid')));
+				$this->post = Post::newFromId(UID::fromBin($this->event->getExtraParam('postid')));
 			} catch (\Exception $e) {
 				$this->post = null;
 			}

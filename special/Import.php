@@ -75,12 +75,12 @@ class SpecialImport extends \FormSpecialPage {
 
 			foreach ($articles->posts as $postJson) {
 				$data = array(
-					'id' => UUID::fromHex($postJson->id),
+					'id' => UID::fromHex($postJson->id),
 					'pageid' => $titleId,
 					'userid' => $postJson->userid,
 					'username' => $postJson->username,
 					'text' => $postJson->text,
-					'parentid' => $postJson->parentid ? UUID::fromHex($postJson->parentid) : null,
+					'parentid' => $postJson->parentid ? UID::fromHex($postJson->parentid) : null,
 					'status' => $postJson->status,
 					'like' => 0,
 					'report' => 0,

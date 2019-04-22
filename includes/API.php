@@ -62,7 +62,7 @@ class API extends \ApiBase {
 		$ret = array();
 		foreach (explode('|', $postList) as $id) {
 			try {
-				$ret[] = Post::newFromId(UUID::fromHex($id));
+				$ret[] = Post::newFromId(UID::fromHex($id));
 			} catch (\Exception $ex) {
 				$this->dieUsage("There is no post with ID $id", 'nosuchpostid');
 			}
