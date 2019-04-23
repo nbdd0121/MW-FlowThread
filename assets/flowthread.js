@@ -83,7 +83,7 @@ Thread.sendComment = function(postid, text, wikitext) {
     pageid: mw.config.get('wgArticleId'),
     postid: postid,
     content: text,
-    wikitext: wikitext
+    wikitext: wikitext,
   };
   api.get(req).done(reloadComments).fail(function(error, obj) {
     if (obj.error)
@@ -102,7 +102,8 @@ function reloadComments(offset) {
     action: 'flowthread',
     type: 'list',
     pageid: mw.config.get('wgArticleId'),
-    offset: offset
+    offset: offset,
+    utf8: '',
   }).done(function(data) {
     $('.comment-container-top').html('<div>' + mw.msg('flowthread-ui-popular') + '</div>').attr('disabled', '');
     $('.comment-container').html('');
