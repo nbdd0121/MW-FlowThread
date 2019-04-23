@@ -44,6 +44,9 @@ function createThread(post) {
         thread.report();
       }
     });
+  } else if (post.like) {
+    var likeMsg = mw.msg('flowthread-ui-like') + '(' + post.like + ')';
+    $('<span>').addClass('comment-like').css('cursor','text').text(likeMsg).appendTo(thread.object.find('.comment-footer'));
   }
 
   // commentadmin-restricted and poster himself can delete comment
