@@ -158,7 +158,8 @@ class API extends \ApiBase {
 		}
 		$dir = $this->getMain()->getVal('dir');
 		$query->dir = $dir === 'newer' ? 'newer' : 'older';
-		$query->limit = min(intval($this->getMain()->getVal('limit', 10)), 500);
+		$limit = max(min(intval($this->getMain()->getVal('limit', 10)), 500), 1);
+		$query->limit = $limit + 1;
 		$query->offset = max(intval($this->getMain()->getVal('offset', 0)), 0);
 
 		// Check if the user is allowed to do priviledged queries.
@@ -169,22 +170,30 @@ class API extends \ApiBase {
 		}
 
 		$query->fetch();
+		$posts = $query->posts;
+
+		// We fetched one extra row. If it exists in response, then we know we have more to fetch.
+		$more = false;
+		if (count($posts) > $limit) {
+			$more = true;
+			array_pop($posts);
+		}
 
 		// For un-priviledged users, do sanitisation
 		if (!$priviledged) {
 			// Fetch parents to check visibility
 			do {} while (Helper::batchFetchParent($query->posts));
-			$posts = [];
-			foreach ($query->posts as $post) {
-				if ($post->isVisible()) $posts[] = $post;
+			$visible = [];
+			foreach ($posts as $post) {
+				if ($post->isVisible()) $visible[] = $post;
 			}
-		} else {
-			$posts = $query->posts;
+			$posts = $visible;
 		}
 
 		$comments = $this->convertPosts2($posts, $priviledged);
 		$obj = [
-			"posts" => $comments
+			"more" => $more,
+			"posts" => $comments,
 		];
 		$this->getResult()->addValue(null, $this->getModuleName(), $obj);
 	}
