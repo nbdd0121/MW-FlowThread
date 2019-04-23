@@ -31,6 +31,29 @@ class API extends \ApiBase {
 		return $ret;
 	}
 
+	private function convertPosts2(array $posts, $priviledged) {
+		$ret = array();
+		foreach ($posts as $post) {
+			$title = \Title::newFromId($post->pageid);
+			$json = array(
+				'id' => $post->id->getHex(),
+				'userid' => $post->userid,
+				'username' => $post->username,
+				'title' => $title ? $title->getPrefixedText() : null,
+				'text' => $post->text,
+				'timestamp' => $post->id->getTimestamp(),
+				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
+				'like' => $post->getFavorCount(),
+			);
+			if ($priviledged) {
+				$json['report'] = $post->getReportCount();
+				$json['status'] = $post->status;
+			}
+			$ret[] = $json;
+		}
+		return $ret;
+	}
+
 	private function fetchPosts($pageid) {
 		$limit = $this->getMain()->getVal('limit', 10);
 		if ($limit === 'max') {
@@ -92,6 +115,80 @@ class API extends \ApiBase {
 		$this->getResult()->addValue(null, $this->getModuleName(), $this->fetchPosts($page));
 	}
 
+	private function executeListAll() {
+		$query = new Query();
+		$query->threadMode = false;
+
+		$filter = $this->getMain()->getVal('filter');
+		$priviledged = true;
+		if ($filter === 'all') {
+			$query->filter = Query::FILTER_ALL;
+		} else if ($filter === 'deleted') {
+			$query->filter = Query::FILTER_DELETED;
+		} else if ($filter === 'spam') {
+			$query->filter = Query::FILTER_SPAM;
+		} else if ($filter === 'reported') {
+			$query->filter = Query::FILTER_REPORTED;
+		} else {
+			$priviledged = false;
+			$query->filter = Query::FILTER_NORMAL;
+		}
+
+		// Try pageid first, if it is absent/invalid, also try title.
+		$pageid = max(intval($this->getMain()->getVal('pageid')), 0);
+		if (!$pageid) {
+			$title = $this->getMain()->getVal('title');
+			if ($title) {
+				$titleObj = \Title::newFromText($title);
+				if ($titleObj !== null && $titleObj->exists()) {
+					$pageid = $titleObj->getArticleID();
+				}
+			}
+		}
+		$query->pageid = $pageid;
+		$user = $this->getMain()->getVal('user');
+		if ($user) $query->user = $user;
+
+		$keyword = $this->getMain()->getVal('keyword');
+		if ($keyword) {
+			// Even though this is public information, this operation is quite
+			// expensive, so we restrict its usage.
+			$priviledged = true;
+			$query->keyword = $keyword;
+		}
+		$dir = $this->getMain()->getVal('dir');
+		$query->dir = $dir === 'newer' ? 'newer' : 'older';
+		$query->limit = min(intval($this->getMain()->getVal('limit', 10)), 500);
+		$query->offset = max(intval($this->getMain()->getVal('offset', 0)), 0);
+
+		// Check if the user is allowed to do priviledged queries.
+		if ($priviledged) {
+			$this->checkUserRightsAny('commentadmin-restricted');
+		} else {
+			if ($this->getUser()->isAllowed('commentadmin-restricted')) $priviledged = true;
+		}
+
+		$query->fetch();
+
+		// For un-priviledged users, do sanitisation
+		if (!$priviledged) {
+			// Fetch parents to check visibility
+			do {} while (Helper::batchFetchParent($query->posts));
+			$posts = [];
+			foreach ($query->posts as $post) {
+				if ($post->isVisible()) $posts[] = $post;
+			}
+		} else {
+			$posts = $query->posts;
+		}
+
+		$comments = $this->convertPosts2($posts, $priviledged);
+		$obj = [
+			"posts" => $comments
+		];
+		$this->getResult()->addValue(null, $this->getModuleName(), $obj);
+	}
+
 	public static function stripWrapper( $html ) {
 		$m = [];
 		if ( preg_match( '/^<div class="mw-parser-output">(.*)<\/div>$/sU', $html, $m ) ) {
@@ -113,6 +210,10 @@ class API extends \ApiBase {
 			switch ($action) {
 			case 'list':
 				$this->executeList();
+				break;
+
+			case 'listall':
+				$this->executeListAll();
 				break;
 
 			case 'like':

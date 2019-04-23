@@ -27,14 +27,20 @@ class Helper {
 
 	public static function batchFetchParent(array $posts) {
 		$needed = [];
+		$ids = [];
 		foreach ($posts as $post) {
-			if ($post->parent === null && $post->parentid !== null) {
-				$needed[] = $post->parentid->getBin();
+			$p = $post;
+			while ($p->parent !== null) $p = $p->parent;
+			if ($p->parentid !== null) {
+				$needed[] = $p;
+				$ids[] = $p->parentid->getBin();
 			}
 		}
 
+		if ( !count($needed) ) return 0;
+
 		$dbr = wfGetDB(DB_SLAVE);
-		$inExpr = self::buildSQLInExpr($dbr, $needed);
+		$inExpr = self::buildSQLInExpr($dbr, $ids);
 		$res = $dbr->select('FlowThread', Post::getRequiredColumns(), [
 			'flowthread_id' . $inExpr
 		]);
@@ -43,10 +49,21 @@ class Helper {
 		foreach ($res as $row) {
 			$ret[UID::fromBin($row->flowthread_id)->getHex()] = $row;
 		}
-		foreach ($posts as $post) {
+		foreach ($needed as $post) {
 			if ($post->parent !== null || $post->parentid === null) continue;
-			$posts->parent = Post::newFromDatabaseRow($ret[$post->parentid->getHex()]);
+			$hex = $post->parentid->getHex();
+			if (isset($ret[$hex])) {
+				$post->parent = Post::newFromDatabaseRow($ret[$hex]);
+			} else {
+				// Inconsistent database state, probably caused by a removed
+				// parent but the child not being removed.
+				// Treat as deleted
+				$post->parentid = null;
+				$post->status = Post::STATUS_DELETED;
+			}
 		}
+
+		return count($needed);
 	}
 
 	public static function batchGetUserAttitude(\User $user, array $posts) {
