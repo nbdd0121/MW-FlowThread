@@ -139,13 +139,86 @@ Thread.markchecked = function(threads) {
 	});
 };
 
-function loadComments() {
-	var data = mw.config.get('commentjson');
-	$('.comment-container').html('');
-	data.forEach(function(item) {
-		$('.comment-container').append(createThread(item).object);
-	});
+// Retrieve params from URL
+function getParams() {
+  var filter = mw.util.getParamValue('filter') || 'all';
+  var offset = parseInt(mw.util.getParamValue('offset')) || 0;
+  var limit = parseInt(mw.util.getParamValue('limit')) || 20;
+  var query = {
+    filter: filter,
+    offset: offset,
+    limit: limit,
+  };
+  var page = mw.util.getParamValue('page');
+  if (page) query.page = page;
+  var user = mw.util.getParamValue('user');
+  if (user) query.user = user;
+  var keyword = mw.util.getParamValue('keyword');
+  if (keyword) query.keyword = keyword;
+  var dir = mw.util.getParamValue('dir');
+  if (dir) query.dir = dir;
+  return query;
 }
+
+function loadComments() {
+  var query = getParams();
+
+  var apiQuery = $.extend({
+    action: 'flowthread',
+    type: 'listall',
+    utf8: '',
+  }, query);
+  // "All" comments actually exclude deleted and spam comments!
+  if (apiQuery.filter == 'all') apiQuery.filter = 'normal';
+  apiQuery.dir = apiQuery.dir === 'prev' ? 'newer' : 'older';
+  if ('page' in apiQuery) {
+    apiQuery.title = apiQuery.page;
+    delete apiQuery.page;
+  }
+
+  var api = new mw.Api();
+  api.get(apiQuery).done(function(data) {
+    $('.comment-container').html('');
+    data.flowthread.posts.forEach(function(item) {
+      $('.comment-container').append(createThread(item).object);
+    });
+    var more = 'more' in data.flowthread;
+    var prev = $('#pager-prev');
+    var next = $('#pager-next');
+    var first = $('#pager-first');
+    var last = $('#pager-last');
+    if (query.dir === 'prev') {
+      // Sigh.. when can MW allow ES6?!!
+      var tmp = next;
+      next = prev;
+      prev = tmp;
+      tmp = first;
+      first = last;
+      last = tmp;
+    }
+    prev.attr('href', mw.util.getUrl(null, $.extend({}, query, {
+      offset: Math.max(query.offset - query.limit, 0)
+    }))).toggleClass('pager-disable', query.offset === 0);
+    next.attr('href', mw.util.getUrl(null, $.extend({}, query, {
+      offset: query.offset + query.limit
+    }))).toggleClass('pager-disable', !more);
+    first.toggleClass('pager-disable', query.offset === 0);
+    last.toggleClass('pager-disable', !more);
+  });
+}
+
+$('#pager-prev,#pager-next,#pager-first,#pager-last').on('click', function(event) {
+  // Pagers are "hi-jacked" by JS and does not actually cause page fresh
+  event.preventDefault();
+  // Still change the URL
+  history.pushState({}, '', this.href);
+  // Trigger a comment reload, so it looks like the page has been updated
+  loadComments();
+});
+
+$(window).on('popstate', function() {
+  loadComments();
+});
 
 $('#bodyContent').after('<div class="comment-container"></div>');
 loadComments();

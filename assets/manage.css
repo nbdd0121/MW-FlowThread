@@ -84,3 +84,10 @@
     padding-left: 1em;
     background: lightblue;
 }
+
+/* a. here is necessary to increase priority */
+a.pager-disable {
+    color: black;
+    cursor: text;
+    text-decoration: none;
+}

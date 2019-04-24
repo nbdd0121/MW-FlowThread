@@ -11,7 +11,6 @@ class SpecialManage extends \SpecialPage {
 	private $offset = 0;
 	private $revDir;
 	private $limit = 10;
-	private $haveMore = false;
 
 	public function __construct() {
 		parent::__construct('FlowThreadManage', 'commentadmin-restricted');
@@ -65,38 +64,11 @@ class SpecialManage extends \SpecialPage {
 
 		$this->showForm();
 
-		$json = array();
-		$posts = $this->queryDatabase();
-
-		$count = 0;
-		foreach ($posts as $post) {
-			if ($count === $this->limit) {
-				$this->haveMore = true;
-				break;
-			} else {
-				$count++;
-			}
-			$title = \Title::newFromId($post->pageid);
-			$json[] = array(
-				'id' => $post->id->getHex(),
-				'userid' => $post->userid,
-				'username' => $post->username,
-				'title' => $title ? $title->getPrefixedText() : null,
-				'text' => $post->text,
-				'timestamp' => $post->id->getTimestamp(),
-				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
-				'like' => $post->getFavorCount(),
-				'report' => $post->getReportCount(),
-				'status' => $post->status,
-			);
-		}
-
 		// Pager can only be generated after query
 		$output->addHTML($this->getPager());
 
 		$output->addJsConfigVars(array(
 			'commentfilter' => $this->filter,
-			'commentjson' => $json,
 		));
 		if ($this->getUser()->isAllowed('commentadmin')) {
 			$output->addJsConfigVars(array(
@@ -109,38 +81,6 @@ class SpecialManage extends \SpecialPage {
 			'Avatar' => $wgFlowThreadConfig['Avatar'],
 			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
 		)));
-	}
-
-	private function queryDatabase() {
-		$query = new Query();
-		if ($this->page) {
-			$title = \Title::newFromText($this->page);
-			if ($title !== null && $title->exists()) {
-				$query->pageid = $title->getArticleID();
-			} else {
-				return array();
-			}
-		}
-
-		$query->user = $this->user;
-		$query->keyword = $this->keyword;
-		$query->dir = $this->revDir ? 'newer' : 'older';
-		$query->limit = $this->limit + 1;
-		$query->offset = $this->offset;
-		$query->threadMode = false;
-
-		if ($this->filter === 'deleted') {
-			$query->filter = Query::FILTER_DELETED;
-		} else if ($this->filter === 'spam') {
-			$query->filter = Query::FILTER_SPAM;
-		} else if ($this->filter === 'reported') {
-			$query->filter = Query::FILTER_REPORTED;
-		} else {
-			$query->filter = Query::FILTER_NORMAL;
-		}
-
-		$query->fetch();
-		return $query->posts;
 	}
 
 	private function showForm() {
@@ -255,57 +195,29 @@ class SpecialManage extends \SpecialPage {
 		$query = $this->getQuery();
 		unset($query['dir']);
 		$query['offset'] = 0;
-		if ($this->revDir) {
-			$haveMore = $this->haveMore;
-		} else {
-			$haveMore = $this->offset !== 0;
-		}
 		$msg = $this->msg('histlast')->escaped();
-		return $haveMore ? $this->getQueryLink($msg, $query) : $msg;
+		return $this->getQueryLink($msg, $query, 'pager-first');
 	}
 
 	private function getLastPageLink() {
 		$query = $this->getQuery();
 		$query['dir'] = 'prev';
 		$query['offset'] = 0;
-		if ($this->revDir) {
-			$haveMore = $this->offset !== 0;
-		} else {
-			$haveMore = $this->haveMore;
-		}
 		$msg = $this->msg('histfirst')->escaped();
-		return $haveMore ? $this->getQueryLink($msg, $query) : $msg;
+		return $this->getQueryLink($msg, $query, 'pager-last');
 	}
 
 	private function getPrevPageLink() {
 		$query = $this->getQuery();
-		if ($this->revDir) {
-			$haveMore = $this->haveMore;
-			$query['offset'] = $this->offset + $this->limit;
-		} else {
-			$haveMore = $this->offset !== 0;
-			$query['offset'] = max($this->offset - $this->limit, 0);
-		}
+		// No need to set any query params here, as this is done in client.
 		$msg = $this->msg('pager-newer-n')->numParams($this->limit)->escaped();
-		return $haveMore ? $this->getQueryLink($msg, $query) : $msg;
+		return $this->getQueryLink($msg, $query, 'pager-prev');
 	}
 
 	private function getNextPageLink() {
 		$query = $this->getQuery();
-		if ($this->revDir) {
-			$haveMore = $this->offset !== 0;
-			$query['offset'] = max($this->offset - $this->limit, 0);
-		} else {
-			$haveMore = $this->haveMore;
-			$query['offset'] = $this->offset + $this->limit;
-		}
 		$msg = $this->msg('pager-older-n')->numParams($this->limit)->escaped();
-		return $haveMore ? \Linker::linkKnown(
-			$this->getTitle(),
-			$msg,
-			array(),
-			$query
-		) : $msg;
+		return $this->getQueryLink($msg, $query, 'pager-next');
 	}
 
 	private function getLimitLinks() {
@@ -326,11 +238,11 @@ class SpecialManage extends \SpecialPage {
 		return $str;
 	}
 
-	private function getQueryLink($msg, $query) {
+	private function getQueryLink($msg, $query, $id = false) {
 		return \Linker::linkKnown(
 			$this->getTitle(),
 			$msg,
-			array(),
+			['id' => $id],
 			$query
 		);
 	}
