@@ -71,6 +71,16 @@ class Helper {
 			return array();
 		}
 
+		$ret = [];
+
+		// In this case we don't even need db query
+		if ($user->isAnon()) {
+			foreach ($posts as $post) {
+				$ret[$post->id->getHex()] = Post::ATTITUDE_NORMAL;
+			}
+			return $ret;
+		}
+
 		$dbr = wfGetDB(DB_SLAVE);
 
 		$inExpr = self::buildPostInExpr($dbr, $posts);
@@ -82,7 +92,6 @@ class Helper {
 			'flowthread_att_userid' => $user->getId(),
 		));
 
-		$ret = array();
 		foreach ($res as $row) {
 			$ret[UID::fromBin($row->flowthread_att_id)->getHex()] = intval($row->flowthread_att_type);
 		}

@@ -13,11 +13,11 @@ class API extends \ApiBase {
 		}
 	}
 
-	private function convertPosts(array $posts) {
+	private function convertPosts(array $posts, $needTitle = false, $priviledged = false) {
 		$attTable = Helper::batchGetUserAttitude($this->getUser(), $posts);
 		$ret = array();
 		foreach ($posts as $post) {
-			$ret[] = array(
+			$json = array(
 				'id' => $post->id->getHex(),
 				'userid' => $post->userid,
 				'username' => $post->username,
@@ -27,24 +27,10 @@ class API extends \ApiBase {
 				'like' => $post->getFavorCount(),
 				'myatt' => $attTable[$post->id->getHex()],
 			);
-		}
-		return $ret;
-	}
-
-	private function convertPosts2(array $posts, $priviledged) {
-		$ret = array();
-		foreach ($posts as $post) {
-			$title = \Title::newFromId($post->pageid);
-			$json = array(
-				'id' => $post->id->getHex(),
-				'userid' => $post->userid,
-				'username' => $post->username,
-				'title' => $title ? $title->getPrefixedText() : null,
-				'text' => $post->text,
-				'timestamp' => $post->id->getTimestamp(),
-				'parentid' => $post->parentid ? $post->parentid->getHex() : '',
-				'like' => $post->getFavorCount(),
-			);
+			if ($needTitle) {
+				$title = \Title::newFromId($post->pageid);
+				$json['title'] = $title ? $title->getPrefixedText() : null;
+			}
 			if ($priviledged) {
 				$json['report'] = $post->getReportCount();
 				$json['status'] = $post->status;
@@ -190,7 +176,7 @@ class API extends \ApiBase {
 			$posts = $visible;
 		}
 
-		$comments = $this->convertPosts2($posts, $priviledged);
+		$comments = $this->convertPosts($posts, true, $priviledged);
 		$obj = [
 			"more" => $more,
 			"posts" => $comments,
