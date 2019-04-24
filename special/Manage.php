@@ -7,9 +7,6 @@ class SpecialManage extends \SpecialPage {
 	private $user;
 	private $keyword;
 	private $filter;
-	private $error;
-	private $offset = 0;
-	private $revDir;
 	private $limit = 10;
 
 	public function __construct() {
@@ -28,9 +25,7 @@ class SpecialManage extends \SpecialPage {
 		$opt->add('page', '');
 		$opt->add('filter', 'all');
 		$opt->add('keyword', '');
-		$opt->add('offset', '0');
 		$opt->add('limit', '20');
-		$opt->add('dir', '');
 
 		$opt->fetchValuesFromRequest($this->getRequest());
 
@@ -45,9 +40,7 @@ class SpecialManage extends \SpecialPage {
 		$this->page = $opt->getValue('page');
 		$this->user = $opt->getValue('user');
 		$this->keyword = $opt->getValue('keyword');
-		$this->offset = intval($opt->getValue('offset'));
 		$this->limit = intval($opt->getValue('limit'));
-		$this->revDir = $opt->getValue('dir') === 'prev';
 
 		// Limit the max limit
 		if ($this->limit >= 500) {
@@ -67,9 +60,6 @@ class SpecialManage extends \SpecialPage {
 		// Pager can only be generated after query
 		$output->addHTML($this->getPager());
 
-		$output->addJsConfigVars(array(
-			'commentfilter' => $this->filter,
-		));
 		if ($this->getUser()->isAllowed('commentadmin')) {
 			$output->addJsConfigVars(array(
 				'commentadmin' => '',

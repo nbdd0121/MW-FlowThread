@@ -1,4 +1,5 @@
-var deleted = mw.config.get('commentfilter') === 'deleted' || mw.config.get('commentfilter') == 'spam';
+var filter;
+var deleted;
 var fulladmin = mw.config.exists('commentadmin');
 
 function createThread(post) {
@@ -62,7 +63,7 @@ Thread.prototype.markchecked = function() {
 		type: 'markchecked',
 		postid: this.post.id
 	});
-	if (mw.config.get('commentfilter') === 'reported') {
+	if (filter === 'reported') {
 		this.object.remove();
 	} else {
 		this.object.find('.comment-markchecked').remove();
@@ -130,7 +131,7 @@ Thread.markchecked = function(threads) {
 		postid: Thread.join(threads)
 	});
 	threads.forEach(function(item) {
-		if (mw.config.get('commentfilter') === 'reported') {
+		if (filter === 'reported') {
 			item.object.remove();
 		} else {
 			item.object.find('.comment-markchecked').remove();
@@ -141,7 +142,9 @@ Thread.markchecked = function(threads) {
 
 // Retrieve params from URL
 function getParams() {
-  var filter = mw.util.getParamValue('filter') || 'all';
+  // Deliberate global value update
+  filter = mw.util.getParamValue('filter') || 'all';
+  deleted = filter === 'deleted' || filter == 'spam';
   var offset = parseInt(mw.util.getParamValue('offset')) || 0;
   var limit = parseInt(mw.util.getParamValue('limit')) || 20;
   var query = {
