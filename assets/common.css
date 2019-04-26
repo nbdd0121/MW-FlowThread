@@ -186,3 +186,21 @@
 .comment-delete::before {
     background-position: 0px -40px;
 }
+
+.comment-avatar img {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-thread > div:not(:first-child) .comment-avatar img {
+	width: 30px;
+	height: 30px;
+}
+
+.comment-thread > div:not(:first-child) .comment-body {
+	padding-left: 40px;
+}
+
+.comment-thread .comment-replybox {
+	margin-left: 50px;
+}

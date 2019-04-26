@@ -119,6 +119,7 @@
         "assets/manage.css"
       ],
       "messages": [
+        "flowthread-ui-reply",
         "flowthread-ui-like",
         "flowthread-ui-report",
         "flowthread-ui-delete",
@@ -126,6 +127,12 @@
         "flowthread-ui-recover",
         "flowthread-ui-markchecked",
         "flowthread-ui-erase",
+        "flowthread-ui-usewikitext",
+        "flowthread-ui-preview",
+        "flowthread-ui-placeholder",
+        "flowthread-ui-submit",
+        "flowthread-ui-nocontent",
+        "flowthread-ui-networkerror",
         "flowthread-ui-selectall",
         "flowthread-ui-unselectall",
         "flowthread-ui-user-post-on-page"
