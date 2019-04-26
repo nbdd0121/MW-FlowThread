@@ -66,7 +66,7 @@ function createThread(post) {
 
 Thread.prototype.recover = function() {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'recover',
 		postid: this.post.id
@@ -76,7 +76,7 @@ Thread.prototype.recover = function() {
 
 Thread.prototype.markchecked = function() {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'markchecked',
 		postid: this.post.id
@@ -91,7 +91,7 @@ Thread.prototype.markchecked = function() {
 
 Thread.prototype.erase = function() {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'erase',
 		postid: this.post.id
@@ -113,7 +113,7 @@ Thread.join = function(threads) {
 
 Thread.delete = function(threads) {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'delete',
 		postid: Thread.join(threads)
@@ -123,7 +123,7 @@ Thread.delete = function(threads) {
 
 Thread.recover = function(threads) {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'recover',
 		postid: Thread.join(threads)
@@ -133,7 +133,7 @@ Thread.recover = function(threads) {
 
 Thread.erase = function(threads) {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'erase',
 		postid: Thread.join(threads)
@@ -143,7 +143,7 @@ Thread.erase = function(threads) {
 
 Thread.markchecked = function(threads) {
 	var api = new mw.Api();
-	api.get({
+	api.post({
 		action: 'flowthread',
 		type: 'markchecked',
 		postid: Thread.join(threads)

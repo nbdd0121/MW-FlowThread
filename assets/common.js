@@ -114,7 +114,7 @@ Thread.prototype.reply = function() {
 
 Thread.prototype.like = function() {
   var api = new mw.Api();
-  api.get({
+  api.post({
     action: 'flowthread',
     type: 'like',
     postid: this.post.id
@@ -125,7 +125,7 @@ Thread.prototype.like = function() {
 
 Thread.prototype.dislike = function() {
   var api = new mw.Api();
-  api.get({
+  api.post({
     action: 'flowthread',
     type: 'dislike',
     postid: this.post.id
@@ -136,7 +136,7 @@ Thread.prototype.dislike = function() {
 
 Thread.prototype.report = function() {
   var api = new mw.Api();
-  api.get({
+  api.post({
     action: 'flowthread',
     type: 'report',
     postid: this.post.id
@@ -159,7 +159,7 @@ Thread.prototype.delete = function() {
     }, 1500);
   } else {
     var api = new mw.Api();
-    api.get({
+    api.post({
       action: 'flowthread',
       type: 'delete',
       postid: this.post.id
@@ -193,7 +193,7 @@ function createReplyBox(thread) {
       content: text,
       wikitext: replyBox.isInWikitextMode(),
     };
-    api.get(req).done(reloadComments).fail(function(error, obj) {
+    api.post(req).done(reloadComments).fail(function(error, obj) {
       if (obj.error)
         showMsgDialog(obj.error.info);
       else if (error === 'http')

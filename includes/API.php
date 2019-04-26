@@ -388,6 +388,12 @@ class API extends \ApiBase {
 		return true;
 	}
 
+	public function isWriteMode() {
+		$action = $this->getMain()->getVal('type');
+		// These two subactions are non-write, and all others are.
+		return $action !== 'list' && $action !== 'listall';
+	}
+
 	public function getAllowedParams() {
 		return array(
 			'type' => array(
