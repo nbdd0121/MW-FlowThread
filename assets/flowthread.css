@@ -1,3 +1,7 @@
+.comment-container-top, .comment-container, .comment-paginator, .comment-bannotice, .comment-replybox {
+    margin: 0 1em;
+}
+
 .comment-avatar {
     float: left;
 }
@@ -116,8 +120,4 @@
 
 .comment-container-top:not([disabled]) + .comment-container > div:first-child {
     border-top: 0;
-}
-
-.comment-container-top, .comment-container, .comment-paginator, .comment-bannotice, .comment-replybox {
-    margin: 0 1em;
 }

@@ -163,7 +163,7 @@ var pager = new Paginator();
 
 $('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
   var userPreference = getUserCommentPreference();
-  if (canpost && userPreference) return createReplyBox('');
+  if (canpost && userPreference) return createReplyBox(null);
   
   var noticeContainer = $('<div>').addClass('comment-bannotice');
   
