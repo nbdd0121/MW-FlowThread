@@ -45,7 +45,8 @@
     margin-left: 5px;
 }
 
-.comment-markchecked {
+.comment-markchecked, .comment-recover {
+    margin-left: 5px;
     cursor: pointer;
     transition: color 0.15s linear 0s;
 }
