@@ -10,7 +10,7 @@ class EchoAlertPresentationModel extends EchoPresentationModel {
 		case 'flowthread_recover':
 			return 'reviewed';
 		case 'flowthread_spam':
-			return 'trash';
+			return 'flowthread-delete';
 		}
 		return 'chat';
 	}

@@ -4,6 +4,12 @@ namespace FlowThread;
 class EchoHooks {
 
 	public static function onBeforeCreateEchoEvent(&$notifications, &$notificationCategories, &$icons) {
+		$icons += array(
+			'flowthread-delete' => array(
+				'path' => 'FlowThread/assets/delete.svg'
+			),
+		);
+
 		$notificationCategories['flowthread'] = array(
 			'priority' => 4,
 			'tooltip' => 'echo-pref-tooltip-flowthread',
