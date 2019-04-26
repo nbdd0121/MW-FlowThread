@@ -187,7 +187,8 @@
       "PopularPostThreshold": 1,
       "MaxNestLevel": 3
     },
-    "TriggerFlowThreadHooks": true
+    "TriggerFlowThreadHooks": true,
+    "FlowThreadEnforcePost": false
   },
   "DefaultUserOptions": {
     "echo-subscriptions-web-flowthread": true,

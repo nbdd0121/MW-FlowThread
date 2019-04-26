@@ -197,6 +197,15 @@ class API extends \ApiBase {
 		$action = $this->getMain()->getVal('type');
 		$page = $this->getMain()->getVal('pageid');
 
+		// Forbid non-POST request on operations that could change the database.
+		// However for backware compatibility do not enforce it now.
+		// This will be changed to true in future versions, or can be set manually.
+		global $wgFlowThreadEnforcePost;
+		if ($wgFlowThreadEnforcePost &&
+		    $this->isWriteMode() && $this->getRequest()->getMethod() !== 'POST') {
+			$this->dieWithError(['apierror-mustbeposted', 'FlowThread']);
+		}
+
 		try {
 			// If post is set, get the post object by id
 			// By fetching the post object, we also validate the id
