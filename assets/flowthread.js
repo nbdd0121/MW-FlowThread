@@ -1,8 +1,6 @@
 var canpost = mw.config.exists('canpost');
 var ownpage = mw.config.exists('commentadmin') || mw.config.get('wgNamespaceNumber') === 2 && mw.config.get('wgTitle').replace('/$', '') === mw.user.id();
 
-var replyBox = null;
-
 /* Get user preference */
 /* Returns positive result for non-user namespaces */
 function getUserCommentPreference() {

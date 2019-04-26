@@ -8,10 +8,10 @@ function createThread(post) {
 
 	thread.init(post);
 
-	// Enhance the username by adding page title
-	var pageLink = wrapPageLink('Special:FlowThreadLink/' + post.id, post.title);
-	object.find('.comment-user').html(
-		mw.msg('flowthread-ui-user-post-on-page', object.find('.comment-user').html(), pageLink));
+  if (!deleted) {
+    thread.addButton('reply', mw.msg('flowthread-ui-reply'), function() {
+      thread.reply();
+    });
 
 	// Users with management privilege should have signed in.
 	thread.addButton('like', mw.msg('flowthread-ui-like') + '(' + post.like + ')', function() {
@@ -30,7 +30,6 @@ function createThread(post) {
 		}
 	});
 
-	if (!deleted) {
 		thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
 			thread.delete();
 		});
@@ -158,6 +157,10 @@ Thread.markchecked = function(threads) {
 		}
 	});
 };
+
+function reloadComments() {
+  replyBox.remove();
+}
 
 // Retrieve params from URL
 function getParams() {

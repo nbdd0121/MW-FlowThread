@@ -29,6 +29,7 @@ class API extends \ApiBase {
 			);
 			if ($needTitle) {
 				$title = \Title::newFromId($post->pageid);
+				$json['pageid'] = $post->pageid;
 				$json['title'] = $title ? $title->getPrefixedText() : null;
 			}
 			if ($priviledged) {

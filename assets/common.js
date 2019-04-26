@@ -1,4 +1,5 @@
 var config = mw.config.get('wgFlowThreadConfig');
+var replyBox = null;
 
 /* Get avatar by user name */
 function getAvatar(id, username) {
@@ -57,6 +58,13 @@ Thread.prototype.init = function(post) {
   } else {
     userlink = wrapText(post.username);
   }
+
+  if (post.title) {
+    // Enhance the username by adding page title
+    var pageLink = wrapPageLink('Special:FlowThreadLink/' + post.id, post.title);
+    userlink = mw.msg('flowthread-ui-user-post-on-page', userlink, pageLink);
+  }
+
   object.find('.comment-user').html(userlink);
   object.find('.comment-avatar img').attr('src', getAvatar(post.userid, post.username));
   object.find('.comment-text').html(post.text);
@@ -98,7 +106,7 @@ Thread.prototype.reply = function() {
   if (replyBox) {
     replyBox.remove();
   }
-  replyBox = createReplyBox(this.post.id);
+  replyBox = createReplyBox(this);
   this.appendChild({
     object: replyBox
   });
@@ -166,7 +174,7 @@ Thread.prototype.markAsPopular = function() {
   this.object.removeAttr('id');
 }
 
-function createReplyBox(parentid) {
+function createReplyBox(thread) {
   var replyBox = new ReplyBox();
 
   replyBox.onSubmit = function() {
@@ -176,32 +184,28 @@ function createReplyBox(parentid) {
       return;
     }
     replyBox.setValue('');
-    Thread.sendComment(parentid, text, replyBox.isInWikitextMode());
+    var api = new mw.Api();
+    var req = {
+      action: 'flowthread',
+      type: 'post',
+      pageid: (thread && thread.post.pageid) || mw.config.get('wgArticleId'),
+      postid: thread && thread.post.id,
+      content: text,
+      wikitext: replyBox.isInWikitextMode(),
+    };
+    api.get(req).done(reloadComments).fail(function(error, obj) {
+      if (obj.error)
+        showMsgDialog(obj.error.info);
+      else if (error === 'http')
+        showMsgDialog(mw.msg('flowthread-ui-networkerror'));
+      else
+        showMsgDialog(error);
+    });
   };
   return replyBox.object;
 }
 
-Thread.sendComment = function(postid, text, wikitext) {
-  var api = new mw.Api();
-  var req = {
-    action: 'flowthread',
-    type: 'post',
-    pageid: mw.config.get('wgArticleId'),
-    postid: postid,
-    content: text,
-    wikitext: wikitext,
-  };
-  api.get(req).done(reloadComments).fail(function(error, obj) {
-    if (obj.error)
-      showMsgDialog(obj.error.info);
-    else if (error === 'http')
-      showMsgDialog(mw.msg('flowthread-ui-networkerror'));
-    else
-      showMsgDialog(error);
-  });
-}
-
-function ReplyBox() {
+function ReplyBox(thread) {
   var template = '<div class="comment-replybox">'
     + '<div class="comment-avatar">'
     + '<img src="' + getAvatar(mw.user.getId(), mw.user.id()) + '"></img>'
@@ -219,6 +223,7 @@ function ReplyBox() {
   var self = this;
   var object = $(template);
   this.object = object;
+  this.thread = thread;
 
   object.find('textarea').keyup(function(e) {
     if (e.ctrlKey && e.which === 13) object.find('.comment-submit').click();
@@ -239,7 +244,7 @@ function ReplyBox() {
         var api = new mw.Api();
         api.get({
           action: 'parse',
-          title: mw.config.get('wgTitle'),
+          title: (thread && thread.post.title) || mw.config.get('wgTitle'),
           prop: 'text',
           preview: true,
           text: val
