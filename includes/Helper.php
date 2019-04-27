@@ -136,4 +136,50 @@ class Helper {
 		}
 		return $mentioned;
 	}
+
+	public static function getFilteredNamespace() {
+		$ret = array(
+			NS_MEDIAWIKI,
+			NS_TEMPLATE,
+			NS_CATEGORY,
+			NS_FILE,
+		);
+		if (defined('NS_MODULE')) {
+			$ret[] = NS_MODULE;
+		}
+
+		return $ret;
+	}
+
+	public static function canEverPostOnTitle(\Title $title) {
+		// Disallow commenting on pages without article id
+		if ($title->getArticleID() == 0) {
+			return false;
+		}
+
+		if ($title->isSpecialPage()) {
+			return false;
+		}
+
+		// These could be explicitly allowed in later version
+		if (!$title->canTalk()) {
+			return false;
+		}
+
+		if ($title->isTalkPage()) {
+			return false;
+		}
+
+		// No commenting on main page
+		if ($title->isMainPage()) {
+			return false;
+		}
+
+		// Blacklist several namespace
+		if (in_array($title->getNamespace(), self::getFilteredNamespace())) {
+			return false;
+		}
+
+		return true;
+	}
 }

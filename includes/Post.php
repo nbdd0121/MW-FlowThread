@@ -138,7 +138,7 @@ class Post {
 	 * @return
 	 *   True if the page belongs to the user
 	 */
-	private static function userOwnsPage(\User $user, \Title $title) {
+	public static function userOwnsPage(\User $user, \Title $title) {
 		if ($title->getNamespace() === NS_USER && $title->getRootText() === $user->getName()) {
 			return true;
 		}

@@ -3,43 +3,12 @@ namespace FlowThread;
 
 class Hooks {
 
-	public static function getFilteredNamespace() {
-		$ret = array(
-			NS_MEDIAWIKI,
-			NS_TEMPLATE,
-			NS_CATEGORY,
-			NS_FILE,
-		);
-		if (defined('NS_MODULE')) {
-			$ret[] = NS_MODULE;
-		}
-
-		return $ret;
-	}
-
 	public static function onBeforePageDisplay(\OutputPage &$output, \Skin &$skin) {
 		$title = $output->getTitle();
 
-		// Disallow commenting on pages without article id
-		if ($title->getArticleID() == 0) {
-			return true;
-		}
-
-		if ($title->isSpecialPage()) {
-			return true;
-		}
-
-		// These could be explicitly allowed in later version
-		if (!$title->canTalk()) {
-			return true;
-		}
-
-		if ($title->isTalkPage()) {
-			return true;
-		}
-
-		// No commenting on main page
-		if ($title->isMainPage()) {
+		// If the comments are never allowed on the title, do not load
+		// FlowThread at all.
+		if (!Helper::canEverPostOnTitle($title)) {
 			return true;
 		}
 
@@ -50,11 +19,6 @@ class Hooks {
 
 		// Disable if not viewing
 		if ($skin->getRequest()->getVal('action', 'view') != 'view') {
-			return true;
-		}
-
-		// Blacklist several namespace
-		if (in_array($title->getNamespace(), self::getFilteredNamespace())) {
 			return true;
 		}
 

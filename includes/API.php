@@ -7,12 +7,6 @@ class API extends \ApiBase {
 		$this->dieWithError([ 'apierror-paramempty', $name ], 'noprop');
 	}
 
-	private function validatePageId($pageid) {
-		if (!\Title::newFromId($pageid)) {
-			$this->dieWithError( [ 'apierror-nosuchpageid', $pageid ] );
-		}
-	}
-
 	private function convertPosts(array $posts, $needTitle = false, $priviledged = false) {
 		$attTable = Helper::batchGetUserAttitude($this->getUser(), $posts);
 		$ret = array();
@@ -303,7 +297,14 @@ class API extends \ApiBase {
 				// Permission check
 				Post::checkIfCanPost($this->getUser());
 
-				$this->validatePageId($page);
+				$title = \Title::newFromId($page);
+				if (!$title) {
+					$this->dieWithError( [ 'apierror-nosuchpageid', $page ] );
+				}
+
+				if (!Helper::canEverPostOnTitle($title)) {
+					throw new \Exception('cannot post on this page');
+				}
 
 				// Construct the object first without setting the text
 				// As we need to use some useful functions on the post object
