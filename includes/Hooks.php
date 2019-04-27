@@ -58,6 +58,7 @@ class Hooks {
 
 		$updater->addExtensionTable('FlowThread', "{$dir}/{$filename}");
 		$updater->addExtensionTable('FlowThreadAttitude', "{$dir}/{$filename}");
+		$updater->addExtensionTable('FlowThreadControl', "{$dir}/control.sql");
 
 		return true;
 	}
