@@ -8,6 +8,8 @@
   "logentry-comments-erase": "$1从页面$3中永久删除了$4的评论及$5条子评论",
   "logentry-comments-import": "$1向页面$3中导入了$4条评论",
   "logentry-comments-markchecked": "$1将页面$3中$4的评论标记为已检查",
+  "logentry-comments-disable": "$1关闭了$3上的评论功能",
+  "logentry-comments-enable": "$1重新打开了$3上的评论功能",
   "right-comment": "评论",
   "right-commentadmin-restricted": "受限的评论管理",
   "right-commentadmin": "评论管理",
@@ -25,6 +27,18 @@
   "flowthreadmanage-user": "评论者",
   "flowthreadmanage-title": "页面标题",
   "flowthreadmanage-keyword": "关键字",
+  "flowthreadcontrol": "控制“$1”上的评论",
+  "flowthreadcontrol-disable-reason": "理由",
+  "flowthreadcontrol-disable-reason-dropdown": "** 用户不愿意他人在用户页上评论\n* 常见理由\n** 遭到过度破坏\n**过度张贴垃圾链接",
+  "flowthreadcontrol-disable": "禁止该页面上的评论",
+  "flowthreadcontrol-optout": "在我用户页上关闭评论功能",
+  "flowthreadcontrol-disable-success": "页面“$1”上的评论已被关闭",
+  "flowthreadcontrol-allow-optin": "允许该用户页的拥有者重新选择打开评论",
+  "flowthreadcontrol-enable": "重新在该页面上启用评论",
+  "flowthreadcontrol-enable-reason": "理由",
+  "flowthreadcontrol-enable-success": "页面“$1”上的评论已被重新打开",
+  "flowthreadcontrol-edit-disable-dropdown": "编辑禁止理由",
+  "flowthreadcontrol-showlog": "下面是该页面的评论管理历史。",
   "flowthread-filter-all": "所有评论",
   "flowthread-filter-reported": "被举报评论",
   "flowthread-filter-spam": "垃圾评论",
@@ -84,7 +98,9 @@
   "apihelp-flowthread-example-3": "回复一条在页面ID为1的页面上发表的评论。",
   "apihelp-flowthread-example-4": "赞一条评论。",
   "apihelp-flowthread-example-5": "删除一条评论。",
+  "apierror-nosuchpostid": "没有编号为$1的评论。",
 
   "sidebar-section-extension": "扩展程序",
-  "sidebar-usercomments": "用户评论"
+  "sidebar-usercomments": "用户评论",
+  "action-flowthreadcontrol" :"评论控制"
 }

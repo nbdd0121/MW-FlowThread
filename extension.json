@@ -27,6 +27,7 @@
     "FlowThread\\SpecialImport": "special/Import.php",
     "FlowThread\\SpecialManage": "special/Manage.php",
     "FlowThread\\SpecialLink": "special/Link.php",
+    "FlowThread\\SpecialControl": "special/Control.php",
     "FlowThread\\EchoHooks": "echo/Hooks.php",
     "FlowThread\\EchoPresentationModel": "echo/PresentationModel.php",
     "FlowThread\\EchoAlertPresentationModel": "echo/AlertPresentationModel.php"
@@ -171,13 +172,16 @@
     "comments/recover": "LogFormatter",
     "comments/erase": "LogFormatter",
     "comments/import": "LogFormatter",
-    "comments/markchecked": "LogFormatter"
+    "comments/markchecked": "LogFormatter",
+    "comments/disable": "LogFormatter",
+    "comments/enable": "LogFormatter"
   },
   "SpecialPages": {
     "FlowThreadExport": "FlowThread\\SpecialExport",
     "FlowThreadImport": "FlowThread\\SpecialImport",
     "FlowThreadManage": "FlowThread\\SpecialManage",
-    "FlowThreadLink": "FlowThread\\SpecialLink"
+    "FlowThreadLink": "FlowThread\\SpecialLink",
+    "FlowThreadControl": "FlowThread\\SpecialControl"
   },
   "config": {
     "FlowThreadConfig": {

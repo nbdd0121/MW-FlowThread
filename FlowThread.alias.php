@@ -6,6 +6,7 @@ $specialPageAliases['en'] = array(
 	'FlowThreadExport' => array('FlowThreadExport'),
 	'FlowThreadManage' => array('FlowThreadManage'),
 	'FlowThreadLink' => array('FlowThreadLink'),
+	'FlowThreadControl' => ['CommentControl'],
 );
 
 $specialPageAliases['zh-hans'] = array(
@@ -13,4 +14,5 @@ $specialPageAliases['zh-hans'] = array(
 	'FlowThreadExport' => array('导出FlowThread评论'),
 	'FlowThreadManage' => array('管理FlowThread评论'),
 	'FlowThreadLink' => array('FlowThreadLink'),
+	'FlowThreadControl' => ['评论控制'],
 );
