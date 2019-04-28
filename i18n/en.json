@@ -64,6 +64,7 @@
   "flowthread-ui-editblacklist": "Edit Blacklist",
   "flowthread-ui-networkerror": "Cannot connect to the server.",
   "flowthread-ui-useroptout": "Comments are disabled upon user request. Please go to discussion page instead.",
+  "flowthread-ui-disabled": "Comments are disabled on this page.",
 
   "echo-category-title-flowthread": "FlowThread comment",
   "echo-pref-tooltip-flowthread": "Notify me when my comment is replyed.",

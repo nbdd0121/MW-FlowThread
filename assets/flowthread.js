@@ -1,19 +1,6 @@
 var canpost = mw.config.exists('canpost');
 var ownpage = mw.config.exists('commentadmin') || mw.config.get('wgNamespaceNumber') === 2 && mw.config.get('wgTitle').replace('/$', '') === mw.user.id();
 
-/* Get user preference */
-/* Returns positive result for non-user namespaces */
-function getUserCommentPreference() {
-  var optFlag = document.getElementById("flowthread-user-optout");
-
-  // No one will even change the default user namespace ID in MediaWiki
-  // Changing this value considered unsupported
-  if (optFlag && mw.config.get("wgNamespaceNumber") === 2) {
-      return false;
-  }
-  return true;
-}
-
 function createThread(post) {
   var thread = new Thread();
   var object = thread.object;
@@ -162,17 +149,9 @@ Paginator.prototype.repaint = function() {
 var pager = new Paginator();
 
 $('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
-  var userPreference = getUserCommentPreference();
-  if (canpost && userPreference) return createReplyBox(null);
-  
+  if (canpost) return createReplyBox(null);
   var noticeContainer = $('<div>').addClass('comment-bannotice');
-  
-  if (!userPreference) {
-    noticeContainer.html(config.UserOptOutNotice);
-  } else {
-    noticeContainer.html(config.CantPostNotice);
-  }
-  
+  noticeContainer.html(config.CantPostNotice);
   return noticeContainer;
 }());
 

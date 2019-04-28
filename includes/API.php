@@ -306,6 +306,11 @@ class API extends \ApiBase {
 					throw new \Exception('cannot post on this page');
 				}
 
+				$controlStatus = SpecialControl::getControlStatus($title);
+				if ($controlStatus !== SpecialControl::STATUS_ENABLED) {
+					throw new \Exception('cannot post on this page');
+				}
+
 				// Construct the object first without setting the text
 				// As we need to use some useful functions on the post object
 				$data = array(

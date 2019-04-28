@@ -32,11 +32,18 @@ class Hooks {
 			'AnonymousAvatar' => $wgFlowThreadConfig['AnonymousAvatar'],
 		);
 
-		if (\FlowThread\Post::canPost($output->getUser())) {
-			$config['UserOptOutNotice'] = wfMessage('flowthread-ui-useroptout')->parse();
-			$output->addJsConfigVars(array('canpost' => ''));
-		} else {
+		// First check if user can post at all
+		if (!\FlowThread\Post::canPost($output->getUser())) {
 			$config['CantPostNotice'] = wfMessage('flowthread-ui-cantpost')->parse();
+		} else {
+			$status = SpecialControl::getControlStatus($title);
+			if ($status === SpecialControl::STATUS_OPTEDOUT) {
+				$config['CantPostNotice'] = wfMessage('flowthread-ui-useroptout')->parse();
+			} else if ($status === SpecialControl::STATUS_DISABLED) {
+				$config['CantPostNotice'] = wfMessage('flowthread-ui-disabled')->parse();
+			} else {
+				$output->addJsConfigVars(array('canpost' => ''));
+			}
 		}
 
 		global $wgFlowThreadConfig;

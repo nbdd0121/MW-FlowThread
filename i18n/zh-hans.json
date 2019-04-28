@@ -64,6 +64,7 @@
   "flowthread-ui-editblacklist": "编辑屏蔽列表",
   "flowthread-ui-networkerror": "无法连接到服务器。",
   "flowthread-ui-useroptout": "应用户要求，评论已经被关闭。请前往用户讨论页以留言。",
+  "flowthread-ui-disabled": "该页面的评论已经被关闭。",
 
   "echo-category-title-flowthread": "FlowThread评论",
   "echo-pref-tooltip-flowthread": "当我的评论被回复时提醒我。",
