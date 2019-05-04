@@ -175,7 +175,7 @@ Thread.prototype.markAsPopular = function() {
 }
 
 function createReplyBox(thread) {
-  var replyBox = new ReplyBox();
+  var replyBox = new ReplyBox(thread);
 
   replyBox.onSubmit = function() {
     var text = replyBox.getValue().trim();
