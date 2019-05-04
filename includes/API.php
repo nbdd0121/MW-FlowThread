@@ -303,12 +303,12 @@ class API extends \ApiBase {
 				}
 
 				if (!Helper::canEverPostOnTitle($title)) {
-					throw new \Exception('cannot post on this page');
+					$this->dieWithError(['apierror-cantpost', $title]);
 				}
 
 				$controlStatus = SpecialControl::getControlStatus($title);
 				if ($controlStatus !== SpecialControl::STATUS_ENABLED) {
-					throw new \Exception('cannot post on this page');
+					$this->dieWithError(['apierror-commentcontrol', $title]);
 				}
 
 				// Construct the object first without setting the text

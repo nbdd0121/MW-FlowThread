@@ -103,6 +103,8 @@
   "apihelp-flowthread-example-4": "Like a comment.",
   "apihelp-flowthread-example-5": "Delete a comment.",
   "apierror-nosuchpostid": "There is no post with ID $1.",
+  "apierror-cantpost": "Cannot post on $1.",
+  "apierror-commentcontrol": "Commenting is disabled on $1.",
 
   "sidebar-section-extension": "Extension",
   "sidebar-usercomments": "User Comments",

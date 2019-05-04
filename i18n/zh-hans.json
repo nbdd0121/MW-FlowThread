@@ -100,6 +100,8 @@
   "apihelp-flowthread-example-4": "赞一条评论。",
   "apihelp-flowthread-example-5": "删除一条评论。",
   "apierror-nosuchpostid": "没有编号为$1的评论。",
+  "apierror-cantpost": "不能再“$1”上评论。",
+  "apierror-commentcontrol": "“$1”上的评论已被关闭。",
 
   "sidebar-section-extension": "扩展程序",
   "sidebar-usercomments": "用户评论",
