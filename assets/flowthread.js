@@ -148,12 +148,22 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
-  if (canpost) return createReplyBox(null);
-  var noticeContainer = $('<div>').addClass('comment-bannotice');
-  noticeContainer.html(config.CantPostNotice);
-  return noticeContainer;
-}());
+if($("#page-secondary-actions")[0]){
+		$('#page-secondary-actions').prepend('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
+		  if (canpost) return createReplyBox(null);
+		  var noticeContainer = $('<div>').addClass('comment-bannotice');
+		  noticeContainer.html(config.CantPostNotice);
+		  return noticeContainer;
+		}());
+	} else {
+		$('#bodyContent').after('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
+		  if (canpost) return createReplyBox(null);
+		  var noticeContainer = $('<div>').addClass('comment-bannotice');
+		  noticeContainer.html(config.CantPostNotice);
+		  return noticeContainer;
+		}());
+}
+
 
 if (mw.util.getParamValue('flowthread-page')) {
   reloadComments((parseInt(mw.util.getParamValue('flowthread-page')) - 1) * 10);
