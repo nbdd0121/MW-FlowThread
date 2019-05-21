@@ -148,7 +148,7 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after($('<div class="post-content"></div>').append('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
+$('#bodyContent').after($('<div class="post-content" id="flowthread"></div>').append('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
   if (canpost) return createReplyBox(null);
   var noticeContainer = $('<div>').addClass('comment-bannotice');
   noticeContainer.html(config.CantPostNotice);

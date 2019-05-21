@@ -1,3 +1,8 @@
+#flowthread {
+    clear: both;
+    margin-top: 2em;
+}
+
 .comment-avatar {
     float: left;
 }
@@ -8,11 +13,6 @@
 
 .comment-post {
     padding: 10px;
-}
-
-/* Only add margin if we do not have topped posts */
-.comment-container-top[disabled] + .comment-container {
-    margin-top: 2em;
 }
 
 .comment-body {
@@ -91,7 +91,6 @@
 
 .comment-container-top {
     border: 1px #CCC solid;
-    margin-top: 2em;
     border-radius: 5px;
 }
 
