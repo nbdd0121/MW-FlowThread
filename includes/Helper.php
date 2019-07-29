@@ -162,7 +162,7 @@ class Helper {
 		}
 
 		// These could be explicitly allowed in later version
-		if (!$title->canTalk()) {
+		if (!$title->canHaveTalkPage()) {
 			return false;
 		}
 

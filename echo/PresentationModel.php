@@ -21,7 +21,7 @@ class EchoPresentationModel extends \EchoEventPresentationModel {
 	}
 
 	protected function getTruncatedBody($text) {
-		return $this->language->embedBidi($this->language->truncate($text, 150, '...', false));
+		return $this->language->embedBidi($this->language->truncateForVisual($text, 150, '...', false));
 	}
 
 	public function canRender() {
