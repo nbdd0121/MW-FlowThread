@@ -62,7 +62,6 @@ class Query {
 		case static::FILTER_REPORTED:
 			$cond['flowthread_status'] = Post::STATUS_NORMAL;
 			$cond[] = 'flowthread_report > 0';
-			$options['ORDER BY'] = 'flowthread_report DESC, ' . $options['ORDER BY'];
 			break;
 		case self::FILTER_DELETED:
 			$cond['flowthread_status'] = Post::STATUS_DELETED;
