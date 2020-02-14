@@ -59,8 +59,6 @@ class API extends \ApiBase {
 
 		$comments = $this->convertPosts($page->posts);
 
-		// This is slow, use cache
-		$cache = \ObjectCache::getMainWANInstance();
 		$popular = PopularPosts::getFromPageId($pageid);
 		$popularRet = $this->convertPosts($popular);
 
