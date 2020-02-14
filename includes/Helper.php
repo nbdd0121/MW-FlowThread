@@ -39,7 +39,7 @@ class Helper {
 
 		if ( !count($needed) ) return 0;
 
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 		$inExpr = self::buildSQLInExpr($dbr, $ids);
 		$res = $dbr->select('FlowThread', Post::getRequiredColumns(), [
 			'flowthread_id' . $inExpr
@@ -81,7 +81,7 @@ class Helper {
 			return $ret;
 		}
 
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 
 		$inExpr = self::buildPostInExpr($dbr, $posts);
 		$res = $dbr->select('FlowThreadAttitude', array(

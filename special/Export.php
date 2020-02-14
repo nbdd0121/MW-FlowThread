@@ -39,7 +39,7 @@ class SpecialExport extends \SpecialPage {
 			$request->response()->header("Cache-Control: no-cache");
 
 			// Got all data. NOTE that ORDER BY is essential since we are grouping comments
-			$dbr = wfGetDB(DB_SLAVE);
+			$dbr = wfGetDB(DB_REPLICA);
 
 			$pageid = 0;
 			$counter = 0;

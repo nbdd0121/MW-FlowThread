@@ -17,7 +17,7 @@ class SpecialLink extends \RedirectSpecialPage {
 					$post = $post->getParent();
 				}
 
-				$db = wfGetDB(DB_SLAVE);
+				$db = wfGetDB(DB_REPLICA);
 
 				$cond = array(
 					'flowthread_pageid' => $post->pageid,
