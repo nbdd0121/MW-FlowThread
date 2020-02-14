@@ -47,7 +47,7 @@ class PopularPosts {
 		if (!$wgFlowThreadConfig['PopularPostCount']) {
 			return array();
 		}
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 		$cond = array(
 			'flowthread_pageid' => $pageid,
 			'flowthread_status' => Post::STATUS_NORMAL,

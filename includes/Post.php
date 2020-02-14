@@ -83,7 +83,7 @@ class Post {
 
 	public static function newFromId(UID $id) {
 		// Do not apply cache here, it will seriously slow down the application
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 
 		$row = $dbr->selectRow('FlowThread',
 			self::getRequiredColumns(),
@@ -403,7 +403,7 @@ class Post {
 	public function getChildren() {
 		$this->validate();
 
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 
 		$res = $dbr->select('FlowThread',
 			self::getRequiredColumns(), array(
@@ -430,7 +430,7 @@ class Post {
 	}
 
 	public function getUserAttitude(\User $user) {
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 		$row = $dbr->selectRow('FlowThreadAttitude', 'flowthread_att_type', array(
 			'flowthread_att_id' => $this->id->getBin(),
 			'flowthread_att_userid' => $user->getId(),

@@ -198,7 +198,7 @@ class SpecialControl extends \FormSpecialPage {
 	public static function getControlStatus(\Title $title) {
 		$id = $title->getArticleID();
 
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 		$row = $dbr->selectRow('FlowThreadControl', ['flowthread_ctrl_status'], [
 			'flowthread_ctrl_pageid' => $title->getArticleID(),
 		]);

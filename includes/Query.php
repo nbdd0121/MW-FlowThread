@@ -23,7 +23,7 @@ class Query {
 	public $posts = null;
 
 	public function fetch() {
-		$dbr = wfGetDB(DB_SLAVE);
+		$dbr = wfGetDB(DB_REPLICA);
 
 		$comments = array();
 		$parentLookup = array();
