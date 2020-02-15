@@ -2,6 +2,7 @@
 namespace FlowThread;
 
 use MediaWiki\MediaWikiServices;
+use Wikimedia\AtEase\AtEase;
 
 class SpamFilter {
 
@@ -9,9 +10,9 @@ class SpamFilter {
 	 * Validate if a regular expression is valid
 	 */
 	private static function validateRegex($regex) {
-		wfSuppressWarnings();
+		AtEase::suppressWarnings();
 		$ok = preg_match($regex, '');
-		wfRestoreWarnings();
+		AtEase::restoreWarnings();
 
 		if ($ok === false) {
 			return false;
