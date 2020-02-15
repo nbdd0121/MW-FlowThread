@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class SpamFilter {
 
 	/**
@@ -121,7 +123,7 @@ class SpamFilter {
 	}
 
 	private static function getBlackList() {
-		$cache = \ObjectCache::getMainWANInstance();
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 		return $cache->getWithSetCallback(
 			wfMemcKey('flowthread', 'spamblacklist'),
 			60,
