@@ -1,9 +1,11 @@
 <?php
 namespace FlowThread;
 
+use Wikimedia\Rdbms\DBConnRef;
+
 class Helper {
 
-	public static function buildSQLInExpr(\DatabaseBase $db, array $arr) {
+	public static function buildSQLInExpr(DBConnRef $db, array $arr) {
 		$range = '';
 		foreach ($arr as $item) {
 			if ($range) {
@@ -14,7 +16,7 @@ class Helper {
 		return ' IN(' . $range . ')';
 	}
 
-	public static function buildPostInExpr(\DatabaseBase $db, array $arr) {
+	public static function buildPostInExpr(DBConnRef $db, array $arr) {
 		$range = '';
 		foreach ($arr as $post) {
 			if ($range) {

@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use Wikimedia\Rdbms\DBConnRef;
+
 class Post {
 	const STATUS_NORMAL = 0;
 	const STATUS_DELETED = 1;
@@ -275,7 +277,7 @@ class Post {
 
 	// Recursively delete a thread and its children
 	// FIXME: Should be somehow protected
-	public function eraseSilently(\DatabaseBase $db) {
+	public function eraseSilently(DBConnRef $db) {
 		$counter = 1;
 
 		$db->delete('FlowThread', array(
