@@ -247,7 +247,8 @@ function ReplyBox(thread) {
           title: (thread && thread.post.title) || mw.config.get('wgTitle'),
           prop: 'text',
           preview: true,
-          text: val
+          text: val,
+          pst: true,
         }).done(function(result) {
           previewPanel.html(result.parse.text['*']);
         }).fail(function(error, obj) {

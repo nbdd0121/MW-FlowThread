@@ -354,7 +354,8 @@ class API extends \ApiBase {
 				// Set options for parsing
 				$opt = new \ParserOptions($this->getUser());
 
-				$output = $parser->parse($text, \Title::newFromId($page), $opt);
+				$text = $parser->preSaveTransform($text, $title, $this->getUser(), $opt);
+				$output = $parser->parse($text, $title, $opt);
 				$text = $output->getText(['enableSectionEditLinks' => false]); // Edit button will not work!
 
 				// Get all mentioned user
