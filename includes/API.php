@@ -59,8 +59,6 @@ class API extends \ApiBase {
 
 		$comments = $this->convertPosts($page->posts);
 
-		// This is slow, use cache
-		$cache = \ObjectCache::getMainWANInstance();
 		$popular = PopularPosts::getFromPageId($pageid);
 		$popularRet = $this->convertPosts($popular);
 
@@ -151,6 +149,7 @@ class API extends \ApiBase {
 		}
 
 		$query->fetch();
+		/** @var Post[] $posts */
 		$posts = $query->posts;
 
 		// We fetched one extra row. If it exists in response, then we know we have more to fetch.
@@ -354,10 +353,9 @@ class API extends \ApiBase {
 
 				// Set options for parsing
 				$opt = new \ParserOptions($this->getUser());
-				$opt->setEditSection(false); // Edit button will not work!
 
 				$output = $parser->parse($text, \Title::newFromId($page), $opt);
-				$text = $output->getText();
+				$text = $output->getText(['enableSectionEditLinks' => false]); // Edit button will not work!
 
 				// Get all mentioned user
 				$mentioned = Helper::generateMentionedList($output, $postObject);

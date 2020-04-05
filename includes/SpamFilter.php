@@ -1,15 +1,18 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+use Wikimedia\AtEase\AtEase;
+
 class SpamFilter {
 
 	/**
 	 * Validate if a regular expression is valid
 	 */
 	private static function validateRegex($regex) {
-		wfSuppressWarnings();
+		AtEase::suppressWarnings();
 		$ok = preg_match($regex, '');
-		wfRestoreWarnings();
+		AtEase::restoreWarnings();
 
 		if ($ok === false) {
 			return false;
@@ -121,7 +124,7 @@ class SpamFilter {
 	}
 
 	private static function getBlackList() {
-		$cache = \ObjectCache::getMainWANInstance();
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 		return $cache->getWithSetCallback(
 			wfMemcKey('flowthread', 'spamblacklist'),
 			60,
