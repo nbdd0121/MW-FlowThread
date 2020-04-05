@@ -78,7 +78,7 @@ class SpecialManage extends \SpecialPage {
 
 		// This is essential as we need to submit the form to this page
 		$title = parent::getTitleFor('FlowThreadManage');
-		$html = \Html::hidden('title', $this->getTitle());
+		$html = \Html::hidden('title', $this->getPageTitle());
 
 		$html .= $this->getTitleInput($this->page) . "\n";
 		$html .= $this->getUserInput($this->user) . "\n";
@@ -230,7 +230,7 @@ class SpecialManage extends \SpecialPage {
 
 	private function getQueryLink($msg, $query, $id = false) {
 		return \Linker::linkKnown(
-			$this->getTitle(),
+			$this->getPageTitle(),
 			$msg,
 			['id' => $id],
 			$query
