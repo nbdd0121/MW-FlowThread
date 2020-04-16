@@ -187,22 +187,29 @@ class API extends \ApiBase {
 	}
 
 	public function execute() {
-		$action = $this->getMain()->getVal('type');
-		$page = $this->getMain()->getVal('pageid');
+		$main = $this->getMain();
+		$action = $main->getVal('type');
+		$page = $main->getVal('pageid');
+		$writeMode = $this->isWriteMode();
 
 		// Forbid non-POST request on operations that could change the database.
 		// However for backware compatibility do not enforce it now.
 		// This will be changed to true in future versions, or can be set manually.
 		global $wgFlowThreadEnforcePost;
 		if ($wgFlowThreadEnforcePost &&
-		    $this->isWriteMode() && $this->getRequest()->getMethod() !== 'POST') {
+		    $writeMode && $this->getRequest()->getMethod() !== 'POST') {
 			$this->dieWithError(['apierror-mustbeposted', 'FlowThread']);
+		}
+
+		if (!$writeMode) {
+			$main->setCacheMode('anon-public-user-private');
+			$main->setCacheControl(['s-maxage' => 300]);
 		}
 
 		try {
 			// If post is set, get the post object by id
 			// By fetching the post object, we also validate the id
-			$postList = $this->getMain()->getVal('postid');
+			$postList = $main->getVal('postid');
 			$postList = $this->parsePostList($postList);
 
 			switch ($action) {
