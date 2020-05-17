@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class API extends \ApiBase {
 
 	private function dieNoParam($name) {
@@ -356,7 +358,7 @@ class API extends \ApiBase {
 					}
 				}
 
-				$parser = new \Parser();
+				$parser = MediaWikiServices::getInstance()->getParserFactory()->create();
 
 				// Set options for parsing
 				$opt = new \ParserOptions($this->getUser());
