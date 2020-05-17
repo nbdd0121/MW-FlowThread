@@ -1,8 +1,6 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\MediaWikiServices;
-
 class PopularPosts {
 
 	const CACHE_TTL = 3600;
@@ -13,7 +11,7 @@ class PopularPosts {
 
 	public static function invalidateCache($post) {
 		$pageid = $post->pageid;
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cache = \ObjectCache::getMainWANInstance();
 		$key = wfMemcKey('flowthread', 'popular', $pageid);
 		$cachedValue = $cache->get($key);
 		if ($cachedValue === false) {
@@ -25,7 +23,7 @@ class PopularPosts {
 	}
 
 	private static function fetchFromCache($pageid) {
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cache = \ObjectCache::getMainWANInstance();
 		$key = wfMemcKey('flowthread', 'popular', $pageid);
 		$cachedValue = $cache->get($key);
 		if ($cachedValue === false) {
