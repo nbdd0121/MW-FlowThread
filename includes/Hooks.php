@@ -88,32 +88,35 @@ class Hooks {
 		}
 	}
 
-	public static function onSkinTemplateOutputPageBeforeExec(&$skinTemplate, &$tpl) {
-		$commentAdmin = $skinTemplate->getUser()->isAllowed('commentadmin-restricted');
-		$user = $skinTemplate->getRelevantUser();
+	public static function onSidebarBeforeOutput(\Skin $skin, &$sidebar) {
+		$commentAdmin = $skin->getUser()->isAllowed('commentadmin-restricted');
+		$user = $skin->getRelevantUser();
 
 		if ($user && $commentAdmin) {
-			$nav_urls = $tpl->get('nav_urls');
-			$nav_urls['usercomments'] = [
+			$sidebar['TOOLBOX'][] = [
 				'text' => wfMessage('sidebar-usercomments')->text(),
 				'href' => \SpecialPage::getTitleFor('FlowThreadManage')->getLocalURL(array(
 					'user' => $user->getName(),
 				)),
 			];
-			$tpl->set('nav_urls', $nav_urls);
 		}
+	}
+
+	public static function onSkinTemplateNavigation_Universal(\SkinTemplate $skinTemplate, array &$links) {
+		$commentAdmin = $skinTemplate->getUser()->isAllowed('commentadmin-restricted');
+		$user = $skinTemplate->getRelevantUser();
 
 		$title = $skinTemplate->getRelevantTitle();
 		if (Helper::canEverPostOnTitle($title) && ($commentAdmin || Post::userOwnsPage($skinTemplate->getUser(), $title))) {
-			$contentNav = $tpl->get('content_navigation');
-			$contentNav['actions']['flowthreadcontrol'] = [
+			// add a new action
+			$links['actions']['flowthreadcontrol'] = [
 				'id' => 'ca-flowthreadcontrol',
 				'text' => wfMessage('action-flowthreadcontrol')->text(),
 				'href' => \SpecialPage::getTitleFor('FlowThreadControl', $title->getPrefixedDBKey())->getLocalURL()
 			];
-			$tpl->set('content_navigation', $contentNav);
 		}
 
 		return true;
 	}
+
 }
