@@ -220,7 +220,7 @@ class SpecialControl extends \FormSpecialPage {
 				'flowthread_ctrl_status' => $status,
 			];
 			$dbw->upsert('FlowThreadControl', $values, [
-				'flowthread_ctrl_pageid' => $id,
+				'flowthread_ctrl_pageid'
 			], $values);
 		}
 	}
