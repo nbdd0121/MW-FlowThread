@@ -43,7 +43,7 @@ class SpecialLink extends \RedirectSpecialPage {
 		throw new \ErrorPageError('nopagetitle', 'nopagetext');
 	}
 
-	public function getRedirectQuery($subpage) {
+	public function getRedirectQuery() {
 		return $this->query;
 	}
 }
