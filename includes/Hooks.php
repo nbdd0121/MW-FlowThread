@@ -70,13 +70,27 @@ class Hooks {
 		return true;
 	}
 
-	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, \Content $content = null, \LogEntry $logEntry) {
-		$page = new Query();
-		$page->pageid = $id;
-		$page->limit = -1;
-		$page->threadMode = false;
-		$page->fetch();
-		$page->erase();
+	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, $content, \LogEntry $logEntry, $archivedRevisionCount) {
+		$archived_base = Post::STATUS_ARCHIVED_BASE;
+		$dbw = wfGetDB(DB_MASTER);
+		$dbw->update('FlowThread', array(
+			"flowthread_status=flowthread_status+{$archived_base}",
+		), array(
+			'flowthread_pageid' => $id,
+		));
+		return true;
+	}
+
+	public static function onArticleUndelete(\Title $title, $create, $comment, $oldPageId, $restoredPages) {
+		if ($create) {
+			$archived_base = Post::STATUS_ARCHIVED_BASE;
+			$dbw = wfGetDB(DB_MASTER);
+			$dbw->update('FlowThread', array(
+				"flowthread_status=flowthread_status-{$archived_base}",
+			), array(
+				'flowthread_pageid' => $oldPageId,
+			));
+		}
 		return true;
 	}
 

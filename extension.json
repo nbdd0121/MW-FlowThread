@@ -42,6 +42,9 @@
     "ArticleDeleteComplete": [
       "FlowThread\\Hooks::onArticleDeleteComplete"
     ],
+    "ArticleUndelete": [
+      "FlowThread\\Hooks::onArticleUndelete"
+    ],
     "BeforeCreateEchoEvent": [
       "FlowThread\\EchoHooks::onBeforeCreateEchoEvent"
     ],
