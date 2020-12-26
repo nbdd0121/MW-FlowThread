@@ -109,6 +109,8 @@ class SpecialImport extends \FormSpecialPage {
 				$output->addWikiMsg('flowthreadimport-skipped', $articles->title, $skipped);
 			}
 		}
+		
+		$wgTriggerFlowThreadHooks = true;
 	}
 
 	protected function alterForm(\HTMLForm $form) {

@@ -143,6 +143,7 @@ class Query {
 			}
 		}
 		$this->posts = array();
+		$wgTriggerFlowThreadHooks = true;
 	}
 
 }
