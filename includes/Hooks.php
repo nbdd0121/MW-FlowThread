@@ -71,10 +71,10 @@ class Hooks {
 	}
 
 	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, $content, \LogEntry $logEntry, $archivedRevisionCount) {
-		$archived_base = Post::STATUS_ARCHIVED_BASE;
+		$status_archived = Post::STATUS_ARCHIVED;
 		$dbw = wfGetDB(DB_MASTER);
 		$dbw->update('FlowThread', array(
-			"flowthread_status=flowthread_status+{$archived_base}",
+			"flowthread_status=flowthread_status|{$status_archived}",
 		), array(
 			'flowthread_pageid' => $id,
 		));
@@ -83,10 +83,10 @@ class Hooks {
 
 	public static function onArticleUndelete(\Title $title, $create, $comment, $oldPageId, $restoredPages) {
 		if ($create) {
-			$archived_base = Post::STATUS_ARCHIVED_BASE;
+			$status_archived = Post::STATUS_ARCHIVED;
 			$dbw = wfGetDB(DB_MASTER);
 			$dbw->update('FlowThread', array(
-				"flowthread_status=flowthread_status-{$archived_base}",
+				"flowthread_status=flowthread_status^{$status_archived}",
 			), array(
 				'flowthread_pageid' => $oldPageId,
 			));

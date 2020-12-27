@@ -3,11 +3,9 @@ namespace FlowThread;
 
 class Post {
 	const STATUS_NORMAL = 0;
-	const STATUS_DELETED = 1;
-	const STATUS_SPAM = 2;
-	const STATUS_ARCHIVED_BASE = 3;
-	const STATUS_ARCHIVED_DELETED = 4;
-	const STATUS_ARCHIVED_SPAM = 5;
+	const STATUS_DELETED = 1; // 0b001
+	const STATUS_SPAM = 2; // 0b010
+	const STATUS_ARCHIVED = 4; // 0b100
 
 	const ATTITUDE_NORMAL = 0;
 	const ATTITUDE_LIKE = 1;
