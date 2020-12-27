@@ -132,18 +132,4 @@ class Query {
 		$this->posts = $comments;
 	}
 
-	public function erase() {
-		global $wgTriggerFlowThreadHooks;
-		$wgTriggerFlowThreadHooks = false;
-
-		$dbw = wfGetDB(DB_MASTER);
-		foreach ($this->posts as $post) {
-			if ($post->isValid()) {
-				$post->eraseSilently($dbw);
-			}
-		}
-		$this->posts = array();
-		$wgTriggerFlowThreadHooks = true;
-	}
-
 }
