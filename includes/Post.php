@@ -184,13 +184,14 @@ class Post {
 		}
 	}
 
-	private function publishSimpleLog($subtype, \User $initiator) {
+	private function publishSimpleLog($subtype, \User $initiator, $count_child = null) {
 		$logEntry = new \ManualLogEntry('comments', $subtype);
 		$logEntry->setPerformer($initiator);
 		$logEntry->setTarget(\Title::newFromId($this->pageid));
-		$logEntry->setParameters(array(
-			'4::username' => $this->username,
-		));
+		$param = [];
+		$param['4::username'] = $this->username;
+		if ($count_child !== null) $param['5::children'] = $count_child;
+		$logEntry->setParameters($param);
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
 	}
@@ -306,13 +307,7 @@ class Post {
 		$counter = $this->eraseSilently($dbw);
 
 		// Add to log
-		$logEntry = new \ManualLogEntry('comments', 'erase');
-		$logEntry->setPerformer($user);
-		$logEntry->setTarget(\Title::newFromId($this->pageid));
-		$logEntry->setParameters(array(
-			'4::postid' => $this->username,
-			'5::children' => $counter - 1,
-		));
+		$this->publishSimpleLog('erase', $user, $counter - 1);
 		$logId = $logEntry->insert();
 		$logEntry->publish($logId, 'udp');
 
