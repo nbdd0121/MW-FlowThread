@@ -57,6 +57,7 @@ class SpecialImport extends \FormSpecialPage {
 
 	private function doImport(array $json) {
 		global $wgTriggerFlowThreadHooks;
+		$TriggerFlowThreadHooks_backup = $wgTriggerFlowThreadHooks;
 		$wgTriggerFlowThreadHooks = false;
 
 		$output = $this->getOutput();
@@ -110,7 +111,7 @@ class SpecialImport extends \FormSpecialPage {
 			}
 		}
 		
-		$wgTriggerFlowThreadHooks = true;
+		$wgTriggerFlowThreadHooks = $TriggerFlowThreadHooks_backup;
 	}
 
 	protected function alterForm(\HTMLForm $form) {
