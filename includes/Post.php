@@ -205,6 +205,34 @@ class Post {
 		));
 	}
 
+	public function archiveChildren(DBConnRef $db, $archive = true) {
+		$status_archived = self::STATUS_ARCHIVED;
+		$status_deleted = self::STATUS_DELETED;
+
+		$db->update('FlowThread', [
+				"flowthread_status=flowthread_status" . ($archive ? "|" : "^") . "{$status_archived}"
+			], [
+				'flowthread_pageid' => $this->pageid, # This line is critical in performance, as we indexed pageid
+				'flowthread_parentid' => $this->id->getBin()
+			]
+		);
+		$count = $db->affectedRows();
+
+		$res = $db->select('FlowThread', self::getRequiredColumns(),
+			[
+				'flowthread_pageid' => $this->pageid,
+				'flowthread_parentid' => $this->id->getBin(),
+				"NOT flowthread_status&{$status_deleted}" // The archived status of deleted comments' children should not be changed
+			]
+		);
+
+		foreach ($res as $row) {
+			$post = self::newFromDatabaseRow($row);
+			$count += $post->archiveChildren($db, $archive);
+		}
+		return $count;
+	}
+
 	public function recover(\User $user) {
 		self::checkIfAdmin($user);
 
@@ -216,8 +244,12 @@ class Post {
 		// Mark status as normal
 		$this->switchStatus(static::STATUS_NORMAL);
 
+		// Recover children
+		$dbw = wfGetDB(DB_MASTER);
+		$count = $this->archiveChildren($dbw, false);
+
 		// Write a log
-		$this->publishSimpleLog('recover', $user);
+		$this->publishSimpleLog('recover', $user, $count);
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
@@ -239,8 +271,8 @@ class Post {
 		$this->reportCount = 0;
 		$this->updateFavorReportCount();
 
-		$db = wfGetDB(DB_MASTER);
-		$db->delete('FlowThreadAttitude', array(
+		$dbw = wfGetDB(DB_MASTER);
+		$dbw->delete('FlowThreadAttitude', array(
 			'flowthread_att_id' => $this->id->getBin(),
 			'flowthread_att_type' => self::ATTITUDE_REPORT,
 		));
@@ -265,8 +297,11 @@ class Post {
 		// Mark status as deleted
 		$this->switchStatus(static::STATUS_DELETED);
 
+		$dbw = wfGetDB(DB_MASTER);
+		$count = $this->archiveChildren($dbw);
+
 		// Write a log
-		$this->publishSimpleLog('delete', $user);
+		$this->publishSimpleLog('delete', $user, $count);
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {

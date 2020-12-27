@@ -73,23 +73,42 @@ class Hooks {
 	public static function onArticleDeleteComplete(&$article, \User &$user, $reason, $id, $content, \LogEntry $logEntry, $archivedRevisionCount) {
 		$status_archived = Post::STATUS_ARCHIVED;
 		$dbw = wfGetDB(DB_MASTER);
-		$dbw->update('FlowThread', array(
-			"flowthread_status=flowthread_status|{$status_archived}",
-		), array(
-			'flowthread_pageid' => $id,
-		));
+		$dbw->update('FlowThread', [
+				"flowthread_status=flowthread_status|{$status_archived}"
+			], [
+				'flowthread_pageid' => $id,
+				"NOT flowthread_status&{$status_archived}" // As deleted comments' children have this status
+			]
+		);
 		return true;
 	}
 
 	public static function onArticleUndelete(\Title $title, $create, $comment, $oldPageId, $restoredPages) {
 		if ($create) {
 			$status_archived = Post::STATUS_ARCHIVED;
+			$status_deleted = Post::STATUS_DELETED;
+	
 			$dbw = wfGetDB(DB_MASTER);
-			$dbw->update('FlowThread', array(
-				"flowthread_status=flowthread_status^{$status_archived}",
-			), array(
-				'flowthread_pageid' => $oldPageId,
-			));
+
+			$dbw->update('FlowThread', [
+					"flowthread_status=flowthread_status^{$status_archived}"
+				], [
+					'flowthread_pageid' => $oldPageId,
+					'flowthread_parentid' => null
+				]
+			);
+
+			$res = $dbw->select('FlowThread', Post::getRequiredColumns(), [
+					'flowthread_pageid' => $oldPageId,
+					'flowthread_parentid' => null,
+					"NOT flowthread_status&{$status_deleted}" // As deleted comments' children have this status
+				]
+			);
+
+			foreach ($res as $row) {
+				$post = Post::newFromDatabaseRow($row);
+				$count += $post->archiveChildren($dbw, false);
+			}
 		}
 		return true;
 	}
