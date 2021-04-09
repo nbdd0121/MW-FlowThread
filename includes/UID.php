@@ -37,7 +37,7 @@ class UID {
 	}
 
 	public static function generate() {
-		$hex = MediaWikiServices::getInstance()->getGlobalIdGenerator()->newTimestampedUID128(16);
+		$hex = MediaWikiServices::getInstance()->getGlobalIdGenerator()->newTimestampedUID88(16);
 		$hex = str_pad($hex, static::HEX_LEN, '0', STR_PAD_LEFT);
 		return self::fromHex($hex);
 	}
