@@ -386,15 +386,16 @@ class API extends \ApiBase {
 				$postObject->text = $text;
 				$postObject->post();
 
+				$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
 				if (!$filterResult['good']) {
 					global $wgTriggerFlowThreadHooks;
 					if ($wgTriggerFlowThreadHooks) {
-						\Hooks::run('FlowThreadSpammed', array($postObject));
+						$hookContainer->run('FlowThreadSpammed', [$postObject]);
 					}
 				}
 
 				if (count($mentioned)) {
-					\Hooks::run('FlowThreadMention', array($postObject, $mentioned));
+					$hookContainer->run('FlowThreadMention', [$postObject, $mentioned]);
 				}
 
 				$this->getResult()->addValue(null, $this->getModuleName(), '');
