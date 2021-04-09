@@ -1,6 +1,9 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
+
 class Hooks {
 
 	public static function onBeforePageDisplay(\OutputPage &$output, \Skin &$skin) {
@@ -22,7 +25,7 @@ class Hooks {
 			return true;
 		}
 
-		if ($output->getUser()->isAllowed('commentadmin-restricted')) {
+		if (self::getPermissionManager()->userHasRight($output->getUser(), 'commentadmin-restricted')) {
 			$output->addJsConfigVars(array('commentadmin' => ''));
 		}
 
@@ -89,7 +92,7 @@ class Hooks {
 	}
 
 	public static function onSidebarBeforeOutput(\Skin $skin, &$sidebar) {
-		$commentAdmin = $skin->getUser()->isAllowed('commentadmin-restricted');
+		$commentAdmin = self::getPermissionManager()->userHasRight($skin->getUser(), 'commentadmin-restricted');
 		$user = $skin->getRelevantUser();
 
 		if ($user && $commentAdmin) {
@@ -103,7 +106,7 @@ class Hooks {
 	}
 
 	public static function onSkinTemplateNavigation_Universal(\SkinTemplate $skinTemplate, array &$links) {
-		$commentAdmin = $skinTemplate->getUser()->isAllowed('commentadmin-restricted');
+		$commentAdmin = self::getPermissionManager()->userHasRight($skinTemplate->getUser(), 'commentadmin-restricted');
 		$user = $skinTemplate->getRelevantUser();
 
 		$title = $skinTemplate->getRelevantTitle();
@@ -119,4 +122,7 @@ class Hooks {
 		return true;
 	}
 
+	private static function getPermissionManager() : PermissionManager {
+		return MediaWikiServices::getInstance()->getPermissionManager();
+	}
 }

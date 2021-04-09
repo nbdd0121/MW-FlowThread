@@ -147,7 +147,9 @@ class API extends \ApiBase {
 		if ($priviledged) {
 			$this->checkUserRightsAny('commentadmin-restricted');
 		} else {
-			if ($this->getUser()->isAllowed('commentadmin-restricted')) $priviledged = true;
+			if (MediaWikiServices::getInstance()->getPermissionManager()->userHasRight($this->getUser(), 'commentadmin-restricted'))  {
+				$priviledged = true;
+			}
 		}
 
 		$query->fetch();
