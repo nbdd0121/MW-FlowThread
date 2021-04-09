@@ -78,14 +78,15 @@ class SpamFilter {
 				$options['replace'] = $value;
 				break;
 			default:
-				if (in_array($key, MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions())) {
+				$services = MediaWikiServices::getInstance();
+				if (in_array($key, $services->getPermissionManager()->getAllPermissions())) {
 					// If the name is a user right
 					if (isset($options['right'])) {
 						$options['right'][] = $key;
 					} else {
 						$options['right'] = array($key);
 					}
-				} else if (in_array($key, \User::getAllGroups())) {
+				} else if (in_array($key, $services->getUserGroupManager()->listAllGroups())) {
 					// If the name is a user group
 					if (isset($options['group'])) {
 						$options['group'][] = $key;
