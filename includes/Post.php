@@ -1,6 +1,7 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Post {
@@ -221,7 +222,7 @@ class Post {
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
-			\Hooks::run('FlowThreadRecovered', array($this, $user));
+			MediaWikiServices::getInstance()->getHookContainer()->run('FlowThreadRecovered', [$this, $user]);
 		}
 	}
 
@@ -270,7 +271,7 @@ class Post {
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
-			\Hooks::run('FlowThreadDeleted', array($this, $user));
+			MediaWikiServices::getInstance()->getHookContainer()->run('FlowThreadDeleted', [$this, $user]);
 		}
 
 	}
@@ -340,7 +341,7 @@ class Post {
 
 		global $wgTriggerFlowThreadHooks;
 		if ($wgTriggerFlowThreadHooks) {
-			\Hooks::run('FlowThreadPosted', array($this));
+			MediaWikiServices::getInstance()->getHookContainer()->run('FlowThreadPosted', [$this]);
 		}
 
 	}
