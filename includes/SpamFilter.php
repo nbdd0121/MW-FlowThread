@@ -2,6 +2,7 @@
 namespace FlowThread;
 
 use MediaWiki\MediaWikiServices;
+use ObjectCache;
 use Wikimedia\AtEase\AtEase;
 
 class SpamFilter {
@@ -126,7 +127,7 @@ class SpamFilter {
 	private static function getBlackList() {
 		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 		return $cache->getWithSetCallback(
-			wfMemcKey('flowthread', 'spamblacklist'),
+			ObjectCache::getLocalClusterInstance()->makeKey('flowthread', 'spamblacklist'),
 			60,
 			function () {
 				$source = wfMessage('flowthread-blacklist')->inContentLanguage();
