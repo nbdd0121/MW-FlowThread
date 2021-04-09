@@ -62,7 +62,7 @@ class SpecialManage extends \SpecialPage {
 		// Pager can only be generated after query
 		$output->addHTML($this->getPager());
 
-		if ($this->getUser()->isAllowed('commentadmin')) {
+		if (MediaWikiServices::getInstance()->getPermissionManager()->userHasRight($this->getUser(), 'commentadmin')) {
 			$output->addJsConfigVars(array(
 				'commentadmin' => '',
 			));
@@ -97,7 +97,7 @@ class SpecialManage extends \SpecialPage {
 		// Wrap with a form
 		$html = \Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
 
-		if ($this->getUser()->isAllowed('editinterface')) {
+		if (MediaWikiServices::getInstance()->getPermissionManager()->userHasRight($this->getUser(), 'editinterface')) {
 			$link = MediaWikiServices::getInstance()->getLinkRenderer()
 				->makeKnownLink(\Title::newFromText('MediaWiki:Flowthread-blacklist'),
 					$this->msg('flowthread-ui-editblacklist'));

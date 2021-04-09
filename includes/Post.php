@@ -2,6 +2,7 @@
 namespace FlowThread;
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Post {
@@ -116,17 +117,17 @@ class Post {
 	 *   True if the user can performe admin
 	 */
 	private static function canPerformAdmin(\User $user) {
-		return $user->isAllowed('commentadmin-restricted');
+		return self::getPermissionManager()->userHasRight($user, 'commentadmin-restricted');
 	}
 
 	private static function checkIfAdmin(\User $user) {
-		if (!$user->isAllowed('commentadmin-restricted')) {
+		if (!self::getPermissionManager()->userHasRight($user, 'commentadmin-restricted')) {
 			throw new \Exception("Current user cannot perform comment admin");
 		}
 	}
 
 	private static function checkIfAdminFull(\User $user) {
-		if (!$user->isAllowed('commentadmin')) {
+		if (!self::getPermissionManager()->userHasRight($user, 'commentadmin')) {
 			throw new \Exception("Current user cannot perform full comment admin");
 		}
 	}
@@ -154,7 +155,7 @@ class Post {
 			return false;
 		}
 		/* User without comment right cannot post */
-		if (!$user->isAllowed('comment')) {
+		if (!self::getPermissionManager()->userHasRight($user, 'comment')) {
 			return false;
 		}
 		/* Prevent cross-site request forgeries */
@@ -170,7 +171,7 @@ class Post {
 			throw new \Exception('User blocked');
 		}
 		/* User without comment right cannot post */
-		if (!$user->isAllowed('comment')) {
+		if (!self::getPermissionManager()->userHasRight($user, 'comment')) {
 			throw new \Exception("Current user cannot post comment");
 		}
 		/* Prevent cross-site request forgeries */
@@ -503,4 +504,7 @@ class Post {
 		$this->updateFavorReportCount();
 	}
 
+	private static function getPermissionManager() : PermissionManager {
+		return MediaWikiServices::getInstance()->getPermissionManager();
+	}
 }

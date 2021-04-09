@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class SpecialControl extends \FormSpecialPage {
 
 	const STATUS_ENABLED = 0;
@@ -48,7 +50,8 @@ class SpecialControl extends \FormSpecialPage {
 		$status = self::getControlStatus($title);
 		$this->currentStatus = $status;
 
-		$isAdmin = $this->getUser()->isAllowed('commentadmin');
+		$isAdmin = MediaWikiServices::getInstance()->getPermissionManager()
+			->userHasRight($this->getUser(), 'commentadmin');
 		$this->isAdmin = $isAdmin;
 		$ownsPage = Post::userOwnsPage($this->getUser(), $title);
 		$this->ownsPage = $ownsPage;
@@ -163,7 +166,7 @@ class SpecialControl extends \FormSpecialPage {
 	protected function postText() {
 		$links = [];
 
-		if ( $this->getUser()->isAllowed( 'editinterface' ) ) {
+		if ( MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getUser(), 'editinterface' ) ) {
 			$linkRenderer = $this->getLinkRenderer();
 			$links[] = $linkRenderer->makeKnownLink(
 				$this->msg( 'flowthreadcontrol-disable-reason-dropdown' )->inContentLanguage()->getTitle(),
