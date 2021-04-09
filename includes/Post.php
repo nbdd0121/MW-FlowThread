@@ -150,7 +150,7 @@ class Post {
 
 	public static function canPost(\User $user) {
 		/* Disallow blocked user to post */
-		if ($user->isBlocked()) {
+		if ($user->getBlock()) {
 			return false;
 		}
 		/* User without comment right cannot post */
@@ -166,7 +166,7 @@ class Post {
 
 	public static function checkIfCanPost(\User $user) {
 		/* Disallow blocked user to post */
-		if ($user->isBlocked()) {
+		if ($user->getBlock()) {
 			throw new \Exception('User blocked');
 		}
 		/* User without comment right cannot post */
