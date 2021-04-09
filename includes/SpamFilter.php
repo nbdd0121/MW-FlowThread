@@ -77,7 +77,7 @@ class SpamFilter {
 				$options['replace'] = $value;
 				break;
 			default:
-				if (in_array($key, \User::getAllRights())) {
+				if (in_array($key, MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions())) {
 					// If the name is a user right
 					if (isset($options['right'])) {
 						$options['right'][] = $key;
