@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class SpecialManage extends \SpecialPage {
 
 	private $page;
@@ -96,10 +98,10 @@ class SpecialManage extends \SpecialPage {
 		$html = \Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
 
 		if ($this->getUser()->isAllowed('editinterface')) {
-			$html .= \Xml::tags('small', array('style' => 'float:right;'), \Linker::linkKnown(
-				\Title::newFromText('MediaWiki:Flowthread-blacklist'),
-				$this->msg('flowthread-ui-editblacklist')
-			));
+			$link = MediaWikiServices::getInstance()->getLinkRenderer()
+				->makeKnownLink(\Title::newFromText('MediaWiki:Flowthread-blacklist'),
+					$this->msg('flowthread-ui-editblacklist'));
+			$html .= \Xml::tags('small', array('style' => 'float:right;'), $link);
 		}
 
 		$this->getOutput()->addHTML($html);
@@ -229,12 +231,8 @@ class SpecialManage extends \SpecialPage {
 	}
 
 	private function getQueryLink($msg, $query, $id = false) {
-		return \Linker::linkKnown(
-			$this->getPageTitle(),
-			$msg,
-			['id' => $id],
-			$query
-		);
+		return MediaWikiServices::getInstance()->getLinkRenderer()
+			->makeKnownLink($this->getPageTitle(), $msg, ['id' => $id], $query);
 	}
 
 }
