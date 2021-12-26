@@ -6,7 +6,7 @@ function getAvatar(id, username) {
   if (id === 0) {
     return config.AnonymousAvatar;
   } else {
-    return config.Avatar.replace(/\$\{username\}/g, username);
+    return config.Avatar.replace(/\$\{username\}/g, username).replace(/\$\{userid\}/g, id);
   }
 }
 
