@@ -6,6 +6,9 @@
   "version": "1.3.2",
   "license-name": "BSD-2-Clause",
   "type": "specialpage",
+  "requires": {
+    "MediaWiki": ">= 1.38.0"
+  },
   "ExtensionMessagesFiles": {
     "FlowThreadAlias": "FlowThread.alias.php"
   },
