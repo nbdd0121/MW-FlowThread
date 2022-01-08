@@ -87,6 +87,7 @@
   "flowthread-blacklist": "# 在这个列表中的文本会被禁止在评论中出现。\n# 语法如下：\n#* 任何由\"#\"字符开头至行尾的内容都算作注释\n#* 任何非空白行都是匹配文本的正则表达式片段\n #<!-- 请完整地保留此行 --><pre>\n\n #</pre><!-- 请完整地保留此行 -->",
 
   "apihelp-flowthread-description": "FlowThread操作API",
+  "apihelp-flowthread-summary": "FlowThread操作API",
   "apihelp-flowthread-param-type": "需要进行的操作。（必须为 list, like, dislike, report, delete, recover, erase, markchecked 或 post 其中一项）",
   "apihelp-flowthread-param-pageid": "要进行评论 (type = post)，或者要列举评论 (type = list) 的页面的ID。对于 post 和 list 操作来说是必须的。",
   "apihelp-flowthread-param-postid": "要进行操作 (type = like, dislike, report, delete, recover, erase, markchecked)，或者要回复 (type = post) 的评论的ID。在前一种情况下是必须的。",

@@ -90,6 +90,7 @@
   "flowthread-reply-anonymous": "@$1 ",
 
   "apihelp-flowthread-description": "FlowThread action API",
+  "apihelp-flowthread-summary": "FlowThread action API",
   "apihelp-flowthread-param-type": "Type of action to take. (Must be one of list, like, dislike, report, delete, recover, erase, markchecked or post)",
   "apihelp-flowthread-param-pageid": "ID of the page to comment on (type = post), or to list comment (type = list). Required when type is post and list.",
   "apihelp-flowthread-param-postid": "ID of the post to act on (type = like, dislike, report, delete, recover, erase, markchecked), or to reply (type = post). Required in the former case.",
