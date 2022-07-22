@@ -37,9 +37,6 @@ class Query {
 		if ($this->limit !== -1) {
 			$options['LIMIT'] = $this->limit;
 		}
-		if ($this->threadMode) {
-			$options[] = 'SQL_CALC_FOUND_ROWS';
-		}
 
 		$cond = [];
 		if ($this->pageid) {
@@ -91,7 +88,14 @@ class Query {
 		}
 
 		if ($this->threadMode) {
-			$this->totalCount = intval($dbr->query('select FOUND_ROWS() as row')->fetchObject()->row);
+			$this->totalCount = $dbr->newSelectQueryBuilder()
+				->select('COUNT(*) as count')
+				->from('FlowThread')
+				->where($cond)
+				->caller(__METHOD__)
+				->fetchResultSet()
+				->fetchObject()
+				->count;
 
 			// Recursively get all children post list
 			// This is not really resource consuming as you might think, as we use IN to boost it up
