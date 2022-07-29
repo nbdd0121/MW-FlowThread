@@ -123,6 +123,7 @@
     width: 0px;
     margin: 4px 0;
     opacity: 0;
+    visibility: hidden;
     background-image: url(preview.svg);
 }
 
@@ -134,6 +135,7 @@
     width: 24px;
     margin: 4px;
     opacity: 1;
+    visibility: visible;
 }
 
 .comment-reply::before, .comment-like::before, .comment-report::before, .comment-delete::before, .comment-recover::before {
