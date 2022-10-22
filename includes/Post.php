@@ -159,7 +159,7 @@ class Post {
 			return false;
 		}
 		/* Prevent cross-site request forgeries */
-		if (wfReadOnly()) {
+		if (MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly()) {
 			return false;
 		}
 		return true;
@@ -175,7 +175,7 @@ class Post {
 			throw new \Exception("Current user cannot post comment");
 		}
 		/* Prevent cross-site request forgeries */
-		if (wfReadOnly()) {
+		if (MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly()) {
 			throw new \Exception("Site in readonly mode");
 		}
 	}
