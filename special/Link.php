@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class SpecialLink extends \RedirectSpecialPage {
 
 	private $query = array();
@@ -17,7 +19,7 @@ class SpecialLink extends \RedirectSpecialPage {
 					$post = $post->getParent();
 				}
 
-				$db = wfGetDB(DB_REPLICA);
+				$db = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 
 				$cond = array(
 					'flowthread_pageid' => $post->pageid,

@@ -53,6 +53,8 @@ class SpecialImport extends \FormSpecialPage {
 		}
 
 		$this->doImport($data->getValue());
+
+        return \Status::newGood();
 	}
 
 	private function doImport(array $json) {

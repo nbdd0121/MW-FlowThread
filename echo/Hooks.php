@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class EchoHooks {
 
 	public static function onBeforeCreateEchoEvent(&$notifications, &$notificationCategories, &$icons) {
@@ -73,7 +75,7 @@ class EchoHooks {
 			}
 			$recipientId = $extra['target-user-id'];
 			foreach ($recipientId as $id) {
-				$recipient = \User::newFromId($id);
+				$recipient = MediaWikiServices::getInstance()->getUserFactory()->newFromId($id);
 				$users[$id] = $recipient;
 			}
 			break;
@@ -82,7 +84,7 @@ class EchoHooks {
 	}
 
 	public static function onFlowThreadPosted($post) {
-		$poster = \User::newFromId($post->userid);
+		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
 		$title = \Title::newFromId($post->pageid);
 
 		$targets = array();
@@ -110,7 +112,7 @@ class EchoHooks {
 
 		// Check if posted on a user page
 		if ($title->getNamespace() === NS_USER && !$title->isSubpage()) {
-			$user = \User::newFromName($title->getText());
+			$user = MediaWikiServices::getInstance()->getUserFactory()->newFromName($title->getText());
 			// If user exists and is not the poster
 			if ($user && $user->getId() !== 0 && !$user->equals($poster) && !in_array($user->getId(), $targets)) {
 				\EchoEvent::create(array(
@@ -133,7 +135,7 @@ class EchoHooks {
 			return true;
 		}
 
-		$poster = \User::newFromId($post->userid);
+		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
 		$title = \Title::newFromId($post->pageid);
 
 		\EchoEvent::create(array(
@@ -153,7 +155,7 @@ class EchoHooks {
 			return true;
 		}
 
-		$poster = \User::newFromId($post->userid);
+		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
 		$title = \Title::newFromId($post->pageid);
 
 		\EchoEvent::create(array(
@@ -173,7 +175,7 @@ class EchoHooks {
 			return true;
 		}
 
-		$poster = \User::newFromId($post->userid);
+		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
 		$title = \Title::newFromId($post->pageid);
 
 		\EchoEvent::create(array(
@@ -194,7 +196,7 @@ class EchoHooks {
 			$targets[] = $id;
 		}
 
-		$poster = \User::newFromId($post->userid);
+		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
 		$title = \Title::newFromId($post->pageid);
 
 		\EchoEvent::create(array(

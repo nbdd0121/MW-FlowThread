@@ -105,7 +105,7 @@ class SpecialControl extends \FormSpecialPage {
 	}
 
 	protected function alterForm( \HTMLForm $form ) {
-		$form->setHeaderText('');
+		$form->setHeaderHtml('');
 		if ($this->currentStatus === self::STATUS_ENABLED) {
 			$form->setSubmitDestructive();
 			$form->setSubmitTextMsg( $this->ownsPage ? 'flowthreadcontrol-optout' : 'flowthreadcontrol-disable' );
@@ -201,7 +201,7 @@ class SpecialControl extends \FormSpecialPage {
 	public static function getControlStatus(\Title $title) {
 		$id = $title->getArticleID();
 
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 		$row = $dbr->selectRow('FlowThreadControl', ['flowthread_ctrl_status'], [
 			'flowthread_ctrl_pageid' => $title->getArticleID(),
 		]);
@@ -212,7 +212,7 @@ class SpecialControl extends \FormSpecialPage {
 
 	public static function setControlStatus(\Title $title, $status) {
 		$id = $title->getArticleID();
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		if ($status === self::STATUS_ENABLED) {
 			$dbw->delete('FlowThreadControl', [
 				'flowthread_ctrl_pageid' => $id,

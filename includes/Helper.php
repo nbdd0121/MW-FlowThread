@@ -1,6 +1,7 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Helper {
@@ -41,7 +42,7 @@ class Helper {
 
 		if ( !count($needed) ) return 0;
 
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 		$inExpr = self::buildSQLInExpr($dbr, $ids);
 		$res = $dbr->select('FlowThread', Post::getRequiredColumns(), [
 			'flowthread_id' . $inExpr
@@ -83,7 +84,7 @@ class Helper {
 			return $ret;
 		}
 
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 
 		$inExpr = self::buildPostInExpr($dbr, $posts);
 		$res = $dbr->select('FlowThreadAttitude', array(
@@ -112,7 +113,7 @@ class Helper {
 		$links = $output->getLinks();
 		if (isset($links[NS_USER]) && is_array($links[NS_USER])) {
 			foreach ($links[NS_USER] as $titleName => $pageId) {
-				$user = \User::newFromName($titleName);
+				$user = MediaWikiServices::getInstance()->getUserFactory()->newFromName($titleName);
 				if (!$user) {
 					continue; // Invalid user
 				}
