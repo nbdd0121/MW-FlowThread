@@ -1,6 +1,8 @@
 <?php
 namespace FlowThread;
 
+use MediaWiki\MediaWikiServices;
+
 class Query {
 	const FILTER_ALL = 0;
 	const FILTER_NORMAL = 1;
@@ -23,7 +25,7 @@ class Query {
 	public $posts = null;
 
 	public function fetch() {
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 
 		$comments = array();
 		$parentLookup = array();
@@ -136,7 +138,7 @@ class Query {
 		global $wgTriggerFlowThreadHooks;
 		$wgTriggerFlowThreadHooks = false;
 
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		foreach ($this->posts as $post) {
 			if ($post->isValid()) {
 				$post->eraseSilently($dbw);

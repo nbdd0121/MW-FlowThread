@@ -2,6 +2,7 @@
 namespace FlowThread;
 
 use MediaWiki\MediaWikiServices;
+use Wikimedia\ParamValidator\ParamValidator;
 
 class API extends \ApiBase {
 
@@ -423,26 +424,26 @@ class API extends \ApiBase {
 	public function getAllowedParams() {
 		return array(
 			'type' => array(
-				\ApiBase::PARAM_TYPE => 'string',
-				\ApiBase::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_REQUIRED => true,
 			),
 			'pageid' => array(
-				\ApiBase::PARAM_TYPE => 'integer',
+                ParamValidator::PARAM_TYPE => 'integer',
 			),
 			'postid' => array(
-				\ApiBase::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_TYPE => 'string',
 			),
 			'content' => array(
-				\ApiBase::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_TYPE => 'string',
 			),
 			'wikitext' => array(
-				\ApiBase::PARAM_TYPE => 'boolean',
+                ParamValidator::PARAM_TYPE => 'boolean',
 			),
 			'offset' => array(
-				\ApiBase::PARAM_TYPE => 'integer',
+                ParamValidator::PARAM_TYPE => 'integer',
 			),
 			'limit' => array(
-				\ApiBase::PARAM_TYPE => 'integer',
+                ParamValidator::PARAM_TYPE => 'integer',
 			),
 		);
 	}

@@ -87,7 +87,7 @@ class Post {
 
 	public static function newFromId(UID $id) {
 		// Do not apply cache here, it will seriously slow down the application
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 
 		$row = $dbr->selectRow('FlowThread',
 			self::getRequiredColumns(),
@@ -111,7 +111,7 @@ class Post {
 	/**
 	 * Check if the user can perform basic administration action
 	 *
-	 * @param User $user
+	 * @param \User $user
 	 *   User who is acting the action
 	 * @return
 	 *   True if the user can performe admin
@@ -135,9 +135,9 @@ class Post {
 	/**
 	 * Check if the a page is one's user page or user subpage
 	 *
-	 * @param User $user
+	 * @param \User $user
 	 *   User who is acting the action
-	 * @param Title $title
+	 * @param \Title $title
 	 *   Page on which the action is acting
 	 * @return
 	 *   True if the page belongs to the user
@@ -199,7 +199,7 @@ class Post {
 	}
 
 	private function switchStatus($newStatus) {
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		$dbw->update('FlowThread', array(
 			'flowthread_status' => $newStatus,
 		), array(
@@ -241,7 +241,7 @@ class Post {
 		$this->reportCount = 0;
 		$this->updateFavorReportCount();
 
-		$db = wfGetDB(DB_MASTER);
+		$db = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		$db->delete('FlowThreadAttitude', array(
 			'flowthread_att_id' => $this->id->getBin(),
 			'flowthread_att_type' => self::ATTITUDE_REPORT,
@@ -306,7 +306,7 @@ class Post {
 			throw new \Exception("Post must be deleted first before erasing");
 		}
 
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		$counter = $this->eraseSilently($dbw);
 
 		// Add to log
@@ -324,7 +324,7 @@ class Post {
 	}
 
 	public function post() {
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		if (!$this->id) {
 			$this->id = UID::generate();
 		}
@@ -407,7 +407,7 @@ class Post {
 	public function getChildren() {
 		$this->validate();
 
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 
 		$res = $dbr->select('FlowThread',
 			self::getRequiredColumns(), array(
@@ -434,7 +434,7 @@ class Post {
 	}
 
 	public function getUserAttitude(\User $user) {
-		$dbr = wfGetDB(DB_REPLICA);
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 		$row = $dbr->selectRow('FlowThreadAttitude', 'flowthread_att_type', array(
 			'flowthread_att_id' => $this->id->getBin(),
 			'flowthread_att_userid' => $user->getId(),
@@ -447,7 +447,7 @@ class Post {
 	}
 
 	private function updateFavorReportCount() {
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		$dbw->update('FlowThread', array(
 			'flowthread_like' => $this->favorCount,
 			'flowthread_report' => $this->reportCount,
@@ -459,7 +459,7 @@ class Post {
 	public function setUserAttitude(\User $user, $att) {
 		self::checkIfCanVote($user);
 
-		$dbw = wfGetDB(DB_MASTER);
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 
 		// Get current attitude
 		$oldatt = $this->getUserAttitude($user);
