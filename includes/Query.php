@@ -89,13 +89,11 @@ class Query {
 
 		if ($this->threadMode) {
 			$this->totalCount = $dbr->newSelectQueryBuilder()
-				->select('COUNT(*) as count')
+				->select('COUNT(*)')
 				->from('FlowThread')
 				->where($cond)
 				->caller(__METHOD__)
-				->fetchResultSet()
-				->fetchObject()
-				->count;
+				->fetchField();
 
 			// Recursively get all children post list
 			// This is not really resource consuming as you might think, as we use IN to boost it up
