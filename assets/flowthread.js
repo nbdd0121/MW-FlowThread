@@ -1,6 +1,9 @@
 var canpost = mw.config.exists('canpost');
 var ownpage = mw.config.exists('commentadmin') || mw.config.get('wgNamespaceNumber') === 2 && mw.config.get('wgTitle').replace('/$', '') === mw.user.id();
 
+var commentContainerTop = $('<div class="comment-container-top" disabled></div>');
+var commentContainer = $('<div class="comment-container"></div>');
+
 function createThread(post) {
   var thread = new Thread();
   var object = thread.object;
@@ -38,8 +41,8 @@ function createThread(post) {
   if (ownpage || (post.userid && post.userid === mw.user.getId())) {
     thread.addButton('delete', mw.msg('flowthread-ui-delete'), function() {
       thread.delete();
-      if ($('.comment-container-top').children('.comment-thread').length === 0) {
-        $('.comment-container-top').attr('disabled', '');
+      if (commentContainerTop.children('.comment-thread').length === 0) {
+        commentContainerTop.attr('disabled', '');
       }
     });
   }
@@ -63,20 +66,20 @@ function reloadComments(offset) {
     offset: offset,
     utf8: '',
   }).done(function(data) {
-    $('.comment-container-top').html('<div>' + mw.msg('flowthread-ui-popular') + '</div>').attr('disabled', '');
-    $('.comment-container').html('');
+    commentContainerTop.html('<div>' + mw.msg('flowthread-ui-popular') + '</div>').attr('disabled', '');
+    commentContainer.html('');
     var canpostbak = canpost;
     canpost = false; // No reply for topped comments
     data.flowthread.popular.forEach(function(item) {
       var obj = createThread(item);
       obj.markAsPopular();
-      $('.comment-container-top').removeAttr('disabled').append(obj.object);
+      commentContainerTop.removeAttr('disabled').append(obj.object);
     });
     canpost = canpostbak;
     data.flowthread.posts.forEach(function(item) {
       var obj = createThread(item);
       if (item.parentid === '') {
-        $('.comment-container').append(obj.object);
+        commentContainer.append(obj.object);
       } else {
         Thread.fromId(item.parentid).appendChild(obj);
       }
@@ -148,12 +151,14 @@ Paginator.prototype.repaint = function() {
 
 var pager = new Paginator();
 
-$('#bodyContent').after($('<div class="post-content" id="flowthread"></div>').append('<div class="comment-container-top" disabled></div>', '<div class="comment-container"></div>', pager.object, function () {
-  if (canpost) return createReplyBox(null);
-  var noticeContainer = $('<div>').addClass('comment-bannotice');
-  noticeContainer.html(config.CantPostNotice);
-  return noticeContainer;
-}()));
+$(document).ready(() => {
+  $('#bodyContent').after($('<div class="post-content" id="flowthread"></div>').append(commentContainerTop, commentContainer, pager.object, function () {
+    if (canpost) return createReplyBox(null);
+    var noticeContainer = $('<div>').addClass('comment-bannotice');
+    noticeContainer.html(config.CantPostNotice);
+    return noticeContainer;
+  }()))
+});
 
 if (mw.util.getParamValue('flowthread-page')) {
   reloadComments((parseInt(mw.util.getParamValue('flowthread-page')) - 1) * 10);
