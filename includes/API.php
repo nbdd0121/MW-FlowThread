@@ -1,10 +1,16 @@
 <?php
 namespace FlowThread;
 
+use Exception;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiUsageException;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Parser\Parser;
+use MediaWiki\Parser\ParserOptions;
+use MediaWiki\Title\Title;
 use Wikimedia\ParamValidator\ParamValidator;
 
-class API extends \ApiBase {
+class API extends ApiBase {
 
 	private function dieNoParam($name) {
 		$this->dieWithError([ 'apierror-paramempty', $name ], 'noprop');
@@ -25,7 +31,7 @@ class API extends \ApiBase {
 				'myatt' => $attTable[$post->id->getHex()],
 			);
 			if ($needTitle) {
-				$title = \Title::newFromId($post->pageid);
+				$title = Title::newFromId($post->pageid);
 				$json['pageid'] = $post->pageid;
 				$json['title'] = $title ? $title->getPrefixedText() : null;
 			}
@@ -82,7 +88,7 @@ class API extends \ApiBase {
 		foreach (explode('|', $postList) as $id) {
 			try {
 				$ret[] = Post::newFromId(UID::fromHex($id));
-			} catch (\Exception $ex) {
+			} catch (Exception $ex) {
 				$this->dieWithError(['apierror-nosuchpostid', $id]);
 			}
 		}
@@ -121,7 +127,7 @@ class API extends \ApiBase {
 		if (!$pageid) {
 			$title = $this->getMain()->getVal('title');
 			if ($title) {
-				$titleObj = \Title::newFromText($title);
+				$titleObj = Title::newFromText($title);
 				if ($titleObj !== null && $titleObj->exists()) {
 					$pageid = $titleObj->getArticleID();
 				}
@@ -308,7 +314,7 @@ class API extends \ApiBase {
 				// Permission check
 				Post::checkIfCanPost($this->getUser());
 
-				$title = \Title::newFromId($page);
+				$title = Title::newFromId($page);
 				if (!$title) {
 					$this->dieWithError( [ 'apierror-nosuchpageid', $page ] );
 				}
@@ -364,7 +370,7 @@ class API extends \ApiBase {
 				$parser = MediaWikiServices::getInstance()->getParserFactory()->create();
 
 				// Set options for parsing
-				$opt = new \ParserOptions($this->getUser());
+				$opt = new ParserOptions($this->getUser());
 
 				$text = $parser->preSaveTransform($text, $title, $this->getUser(), $opt);
 				$output = $parser->parse($text, $title, $opt);
@@ -379,7 +385,7 @@ class API extends \ApiBase {
 
 				// Useless p wrapper
 				$text = self::stripWrapper($text);
-				$text = \Parser::stripOuterParagraph($text);
+				$text = Parser::stripOuterParagraph($text);
 				$text = SpamFilter::sanitize($text);
 
 				// Fix object
@@ -406,9 +412,9 @@ class API extends \ApiBase {
 			default:
 				$this->dieWithError(['apierror-unrecognizedvalue', 'type', $action]);
 			}
-		} catch (\ApiUsageException $e) {
+		} catch (ApiUsageException $e) {
 			throw $e;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->getResult()->addValue("error", 'code', 'unknown_error');
 			$this->getResult()->addValue("error", 'info', $e->getMessage());
 		}
