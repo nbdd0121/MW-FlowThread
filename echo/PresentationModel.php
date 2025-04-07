@@ -1,7 +1,11 @@
 <?php
 namespace FlowThread;
 
-class EchoPresentationModel extends \EchoEventPresentationModel {
+use Exception;
+use MediaWiki\Extension\Notifications\Formatters\EchoEventPresentationModel;
+use MediaWiki\SpecialPage\SpecialPage;
+
+class EchoPresentationModel extends EchoEventPresentationModel {
 
 	protected $post = false;
 
@@ -9,7 +13,7 @@ class EchoPresentationModel extends \EchoEventPresentationModel {
 		if ($this->post === false) {
 			try {
 				$this->post = Post::newFromId(UID::fromBin($this->event->getExtraParam('postid')));
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				$this->post = null;
 			}
 		}
@@ -66,7 +70,7 @@ class EchoPresentationModel extends \EchoEventPresentationModel {
 				$msg = $this->msg('notification-link-text-view-flowthread-post');
 			}
 			return [
-				'url' => \SpecialPage::getTitleFor('FlowThreadLink', $this->post->id->getHex())->getLocalURL(),
+				'url' => SpecialPage::getTitleFor('FlowThreadLink', $this->post->id->getHex())->getLocalURL(),
 				'label' => $msg->text(),
 			];
 		} else {
