@@ -1,18 +1,9 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\CommentStore\CommentStore;
-use MediaWiki\Exception\ErrorPageError;
-use MediaWiki\Exception\PermissionsError;
-use MediaWiki\Html\Html;
-use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Logging\LogEventsList;
-use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\SpecialPage\FormSpecialPage;
-use MediaWiki\Title\Title;
 
-class SpecialControl extends FormSpecialPage {
+class SpecialControl extends \FormSpecialPage {
 
 	const STATUS_ENABLED = 0;
 	const STATUS_OPTEDOUT = 1;
@@ -41,19 +32,19 @@ class SpecialControl extends FormSpecialPage {
 	}
 
 	protected function setParameter( $par ) {
-		$title = Title::newFromText( $par );
+		$title = \Title::newFromText( $par );
 		$this->title = $title;
 
 		if ( !$title ) {
-			throw new ErrorPageError( 'notargettitle', 'notargettext' );
+			throw new \ErrorPageError( 'notargettitle', 'notargettext' );
 		}
 		if ( !$title->exists() ) {
-			throw new ErrorPageError( 'nopagetitle', 'nopagetext' );
+			throw new \ErrorPageError( 'nopagetitle', 'nopagetext' );
 		}
 
 		if ( !Helper::canEverPostOnTitle($title) ) {
 			// XXX: Should be some different text, but I'm lazy
-			throw new ErrorPageError( 'notargettitle', 'notargettext' );
+			throw new \ErrorPageError( 'notargettitle', 'notargettext' );
 		}
 
 		$status = self::getControlStatus($title);
@@ -68,7 +59,7 @@ class SpecialControl extends FormSpecialPage {
 		// Access granted only if: is comment admin, or the user owns the page and the page is not disabled
 		// by admin.
 		if (!$isAdmin && (!$ownsPage || $status === self::STATUS_DISABLED)) {
-			throw new PermissionsError('commentadmin');
+			throw new \PermissionsError('commentadmin');
 		}
 	}
 
@@ -78,7 +69,7 @@ class SpecialControl extends FormSpecialPage {
 		if ($this->currentStatus === self::STATUS_ENABLED) {
 			$fields['Reason'] = [
 				'type' => 'selectandother',
-				'maxlength' => CommentStore::COMMENT_CHARACTER_LIMIT,
+				'maxlength' => \CommentStore::COMMENT_CHARACTER_LIMIT,
 				'maxlength-unit' => 'codepoints',
 				'options-message' => 'flowthreadcontrol-disable-reason-dropdown',
 				'label-message' => 'flowthreadcontrol-disable-reason',
@@ -99,7 +90,7 @@ class SpecialControl extends FormSpecialPage {
 		} else {
 			$fields['Reason'] = [
 				'type' => 'text',
-				'maxlength' => CommentStore::COMMENT_CHARACTER_LIMIT,
+				'maxlength' => \CommentStore::COMMENT_CHARACTER_LIMIT,
 				'maxlength-unit' => 'codepoints',
 				'label-message' => 'flowthreadcontrol-enable-reason',
 			];
@@ -113,7 +104,7 @@ class SpecialControl extends FormSpecialPage {
 		return $fields;
 	}
 
-	protected function alterForm( HTMLForm $form ) {
+	protected function alterForm( \HTMLForm $form ) {
 		$form->setHeaderHtml('');
 		if ($this->currentStatus === self::STATUS_ENABLED) {
 			$form->setSubmitDestructive();
@@ -123,7 +114,7 @@ class SpecialControl extends FormSpecialPage {
 		}
 	}
 
-	public function onSubmit(array $data, HTMLForm $form = null ) {
+	public function onSubmit(array $data, \HTMLForm $form = null ) {
 		$hiddenStatus = intval($data['CurrentStatus']);
 		if ($this->currentStatus !== $hiddenStatus) {
 			$this->currentStatus = $hiddenStatus;
@@ -148,7 +139,7 @@ class SpecialControl extends FormSpecialPage {
 		if (isset($reason[0])){
 			$reason = $reason[0];
 		}
-		$logEntry = new ManualLogEntry('comments', $disable ? 'disable' : 'enable');
+		$logEntry = new \ManualLogEntry('comments', $disable ? 'disable' : 'enable');
 		$logEntry->setPerformer($performer);
 		$logEntry->setTarget($this->title);
 		$logEntry->setComment($reason);
@@ -185,7 +176,7 @@ class SpecialControl extends FormSpecialPage {
 			);
 		}
 
-		$text = Html::rawElement(
+		$text = \Html::rawElement(
 			'p',
 			[ 'class' => 'mw-protect-editreasons' ],
 			$this->getLanguage()->pipeList( $links )
@@ -193,7 +184,7 @@ class SpecialControl extends FormSpecialPage {
 
 		# Get relevant extracts from the block and suppression logs, if possible
 		$out = '';
-		LogEventsList::showLogExtract(
+		\LogEventsList::showLogExtract(
 			$out,
 			'comments',
 			$this->title->getPrefixedDBKey(),
@@ -207,7 +198,7 @@ class SpecialControl extends FormSpecialPage {
 		return $text . $out;
 	}
 
-	public static function getControlStatus(Title $title) {
+	public static function getControlStatus(\Title $title) {
 		$id = $title->getArticleID();
 
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
@@ -219,7 +210,7 @@ class SpecialControl extends FormSpecialPage {
 		return intval($row->flowthread_ctrl_status);
 	}
 
-	public static function setControlStatus(Title $title, $status) {
+	public static function setControlStatus(\Title $title, $status) {
 		$id = $title->getArticleID();
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		if ($status === self::STATUS_ENABLED) {

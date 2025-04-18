@@ -2,14 +2,9 @@
 
 namespace FlowThread;
 
-use MediaWiki\Exception\PermissionsError;
-use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Json\FormatJson;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\Title\Title;
 
-class SpecialExport extends SpecialPage {
+class SpecialExport extends \SpecialPage {
 
 	public function __construct() {
 		parent::__construct('FlowThreadExport', 'commentadmin');
@@ -18,7 +13,7 @@ class SpecialExport extends SpecialPage {
 	public function execute($par) {
 		$user = $this->getUser();
 		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin');
+			throw new \PermissionsError('commentadmin');
 		}
 
 		$request = $this->getRequest();
@@ -74,8 +69,8 @@ class SpecialExport extends SpecialPage {
 							echo "\n]},";
 						}
 						$pageid = $post->pageid;
-						$title = Title::newFromId($pageid);
-						$title = FormatJSON::encode($title ? $title->getPrefixedText() : '');
+						$title = \Title::newFromId($pageid);
+						$title = \FormatJSON::encode($title ? $title->getPrefixedText() : '');
 						echo "{\"title\":{$title}, \"posts\":[\n";
 						$first = true;
 					}
@@ -94,7 +89,7 @@ class SpecialExport extends SpecialPage {
 						'parentid' => $post->parentid ? $post->parentid->getHex() : null,
 						'status' => $post->status,
 					);
-					echo '  ' . FormatJSON::encode($postJSON);
+					echo '  ' . \FormatJSON::encode($postJSON);
 				}
 			}
 			echo "\n]}]";
@@ -103,7 +98,7 @@ class SpecialExport extends SpecialPage {
 		} else {
 			$formDescriptor = array();
 
-			$htmlForm = HTMLForm::factory('div', $formDescriptor, $this->getContext(), 'flowthread_export_form');
+			$htmlForm = \HTMLForm::factory('div', $formDescriptor, $this->getContext(), 'flowthread_export_form');
 
 			$htmlForm->setSubmitTextMsg('flowthreadexport-submit');
 			$htmlForm->show();

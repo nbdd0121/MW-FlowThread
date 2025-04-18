@@ -1,12 +1,9 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\SpecialPage\RedirectSpecialPage;
-use MediaWiki\Title\Title;
 
-class SpecialLink extends RedirectSpecialPage {
+class SpecialLink extends \RedirectSpecialPage {
 
 	private $query = array();
 
@@ -42,10 +39,10 @@ class SpecialLink extends RedirectSpecialPage {
 					}
 				}
 
-				return Title::newFromId($post->pageid)->createFragmentTarget('comment-' . $subpage);
+				return \Title::newFromId($post->pageid)->createFragmentTarget('comment-' . $subpage);
 			}
 		}
-		throw new ErrorPageError('nopagetitle', 'nopagetext');
+		throw new \ErrorPageError('nopagetitle', 'nopagetext');
 	}
 
 	public function getRedirectQuery($subpage) {

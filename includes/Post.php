@@ -1,13 +1,8 @@
 <?php
 namespace FlowThread;
 
-use Exception;
-use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
-use MediaWiki\Title\Title;
-use MediaWiki\User\User;
-use stdClass;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Post {
@@ -66,7 +61,7 @@ class Post {
 		);
 	}
 
-	public static function newFromDatabaseRow(stdClass $row) {
+	public static function newFromDatabaseRow(\stdClass $row) {
 		$id = UID::fromBin($row->flowthread_id);
 
 		// This is either NULL or a binary UID
@@ -100,7 +95,7 @@ class Post {
 		);
 
 		if ($row === false) {
-			throw new Exception("Invalid post id");
+			throw new \Exception("Invalid post id");
 		}
 
 		return self::newFromDatabaseRow($row);
@@ -110,51 +105,51 @@ class Post {
 	 * Terminate the API execution for permission reason
 	 */
 	private static function diePermission() {
-		throw new Exception("Current user cannot perform comment the specified administration action");
+		throw new \Exception("Current user cannot perform comment the specified administration action");
 	}
 
 	/**
 	 * Check if the user can perform basic administration action
 	 *
-	 * @param User $user
+	 * @param \User $user
 	 *   User who is acting the action
 	 * @return
 	 *   True if the user can performe admin
 	 */
-	private static function canPerformAdmin(User $user) {
+	private static function canPerformAdmin(\User $user) {
 		return self::getPermissionManager()->userHasRight($user, 'commentadmin-restricted');
 	}
 
-	private static function checkIfAdmin(User $user) {
+	private static function checkIfAdmin(\User $user) {
 		if (!self::getPermissionManager()->userHasRight($user, 'commentadmin-restricted')) {
-			throw new Exception("Current user cannot perform comment admin");
+			throw new \Exception("Current user cannot perform comment admin");
 		}
 	}
 
-	private static function checkIfAdminFull(User $user) {
+	private static function checkIfAdminFull(\User $user) {
 		if (!self::getPermissionManager()->userHasRight($user, 'commentadmin')) {
-			throw new Exception("Current user cannot perform full comment admin");
+			throw new \Exception("Current user cannot perform full comment admin");
 		}
 	}
 
 	/**
 	 * Check if the a page is one's user page or user subpage
 	 *
-	 * @param User $user
+	 * @param \User $user
 	 *   User who is acting the action
-	 * @param Title $title
+	 * @param \Title $title
 	 *   Page on which the action is acting
 	 * @return
 	 *   True if the page belongs to the user
 	 */
-	public static function userOwnsPage(User $user, Title $title) {
+	public static function userOwnsPage(\User $user, \Title $title) {
 		if ($title->getNamespace() === NS_USER && $title->getRootText() === $user->getName()) {
 			return true;
 		}
 		return false;
 	}
 
-	public static function canPost(User $user) {
+	public static function canPost(\User $user) {
 		/* Disallow blocked user to post */
 		if ($user->getBlock()) {
 			return false;
@@ -170,32 +165,32 @@ class Post {
 		return true;
 	}
 
-	public static function checkIfCanPost(User $user) {
+	public static function checkIfCanPost(\User $user) {
 		/* Disallow blocked user to post */
 		if ($user->getBlock()) {
-			throw new Exception('User blocked');
+			throw new \Exception('User blocked');
 		}
 		/* User without comment right cannot post */
 		if (!self::getPermissionManager()->userHasRight($user, 'comment')) {
-			throw new Exception("Current user cannot post comment");
+			throw new \Exception("Current user cannot post comment");
 		}
 		/* Prevent cross-site request forgeries */
 		if (MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly()) {
-			throw new Exception("Site in readonly mode");
+			throw new \Exception("Site in readonly mode");
 		}
 	}
 
-	private static function checkIfCanVote(User $user) {
+	private static function checkIfCanVote(\User $user) {
 		self::checkIfCanPost($user);
 		if ($user->getId() == 0) {
-			throw new Exception("Must login first");
+			throw new \Exception("Must login first");
 		}
 	}
 
-	private function publishSimpleLog($subtype, User $initiator) {
-		$logEntry = new ManualLogEntry('comments', $subtype);
+	private function publishSimpleLog($subtype, \User $initiator) {
+		$logEntry = new \ManualLogEntry('comments', $subtype);
 		$logEntry->setPerformer($initiator);
-		$logEntry->setTarget(Title::newFromId($this->pageid));
+		$logEntry->setTarget(\Title::newFromId($this->pageid));
 		$logEntry->setParameters(array(
 			'4::username' => $this->username,
 		));
@@ -212,12 +207,12 @@ class Post {
 		));
 	}
 
-	public function recover(User $user) {
+	public function recover(\User $user) {
 		self::checkIfAdmin($user);
 
 		// Recover is invalid for a not-deleted post
 		if (!$this->isDeleted()) {
-			throw new Exception("Post is not deleted");
+			throw new \Exception("Post is not deleted");
 		}
 
 		// Mark status as normal
@@ -232,12 +227,12 @@ class Post {
 		}
 	}
 
-	public function markchecked(User $user) {
+	public function markchecked(\User $user) {
 		self::checkIfAdminFull($user);
 
 		// Mark-as-checked is invalid for a deleted post
 		if ($this->isDeleted()) {
-			throw new Exception("Post is deleted");
+			throw new \Exception("Post is deleted");
 		}
 
 		// Write a log
@@ -253,18 +248,18 @@ class Post {
 		));
 	}
 
-	public function delete(User $user) {
+	public function delete(\User $user) {
 		// Poster himself can delete as well
 		if ($user->getId() === 0 || $user->getId() !== $this->userid) {
 			if (!self::canPerformAdmin($user) &&
-				!self::userOwnsPage($user, Title::newFromId($this->pageid))) {
+				!self::userOwnsPage($user, \Title::newFromId($this->pageid))) {
 				self::diePermission();
 			}
 		}
 
 		// Delete is not valid for deleted post
 		if ($this->isDeleted()) {
-			throw new Exception("Post is already deleted");
+			throw new \Exception("Post is already deleted");
 		}
 
 		PopularPosts::invalidateCache($this);
@@ -303,21 +298,21 @@ class Post {
 		return $counter;
 	}
 
-	public function erase(User $user) {
+	public function erase(\User $user) {
 		self::checkIfAdminFull($user);
 
 		// To avoid mis-operation, a comment must be deleted (hidden from user) first before it is erased from database
 		if (!$this->isDeleted()) {
-			throw new Exception("Post must be deleted first before erasing");
+			throw new \Exception("Post must be deleted first before erasing");
 		}
 
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);
 		$counter = $this->eraseSilently($dbw);
 
 		// Add to log
-		$logEntry = new ManualLogEntry('comments', 'erase');
+		$logEntry = new \ManualLogEntry('comments', 'erase');
 		$logEntry->setPerformer($user);
-		$logEntry->setTarget(Title::newFromId($this->pageid));
+		$logEntry->setTarget(\Title::newFromId($this->pageid));
 		$logEntry->setParameters(array(
 			'4::postid' => $this->username,
 			'5::children' => $counter - 1,
@@ -381,7 +376,7 @@ class Post {
 
 	public function validate() {
 		if (!$this->isValid()) {
-			throw new Exception("Invalid post");
+			throw new \Exception("Invalid post");
 		}
 	}
 
@@ -438,7 +433,7 @@ class Post {
 		return $this->reportCount;
 	}
 
-	public function getUserAttitude(User $user) {
+	public function getUserAttitude(\User $user) {
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_REPLICA);
 		$row = $dbr->selectRow('FlowThreadAttitude', 'flowthread_att_type', array(
 			'flowthread_att_id' => $this->id->getBin(),
@@ -461,7 +456,7 @@ class Post {
 		));
 	}
 
-	public function setUserAttitude(User $user, $att) {
+	public function setUserAttitude(\User $user, $att) {
 		self::checkIfCanVote($user);
 
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getMaintenanceConnectionRef(DB_PRIMARY);

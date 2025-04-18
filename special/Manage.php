@@ -1,15 +1,9 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\Exception\PermissionsError;
-use MediaWiki\Html\FormOptions;
-use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\Title\Title;
-use MediaWiki\Xml\Xml;
 
-class SpecialManage extends SpecialPage {
+class SpecialManage extends \SpecialPage {
 
 	private $page;
 	private $user;
@@ -24,11 +18,11 @@ class SpecialManage extends SpecialPage {
 	public function execute($par) {
 		$user = $this->getUser();
 		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin-restricted');
+			throw new \PermissionsError('commentadmin-restricted');
 		}
 
 		// Parse request
-		$opt = new FormOptions;
+		$opt = new \FormOptions;
 		$opt->add('user', '');
 		$opt->add('page', '');
 		$opt->add('filter', 'all');
@@ -86,28 +80,28 @@ class SpecialManage extends SpecialPage {
 
 		// This is essential as we need to submit the form to this page
 		$title = parent::getTitleFor('FlowThreadManage');
-		$html = Html::hidden('title', $this->getPageTitle());
+		$html = \Html::hidden('title', $this->getPageTitle());
 
 		$html .= $this->getTitleInput($this->page) . "\n";
 		$html .= $this->getUserInput($this->user) . "\n";
 		$html .= $this->getKeywordInput($this->keyword) . "\n";
 
-		$html .= Xml::tags('p', null, $this->getFilterLinks($this->filter));
+		$html .= \Xml::tags('p', null, $this->getFilterLinks($this->filter));
 
 		// Submit button
-		$html .= Xml::submitButton($this->msg('allpagessubmit')->text());
+		$html .= \Xml::submitButton($this->msg('allpagessubmit')->text());
 
 		// Fieldset
-		$html = Xml::fieldset($this->msg('flowthreadmanage')->text(), $html);
+		$html = \Xml::fieldset($this->msg('flowthreadmanage')->text(), $html);
 
 		// Wrap with a form
-		$html = Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
+		$html = \Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
 
 		if (MediaWikiServices::getInstance()->getPermissionManager()->userHasRight($this->getUser(), 'editinterface')) {
 			$link = MediaWikiServices::getInstance()->getLinkRenderer()
-				->makeKnownLink(Title::newFromText('MediaWiki:Flowthread-blacklist'),
+				->makeKnownLink(\Title::newFromText('MediaWiki:Flowthread-blacklist'),
 					$this->msg('flowthread-ui-editblacklist'));
-			$html .= Xml::tags('small', array('style' => 'float:right;'), $link);
+			$html .= \Xml::tags('small', array('style' => 'float:right;'), $link);
 		}
 
 		$this->getOutput()->addHTML($html);
@@ -130,7 +124,7 @@ class SpecialManage extends SpecialPage {
 			}
 		}
 
-		$hiddens = Html::hidden("filter", $current) . "\n";
+		$hiddens = \Html::hidden("filter", $current) . "\n";
 
 		// Build links
 		return '<small>' . $this->getLanguage()->pipeList($links) . '</small>' . $hiddens;
@@ -143,7 +137,7 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getUserInput($user) {
-		$label = Xml::inputLabel(
+		$label = \Xml::inputLabel(
 			$this->msg('flowthreadmanage-user')->text(),
 			'user',
 			'',
@@ -156,7 +150,7 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getTitleInput($title) {
-		$label = Xml::inputLabel(
+		$label = \Xml::inputLabel(
 			$this->msg('flowthreadmanage-title')->text(),
 			'page',
 			'',
@@ -168,7 +162,7 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getKeywordInput($keyword) {
-		$label = Xml::inputLabel(
+		$label = \Xml::inputLabel(
 			$this->msg('flowthreadmanage-keyword')->text(),
 			'keyword',
 			'',

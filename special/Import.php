@@ -1,16 +1,7 @@
 <?php
 namespace FlowThread;
 
-use Exception;
-use MediaWiki\Exception\PermissionsError;
-use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Json\FormatJson;
-use MediaWiki\Logging\ManualLogEntry;
-use MediaWiki\SpecialPage\FormSpecialPage;
-use MediaWiki\Status\Status;
-use MediaWiki\Title\Title;
-
-class SpecialImport extends FormSpecialPage {
+class SpecialImport extends \FormSpecialPage {
 
 	public function __construct() {
 		parent::__construct('FlowThreadImport', 'commentadmin');
@@ -19,18 +10,18 @@ class SpecialImport extends FormSpecialPage {
 	public function execute($par) {
 		$user = $this->getUser();
 		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin');
+			throw new \PermissionsError('commentadmin');
 		}
 		parent::execute($par);
 	}
 
-	public function onSubmit(array $data, HTMLForm $form = null) {
+	public function onSubmit(array $data, \HTMLForm $form = null) {
 		// Get uploaded file
 		$upload = &$_FILES['wpjsonimport'];
 
 		// Check to make sure there is a file uploaded
 		if ($upload === null || !$upload['name']) {
-			return Status::newFatal('importnofile');
+			return \Status::newFatal('importnofile');
 		}
 
 		// Messages borrowed from Special:Import
@@ -38,23 +29,23 @@ class SpecialImport extends FormSpecialPage {
 			switch ($upload['error']) {
 			case 1:
 			case 2:
-				return Status::newFatal('importuploaderrorsize');
+				return \Status::newFatal('importuploaderrorsize');
 			case 3:
-				return Status::newFatal('importuploaderrorpartial');
+				return \Status::newFatal('importuploaderrorpartial');
 			case 4:
-				return Status::newFatal('importuploaderrortemp');
+				return \Status::newFatal('importuploaderrortemp');
 			default:
-				return Status::newFatal('importnofile');
+				return \Status::newFatal('importnofile');
 			}
 		}
 
 		// Read file
 		$fname = $upload['tmp_name'];
 		if (!is_uploaded_file($fname)) {
-			return Status::newFatal('importnofile');
+			return \Status::newFatal('importnofile');
 		}
 
-		$data = FormatJSON::parse(file_get_contents($fname));
+		$data = \FormatJSON::parse(file_get_contents($fname));
 
 		// If there is an error during JSON parsing, abort
 		if (!$data->isOK()) {
@@ -63,7 +54,7 @@ class SpecialImport extends FormSpecialPage {
 
 		$this->doImport($data->getValue());
 
-        return Status::newGood();
+        return \Status::newGood();
 	}
 
 	private function doImport(array $json) {
@@ -72,7 +63,7 @@ class SpecialImport extends FormSpecialPage {
 
 		$output = $this->getOutput();
 		foreach ($json as $articles) {
-			$title = Title::newFromText($articles->title);
+			$title = \Title::newFromText($articles->title);
 			$count = count($articles->posts);
 			$skipped = 0;
 
@@ -99,14 +90,14 @@ class SpecialImport extends FormSpecialPage {
 				$postObject = new Post($data);
 				try {
 					$postObject->post();
-				} catch (Exception $ex) {
+				} catch (\Exception $ex) {
 					$count--;
 					$skipped++;
 				}
 			}
 
 			if ($count) {
-				$logEntry = new ManualLogEntry('comments', 'import');
+				$logEntry = new \ManualLogEntry('comments', 'import');
 				$logEntry->setPerformer($this->getUser());
 				$logEntry->setTarget($title);
 				$logEntry->setParameters(array(
@@ -122,7 +113,7 @@ class SpecialImport extends FormSpecialPage {
 		}
 	}
 
-	protected function alterForm(HTMLForm $form) {
+	protected function alterForm(\HTMLForm $form) {
 		$form->setSubmitTextMsg('uploadbtn');
 	}
 

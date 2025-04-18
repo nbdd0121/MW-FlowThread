@@ -1,10 +1,7 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\Extension\Notifications\Model\Event;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Title\Title;
-use MediaWiki\User\User;
 
 class EchoHooks {
 
@@ -88,7 +85,7 @@ class EchoHooks {
 
 	public static function onFlowThreadPosted($post) {
 		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
-		$title = Title::newFromId($post->pageid);
+		$title = \Title::newFromId($post->pageid);
 
 		$targets = array();
 		$parent = $post->getParent();
@@ -103,7 +100,7 @@ class EchoHooks {
 			}
 			$targets[] = $parent->userid;
 		}
-		EchoEvent::create(array(
+		\EchoEvent::create(array(
 			'type' => 'flowthread_reply',
 			'title' => $title,
 			'extra' => array(
@@ -118,7 +115,7 @@ class EchoHooks {
 			$user = MediaWikiServices::getInstance()->getUserFactory()->newFromName($title->getText());
 			// If user exists and is not the poster
 			if ($user && $user->getId() !== 0 && !$user->equals($poster) && !in_array($user->getId(), $targets)) {
-				Event::create(array(
+				\EchoEvent::create(array(
 					'type' => 'flowthread_userpage',
 					'title' => $title,
 					'extra' => array(
@@ -133,15 +130,15 @@ class EchoHooks {
 		return true;
 	}
 
-	public static function onFlowThreadDeleted($post, User $initiator) {
+	public static function onFlowThreadDeleted($post, \User $initiator) {
 		if ($post->userid === 0 || $post->userid === $initiator->getId()) {
 			return true;
 		}
 
 		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
-		$title = Title::newFromId($post->pageid);
+		$title = \Title::newFromId($post->pageid);
 
-		Event::create(array(
+		\EchoEvent::create(array(
 			'type' => 'flowthread_delete',
 			'title' => $title,
 			'extra' => array(
@@ -153,15 +150,15 @@ class EchoHooks {
 		return true;
 	}
 
-	public static function onFlowThreadRecovered($post, User $initiator) {
+	public static function onFlowThreadRecovered($post, \User $initiator) {
 		if ($post->userid === 0 || $post->userid === $initiator->getId()) {
 			return true;
 		}
 
 		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
-		$title = Title::newFromId($post->pageid);
+		$title = \Title::newFromId($post->pageid);
 
-		Event::create(array(
+		\EchoEvent::create(array(
 			'type' => 'flowthread_recover',
 			'title' => $title,
 			'extra' => array(
@@ -179,9 +176,9 @@ class EchoHooks {
 		}
 
 		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
-		$title = Title::newFromId($post->pageid);
+		$title = \Title::newFromId($post->pageid);
 
-		Event::create(array(
+		\EchoEvent::create(array(
 			'type' => 'flowthread_spam',
 			'title' => $title,
 			'extra' => array(
@@ -200,9 +197,9 @@ class EchoHooks {
 		}
 
 		$poster = MediaWikiServices::getInstance()->getUserFactory()->newFromId($post->userid);
-		$title = Title::newFromId($post->pageid);
+		$title = \Title::newFromId($post->pageid);
 
-		Event::create(array(
+		\EchoEvent::create(array(
 			'type' => 'flowthread_mention',
 			'title' => $title,
 			'extra' => array(

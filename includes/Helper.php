@@ -2,9 +2,6 @@
 namespace FlowThread;
 
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Parser\ParserOutput;
-use MediaWiki\Title\Title;
-use MediaWiki\User\User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Helper {
@@ -72,7 +69,7 @@ class Helper {
 		return count($needed);
 	}
 
-	public static function batchGetUserAttitude(User $user, array $posts) {
+	public static function batchGetUserAttitude(\User $user, array $posts) {
 		if (!count($posts)) {
 			return array();
 		}
@@ -111,7 +108,7 @@ class Helper {
 	}
 
 	public static function generateMentionedList(\ParserOutput $output, Post $post) {
-		$pageTitle = Title::newFromId($post->pageid);
+		$pageTitle = \Title::newFromId($post->pageid);
 		$mentioned = array();
 		$links = $output->getLinks();
 		if (isset($links[NS_USER]) && is_array($links[NS_USER])) {
@@ -157,7 +154,7 @@ class Helper {
 		return $ret;
 	}
 
-	public static function canEverPostOnTitle(Title $title) {
+	public static function canEverPostOnTitle(\Title $title) {
 		// Disallow commenting on pages without article id
 		if ($title->getArticleID() == 0) {
 			return false;
