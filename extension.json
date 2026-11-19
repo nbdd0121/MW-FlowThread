@@ -7,7 +7,7 @@
   "license-name": "BSD-2-Clause",
   "type": "specialpage",
   "requires": {
-    "MediaWiki": ">= 1.38.0"
+    "MediaWiki": ">= 1.44.0"
   },
   "ExtensionMessagesFiles": {
     "FlowThreadAlias": "FlowThread.alias.php"

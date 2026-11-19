@@ -2,7 +2,6 @@
 
 namespace FlowThread;
 
-use MediaWiki\Exception\PermissionsError;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Json\FormatJson;
 use MediaWiki\MediaWikiServices;
@@ -12,14 +11,19 @@ use MediaWiki\Title\Title;
 class SpecialExport extends SpecialPage {
 
 	public function __construct() {
-		parent::__construct('FlowThreadExport', 'commentadmin');
+		parent::__construct('FlowThreadExport');
+		// Older versions check this property directly instead of calling getRestriction().
+		if (property_exists($this, 'mRestriction')) {
+			$this->mRestriction = $this->getRestriction();
+		}
+	}
+
+	public function getRestriction(): string {
+		return 'commentadmin';
 	}
 
 	public function execute($par) {
-		$user = $this->getUser();
-		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin');
-		}
+		$this->checkPermissions();
 
 		$request = $this->getRequest();
 		$output = $this->getOutput();
@@ -97,7 +101,10 @@ class SpecialExport extends SpecialPage {
 					echo '  ' . FormatJSON::encode($postJSON);
 				}
 			}
-			echo "\n]}]";
+			if ($pageid !== 0) {
+				echo "\n]}";
+			}
+			echo ']';
 
 			return;
 		} else {

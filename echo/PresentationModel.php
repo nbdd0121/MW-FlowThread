@@ -12,7 +12,15 @@ class EchoPresentationModel extends EchoEventPresentationModel {
 	protected function load() {
 		if ($this->post === false) {
 			try {
-				$this->post = Post::newFromId(UID::fromBin($this->event->getExtraParam('postid')));
+				// Echo stores extra data as JSON. Older events can still contain a binary ID.
+				$rawPostId = $this->event->getExtraParam('postid');
+				$postUid = null;
+				if (is_string($rawPostId) && strlen($rawPostId) === UID::HEX_LEN && ctype_xdigit($rawPostId)) {
+					$postUid = UID::fromHex($rawPostId);
+				} elseif (is_string($rawPostId) && strlen($rawPostId) === UID::BIN_LEN) {
+					$postUid = UID::fromBin($rawPostId);
+				}
+				$this->post = $postUid ? Post::newFromId($postUid) : null;
 			} catch (Exception $e) {
 				$this->post = null;
 			}

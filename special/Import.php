@@ -2,7 +2,6 @@
 namespace FlowThread;
 
 use Exception;
-use MediaWiki\Exception\PermissionsError;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Json\FormatJson;
 use MediaWiki\Logging\ManualLogEntry;
@@ -13,15 +12,14 @@ use MediaWiki\Title\Title;
 class SpecialImport extends FormSpecialPage {
 
 	public function __construct() {
-		parent::__construct('FlowThreadImport', 'commentadmin');
+		parent::__construct('FlowThreadImport');
+		if (property_exists($this, 'mRestriction')) {
+			$this->mRestriction = $this->getRestriction();
+		}
 	}
 
-	public function execute($par) {
-		$user = $this->getUser();
-		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin');
-		}
-		parent::execute($par);
+	public function getRestriction(): string {
+		return 'commentadmin';
 	}
 
 	public function onSubmit(array $data, HTMLForm $form = null) {
