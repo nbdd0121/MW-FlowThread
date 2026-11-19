@@ -110,27 +110,24 @@ class Helper {
 		return $ret;
 	}
 
-	public static function generateMentionedList(\ParserOutput $output, Post $post) {
+	public static function generateMentionedList(ParserOutput $output, Post $post) {
 		$pageTitle = Title::newFromId($post->pageid);
 		$mentioned = array();
-		$links = $output->getLinks();
-		if (isset($links[NS_USER]) && is_array($links[NS_USER])) {
-			foreach ($links[NS_USER] as $titleName => $pageId) {
-				$user = MediaWikiServices::getInstance()->getUserFactory()->newFromName($titleName);
-				if (!$user) {
-					continue; // Invalid user
-				}
-				if ($user->isAnon()) {
-					continue;
-				}
-				if ($user->getId() == $post->userid) {
-					continue; // Mention oneself
-				}
-				if ($pageTitle->getNamespace() === NS_USER && $pageTitle->getDBkey() === $titleName) {
-					continue; // Do mentioning in one's own page.
-				}
-				$mentioned[$user->getId()] = $user->getId();
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		foreach ($output->getLinkList('local') as $linkInfo) {
+			$link = $linkInfo['link'];
+			if ($link->getNamespace() !== NS_USER) {
+				continue;
 			}
+			$titleName = $link->getDBkey();
+			$user = $userFactory->newFromName($titleName);
+			if (!$user || $user->isAnon() || $user->getId() == $post->userid) {
+				continue;
+			}
+			if ($pageTitle->getNamespace() === NS_USER && $pageTitle->getDBkey() === $titleName) {
+				continue; // The user-page notification already covers the page owner.
+			}
+			$mentioned[$user->getId()] = $user->getId();
 		}
 
 		// Exclude all users that will be notified on Post hook

@@ -374,7 +374,10 @@ class API extends ApiBase {
 
 				$text = $parser->preSaveTransform($text, $title, $this->getUser(), $opt);
 				$output = $parser->parse($text, $title, $opt);
-				$text = $output->getText(['enableSectionEditLinks' => false]); // Edit button will not work!
+				$text = $output->runOutputPipeline($opt, [
+					'enableSectionEditLinks' => false,
+					'unwrap' => true,
+				])->getContentHolderText();
 
 				// Get all mentioned user
 				$mentioned = Helper::generateMentionedList($output, $postObject);

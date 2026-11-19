@@ -1,13 +1,11 @@
 <?php
 namespace FlowThread;
 
-use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Html\FormOptions;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
-use MediaWiki\Xml\Xml;
 
 class SpecialManage extends SpecialPage {
 
@@ -18,14 +16,18 @@ class SpecialManage extends SpecialPage {
 	private $limit = 10;
 
 	public function __construct() {
-		parent::__construct('FlowThreadManage', 'commentadmin-restricted');
+		parent::__construct('FlowThreadManage');
+		if (property_exists($this, 'mRestriction')) {
+			$this->mRestriction = $this->getRestriction();
+		}
+	}
+
+	public function getRestriction(): string {
+		return 'commentadmin-restricted';
 	}
 
 	public function execute($par) {
-		$user = $this->getUser();
-		if (!$this->userCanExecute($user)) {
-			throw new PermissionsError('commentadmin-restricted');
-		}
+		$this->checkPermissions();
 
 		// Parse request
 		$opt = new FormOptions;
@@ -55,8 +57,6 @@ class SpecialManage extends SpecialPage {
 			$this->limit = 500;
 		}
 
-		global $wgScript;
-
 		$this->setHeaders();
 		$this->outputHeader();
 		$output = $this->getOutput();
@@ -85,32 +85,39 @@ class SpecialManage extends SpecialPage {
 		global $wgScript;
 
 		// This is essential as we need to submit the form to this page
-		$title = parent::getTitleFor('FlowThreadManage');
-		$html = Html::hidden('title', $this->getPageTitle());
+		$html = Html::hidden('title', $this->getPageTitle()->getPrefixedText());
 
 		$html .= $this->getTitleInput($this->page) . "\n";
 		$html .= $this->getUserInput($this->user) . "\n";
 		$html .= $this->getKeywordInput($this->keyword) . "\n";
 
-		$html .= Xml::tags('p', null, $this->getFilterLinks($this->filter));
+		$html .= Html::rawElement('p', [], $this->getFilterLinks($this->filter));
 
 		// Submit button
-		$html .= Xml::submitButton($this->msg('allpagessubmit')->text());
+		$html .= Html::submitButton($this->msg('allpagessubmit')->text());
 
 		// Fieldset
-		$html = Xml::fieldset($this->msg('flowthreadmanage')->text(), $html);
+		$legend = Html::element('legend', [], $this->msg('flowthreadmanage')->text());
+		$html = Html::rawElement('fieldset', [], $legend . $html);
 
 		// Wrap with a form
-		$html = Xml::tags('form', array('action' => $wgScript, 'method' => 'get'), $html);
+		$html = Html::rawElement('form', ['action' => $wgScript, 'method' => 'get'], $html);
 
 		if (MediaWikiServices::getInstance()->getPermissionManager()->userHasRight($this->getUser(), 'editinterface')) {
 			$link = MediaWikiServices::getInstance()->getLinkRenderer()
 				->makeKnownLink(Title::newFromText('MediaWiki:Flowthread-blacklist'),
 					$this->msg('flowthread-ui-editblacklist'));
-			$html .= Xml::tags('small', array('style' => 'float:right;'), $link);
+			$html .= Html::rawElement('small', ['style' => 'float:right;'], $link);
 		}
 
 		$this->getOutput()->addHTML($html);
+	}
+
+	private function inputLabel($label, $name, $size, $value, $attribs = array()) {
+		$attribs['size'] = $size;
+		$attribs['id'] = 'flowthread-manage-' . $name;
+		return Html::label($label, $attribs['id'])
+			. ' ' . Html::input($name, $value, 'text', $attribs);
 	}
 
 	private function getPossibleFilters() {
@@ -143,10 +150,9 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getUserInput($user) {
-		$label = Xml::inputLabel(
+		$label = $this->inputLabel(
 			$this->msg('flowthreadmanage-user')->text(),
 			'user',
-			'',
 			15,
 			$user,
 			array('class' => 'mw-autocomplete-user') # This together with mediawiki.userSuggest will give us an auto completion
@@ -156,10 +162,9 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getTitleInput($title) {
-		$label = Xml::inputLabel(
+		$label = $this->inputLabel(
 			$this->msg('flowthreadmanage-title')->text(),
 			'page',
-			'',
 			20,
 			$title
 		);
@@ -168,10 +173,9 @@ class SpecialManage extends SpecialPage {
 	}
 
 	private function getKeywordInput($keyword) {
-		$label = Xml::inputLabel(
+		$label = $this->inputLabel(
 			$this->msg('flowthreadmanage-keyword')->text(),
 			'keyword',
-			'',
 			20,
 			$keyword
 		);

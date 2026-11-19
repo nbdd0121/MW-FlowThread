@@ -108,7 +108,7 @@ class EchoHooks {
 			'title' => $title,
 			'extra' => array(
 				'target-user-id' => $targets,
-				'postid' => $post->id->getBin(),
+				'postid' => $post->id->getHex(),
 			),
 			'agent' => $poster,
 		));
@@ -123,7 +123,7 @@ class EchoHooks {
 					'title' => $title,
 					'extra' => array(
 						'target-user-id' => array($user->getId()),
-						'postid' => $post->id->getBin(),
+						'postid' => $post->id->getHex(),
 					),
 					'agent' => $poster,
 				));
@@ -146,7 +146,7 @@ class EchoHooks {
 			'title' => $title,
 			'extra' => array(
 				'notifyAgent' => true,
-				'postid' => $post->id->getBin(),
+				'postid' => $post->id->getHex(),
 			),
 			'agent' => $poster,
 		));
@@ -166,7 +166,7 @@ class EchoHooks {
 			'title' => $title,
 			'extra' => array(
 				'notifyAgent' => true,
-				'postid' => $post->id->getBin(),
+				'postid' => $post->id->getHex(),
 			),
 			'agent' => $poster,
 		));
@@ -186,7 +186,7 @@ class EchoHooks {
 			'title' => $title,
 			'extra' => array(
 				'notifyAgent' => true,
-				'postid' => $post->id->getBin(),
+				'postid' => $post->id->getHex(),
 			),
 			'agent' => $poster,
 		));
@@ -207,7 +207,7 @@ class EchoHooks {
 			'title' => $title,
 			'extra' => array(
 				'target-user-id' => $targets,
-				'postid' => $post->id->getBin(),
+				'postid' => $post->id->getHex(),
 			),
 			'agent' => $poster,
 		));

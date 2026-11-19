@@ -2,6 +2,7 @@
 A commenting system for MediaWiki
 
 ## Dependency
+* MediaWiki 1.44.0 or later.
 * [Echo](https://www.mediawiki.org/wiki/Extension:Echo): This is required for FlowThread to work
 * [Avatar](https://github.com/nbdd0121/MW-Avatar): This is optional, but it can provide avatar feature to FlowThread.
 

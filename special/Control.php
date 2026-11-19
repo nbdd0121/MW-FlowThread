@@ -25,7 +25,11 @@ class SpecialControl extends FormSpecialPage {
 	protected $currentStatus;
 
 	public function __construct() {
-		parent::__construct('FlowThreadControl', '', false);
+		parent::__construct('FlowThreadControl');
+	}
+
+	public function isListed() {
+		return false;
 	}
 
 	public function doesWrites() {
@@ -37,7 +41,7 @@ class SpecialControl extends FormSpecialPage {
 
 		$this->getSkin()->setRelevantTitle( $this->title );
 		$out = $this->getOutput();
-		$out->setPageTitle( $this->msg( 'flowthreadcontrol', $this->title->getPrefixedText() ) );
+		$out->setPageTitle( $this->msg( 'flowthreadcontrol', $this->title->getPrefixedText() )->escaped() );
 	}
 
 	protected function setParameter( $par ) {
@@ -145,8 +149,8 @@ class SpecialControl extends FormSpecialPage {
 		$context = $form->getContext();
 		$performer = $context->getUser();
 		$reason = $data['Reason'];
-		if (isset($reason[0])){
-			$reason = $reason[0];
+		if (is_array($reason)) {
+			$reason = $reason[0] ?? '';
 		}
 		$logEntry = new ManualLogEntry('comments', $disable ? 'disable' : 'enable');
 		$logEntry->setPerformer($performer);
